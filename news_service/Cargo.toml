@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "components/api",
+    "components/db",
+    "components/cron",
+]
+
+default-members = [
+    "components/api",
+    "components/db",
+    "components/cron",
+]

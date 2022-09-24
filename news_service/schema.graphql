@@ -1,0 +1,22 @@
+
+
+
+
+type NewsFeedUrl {
+	urlId: Int!
+	urlScore: Int!
+	numReferences: Int!
+	createdAt: Int!
+	title: String
+	description: String
+	parsedExpandedUrl: String!
+}
+
+type Query {
+	newsFeedUrls: [NewsFeedUrl!]!
+}
+
+
+schema {
+	query: Query
+}

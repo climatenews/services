@@ -11,14 +11,14 @@ services:
     volumes:
       - ./web/src:/code/src:ro
 
-  backend:
+  news_service:
     build:
-      context: backend
+      context: news_service
       target: development
     environment:
       - ADDRESS=0.0.0.0:8000
       - RUST_LOG=debug
-      - PG_DBNAME=postgres
+      - PG_DBNAME=climate_action
       - PG_HOST=db
       - PG_USER=postgres
       - PG_PASSWORD=mysecretpassword
@@ -26,8 +26,8 @@ services:
       - client-side
       - server-side
     volumes:
-      - ./backend/src:/code/src
-      - backend-cache:/code/target
+      - ./news_service/src:/code/src
+      - news_service_cache:/code/target
     depends_on:
       - db
 
@@ -41,12 +41,12 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - db-data:/var/lib/postgresql/data
-
+      - db_data:/var/lib/postgresql/data
+# Pass secrets from github Action?: https://github.com/orgs/community/discussions/25269
 networks:
   client-side: {}
   server-side: {}
 
 volumes:
-  backend-cache: {}
-  db-data: {}
+  news_service_cache: {}
+  db_data: {}

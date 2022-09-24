@@ -1,0 +1,41 @@
+[package]
+name = "cron"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+db = { path = "../db" }
+
+# Twitter API
+twitter-v2 = "0.1.7"
+
+# URL parsing
+url = "2.2.2"
+
+# Database
+sqlx = { version = "0.6.1", features = ["runtime-tokio-rustls", "postgres", "time"] } 
+time = { version = "0.3.2", features = ["macros", "formatting", "parsing"] }
+
+# Runtime
+tokio = {version = "1.15.0", features = ["full"]}
+
+# Enum helpers 
+strum = "0.24.1"
+strum_macros = "0.24.3"
+
+# Decimal
+rust_decimal = { version ="1.26", features =["maths"]}
+rust_decimal_macros = "1.26"
+
+# # Misc
+# anyhow = "1.0.28"
+
+# Date and time library for Rust
+chrono = "0.4.22"
+
+# actix
+actix-web = "4.2.1"
+actix-rt = "2.7.0"
+
+# schedule tasks in tokio runtime
+tokio_schedule = "0.3.0"

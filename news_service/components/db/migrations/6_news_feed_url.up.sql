@@ -1,0 +1,11 @@
+CREATE TABLE news_feed_url (
+    id                      SERIAL,
+    url_id                  INTEGER     NOT NULL UNIQUE,  
+    url_score               INTEGER     NOT NULL,  
+    num_references          INTEGER     NOT NULL,
+    created_at              BIGINT      NOT NULL,
+    created_at_str          TEXT        NOT NULL
+);
+
+
+
