@@ -14,7 +14,7 @@ services:
   news_service:
     build:
       context: news_service
-      target: development
+      #target: development
     environment:
       - ADDRESS=0.0.0.0:8000
       - RUST_LOG=debug

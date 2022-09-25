@@ -1,53 +1,28 @@
-# syntax=docker/dockerfile:1.4
-FROM rust:buster AS base
+# Examples:
+# https://www.lpalmieri.com/posts/fast-rust-docker-builds
+# https://windsoilder.github.io/writing_dockerfile_in_rust_project.html
 
-ENV USER=root
-ENV ROCKET_ADDRESS=0.0.0.0
-ENV ROCKET_ENV=development
+# Leveraging the pre-built Docker images with 
+# cargo-chef and the Rust toolchain
+FROM lukemathwalker/cargo-chef:latest-rust-1.59.0 AS chef
+WORKDIR app
 
-WORKDIR /code
-RUN cargo init
-COPY Cargo.toml /code/Cargo.toml
-COPY components/api/Cargo.toml /code/components/api/Cargo.toml
-COPY components/cron/Cargo.toml /code/components/cron/Cargo.toml
-COPY components/db/Cargo.toml /code/components/db/Cargo.toml
-RUN cargo build
-COPY . /code
+FROM chef AS planner
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-FROM base AS development
+FROM chef AS builder 
+COPY --from=planner /app/recipe.json recipe.json
+# Build dependencies - this is the caching Docker layer!
+RUN cargo chef cook --release --recipe-path recipe.json
+# Build application
+COPY . .
+RUN cargo build --release --bin api
 
-EXPOSE 8000
+# We do not need the Rust toolchain to run the binary!
+FROM debian:bullseye-slim AS runtime
+WORKDIR app
+COPY --from=builder /app/target/release/app /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/app"]
 
-CMD [ "cargo", "build" ]
-#CMD [ "cargo", "run", "--offline" ]
 
-FROM base AS dev-envs
-
-EXPOSE 8000
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
-EOF
-
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
-CMD [ "cargo", "run", "--offline" ]
-
-FROM base AS builder
-
-RUN cargo build --release --offline
-
-FROM debian:buster-slim
-
-ENV ROCKET_ENV=production
-
-EXPOSE 8000
-
-COPY --from=builder /code/target/release/react-rust-postgres /react-rust-postgres
-
-CMD [ "/react-rust-postgres" ]
