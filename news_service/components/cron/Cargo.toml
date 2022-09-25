@@ -3,6 +3,11 @@ name = "cron"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "cron"
+path = "src/main.rs"
+
+
 [dependencies]
 db = { path = "../db" }
 

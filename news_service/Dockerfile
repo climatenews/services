@@ -9,14 +9,17 @@ WORKDIR /code
 RUN cargo init
 COPY Cargo.toml /code/Cargo.toml
 COPY components/api/Cargo.toml /code/components/api/Cargo.toml
-RUN cargo fetch
+COPY components/cron/Cargo.toml /code/components/cron/Cargo.toml
+COPY components/db/Cargo.toml /code/components/db/Cargo.toml
+RUN cargo build
 COPY . /code
 
 FROM base AS development
 
 EXPOSE 8000
 
-CMD [ "cargo", "run", "--offline" ]
+CMD [ "cargo", "build" ]
+#CMD [ "cargo", "run", "--offline" ]
 
 FROM base AS dev-envs
 
