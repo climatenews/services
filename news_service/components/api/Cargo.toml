@@ -20,7 +20,7 @@ async-graphql = {version = "4.0.8", default-features = false }
 async-graphql-actix-web = "4.0.8"
 
 # Database
-sqlx = { version = "0.6.1", features = ["runtime-tokio-rustls", "postgres", "time"] } 
+sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "postgres", "time", "offline"] } 
 
 # Runtime
 tokio = {version = "1.15.0", features = ["full"]}

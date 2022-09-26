@@ -10,7 +10,7 @@ path = "src/lib.rs"
 [dependencies]
 
 # Database
-sqlx = { version = "0.6.1", features = ["runtime-tokio-rustls", "postgres", "time"] } 
+sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "postgres", "time", "offline"] } 
 time = { version = "0.3.2", features = ["macros", "formatting", "parsing"] }
 
 # Graphql

@@ -34,6 +34,13 @@ sqlx database drop &&
 sqlx database create &&  
 sqlx migrate run
 
+# sqlx offline mode
+export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action  cargo sqlx prepare 
+
+cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action cargo sqlx prepare --merged
+
+
+$ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null" > .git/hooks/pre-commit 
 # stop database
 sudo service postgresql stop
 ```
