@@ -1,5 +1,7 @@
 # Service
-- [ ] Add cron job every 1H
+- [x] Add cron job every 1H
+- [ ] Create database using docker
+- [ ] Add migrations to code "sqlx::migrate!("./migrations")"
 - [ ] Fix API tests?
 - [ ] set updated_at when not checked?
 - [ ] Add domain (theverge.com)

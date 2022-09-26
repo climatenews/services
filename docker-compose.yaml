@@ -1,4 +1,5 @@
-name: react-rust-postgres
+name: climate-action-collective
+version: '3'
 services:
   web:
     build:
@@ -10,24 +11,24 @@ services:
       - 3000:3000
     volumes:
       - ./web/src:/code/src:ro
+    depends_on:
+      - news_service
 
   news_service:
     build:
       context: news_service
       #target: development
     environment:
-      - ADDRESS=0.0.0.0:8000
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
       - RUST_LOG=debug
-      - PG_DBNAME=climate_action
-      - PG_HOST=db
-      - PG_USER=postgres
-      - PG_PASSWORD=mysecretpassword
+      - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
     networks:
       - client-side
       - server-side
     volumes:
       - ./news_service/src:/code/src
-      - news_service_cache:/code/target
+      - news_service_cache:/code/target #needed?
     depends_on:
       - db
 
@@ -36,6 +37,7 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=climate_action
     networks:
       - server-side
     ports:

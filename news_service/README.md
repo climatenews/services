@@ -44,7 +44,7 @@ $ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null"
 # stop database
 sudo service postgresql stop
 ```
-
+Mozilla example: https://github.com/mozilla-services/cjms
 
 # Ubuntu
 
