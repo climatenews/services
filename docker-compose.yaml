@@ -12,9 +12,9 @@ services:
     volumes:
       - ./web/src:/code/src:ro
     depends_on:
-      - news_service
+      - news_api
 
-  news_service:
+  news_api:
     build:
       context: news_service
       #target: development
@@ -30,7 +30,6 @@ services:
       - server-side
     volumes:
       - ./news_service/src:/code/src
-      - news_service_cache:/code/target #needed?
     depends_on:
       - db
 
@@ -52,5 +51,4 @@ networks:
   server-side: {}
 
 volumes:
-  news_service_cache: {}
   db_data: {}
