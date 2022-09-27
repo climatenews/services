@@ -23,6 +23,8 @@ services:
       - API_PORT=8000
       - RUST_LOG=debug
       - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
+    ports:
+      - 8000:8000
     networks:
       - client-side
       - server-side
