@@ -2,7 +2,7 @@ pub static MAX_TWEET_RESULTS: usize = 100;
 pub static REQUEST_SLEEP_DURATION: u64 = 1500;
 pub static RESET_DB: bool = false;
 
-pub static TWITTER_USERNAMES: [&str; 56] = [
+pub static TWITTER_USERNAMES: [&str; 49] = [
     "GretaThunberg",   // Climate and environmental activist
     "ayanaeliza",      // Marine biologist
     "MichaelEMann",    // Scientist/Author
@@ -36,17 +36,11 @@ pub static TWITTER_USERNAMES: [&str; 56] = [
     "leahstokes",      // Prof climate + energy policy @UCSBpolisci
     "hausfath",        // Climate scientist
     "DrSimEvans",      // Award-winning journalist
-    "ProjectDrawdown", // The world’s leading resource for climate solutions
-    "CarbonBrief", // Award-winning journalism focused on #climatechange, science, energy and policy.
-    "BusinessGreen", // The UK's leading web site for green business news and analysis.
-    "MaryHeglar",  // Co-host & co-creator of @RealHotTake
-    "amywestervelt", // Investigative climate journo
-    "Peters_Glen", // Research Director @CICERO_klima
-    "drvolts",     // Volts newsletter
-    "climate",     // Bloomberg Green
+    "MaryHeglar",       // Co-host & co-creator of @RealHotTake
+    "amywestervelt",    // Investigative climate journo
+    "Peters_Glen",      // Research Director @CICERO_klima
+    "drvolts",          // Volts newsletter
     "JacquelynGill", // Paleoecologist
-    "PacificInstitut", // nonpartisan global water think tank
-    "ForbesScience", // science news
     "JesseJenkins", // PI of ZERO Lab
     "KetanJ0",     // science writer
     "RARohde",     // Lead Scientist @BerkeleyEarth
@@ -55,7 +49,6 @@ pub static TWITTER_USERNAMES: [&str; 56] = [
     "mkhoff",      // Science & environmental communicator
     "DoctorVive",  // Founding Director @EndClimtSilence
     "jabeckx",     // Director, Drawdown Lab
-    "goodenergystory", // Storytelling for today's climate.
     "DavidSuzukiFDN", // academic, science broadcaster, and environmental activist
     "dgelles",     //Climate reporter
     "simondonner", //Climate scientist

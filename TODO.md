@@ -13,12 +13,12 @@
 
 - [ ] Nav Menu
 - [ ] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
-- [ ] Add url thumbnail image?
-
-- [ ] Add request caching / cache busting every hour
+- [ ] Use env variable for graphql host
+- [ ] Add request caching / cache busting every hour - next.js website
 
 # Backlog
 
+- [ ] Incorporate benefit corporation
 - [ ] Add news bot 
 - [ ] Add User accounts
 - [ ] Add comment section
