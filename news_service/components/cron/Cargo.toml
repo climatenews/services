@@ -12,7 +12,7 @@ path = "src/main.rs"
 db = { path = "../db" }
 
 # Twitter API
-twitter-v2 = "0.1.7"
+twitter-v2 = {version = "0.1.7", features = ["rustls-tls"]}
 
 # URL parsing
 url = "2.2.2"

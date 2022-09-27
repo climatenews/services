@@ -23,8 +23,9 @@ services:
     environment:
       - API_HOST=0.0.0.0
       - API_PORT=8000
-      - RUST_LOG=debug
+      - RUST_LOG=info,actix=info
       - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
+     
     ports:
       - 8000:8000
     networks:
@@ -34,6 +35,27 @@ services:
       - ./news_service/src:/code/src
     depends_on:
       - db
+
+  news_cron:
+    build:
+      context: news_service
+      args:
+        SERVICE_NAME: cron 
+      #target: development
+    environment:
+      - CRON_HOST=0.0.0.0
+      - CRON_PORT=8001
+      - RUST_LOG=info,actix=info
+      - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
+      - APP_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAAAMo6ggEAAAAArLoP%2FRAXVHU1jsuvyrAvIKKUWyg%3DE5FPLBkAJOIy680R341JWFM1Ri1hM8ymZqQ6xjW7jDKTJ4Z4np
+ 
+    networks:
+      - server-side
+    volumes:
+      - ./news_service/src:/code/src
+    depends_on:
+      - news_api
+
 
   db:
     image: postgres:12-alpine

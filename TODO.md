@@ -2,10 +2,12 @@
 - [x] Add cron job every 1H
 - [x] Create database using docker?
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
+- [ ] use env logger
+- [ ] use anyhow for errors, remove unwraps
 - [ ] Fix API tests?
 - [ ] set updated_at when not checked?
 - [ ] Add domain (theverge.com)
-- [ ] use anyhow for errors, remove unwraps
+
 
 # Web
 

@@ -23,8 +23,12 @@ RUN SQLX_OFFLINE=true cargo build --release --bin ${SERVICE_NAME}
 
 # We do not need the Rust toolchain to run the binary!
 FROM debian:bullseye-slim AS runtime
+
 ARG SERVICE_NAME
 ENV SERVICE_NAME=${SERVICE_NAME}
+
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+RUN update-ca-certificates
 
 WORKDIR /app
 COPY --from=builder /app/target/release/${SERVICE_NAME} /usr/local/bin
