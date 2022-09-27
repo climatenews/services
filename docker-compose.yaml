@@ -17,6 +17,8 @@ services:
   news_api:
     build:
       context: news_service
+      args:
+        SERVICE_NAME: api 
       #target: development
     environment:
       - API_HOST=0.0.0.0
