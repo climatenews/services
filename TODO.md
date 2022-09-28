@@ -2,6 +2,7 @@
 - [x] Add cron job every 1H
 - [x] Create database using docker?
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
+- [ ] Implement NewsFeedUrlSharesQuery
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
 - [ ] Fix API tests?
@@ -25,6 +26,7 @@
 - [ ] Add news bot 
 - [ ] Add User accounts
 - [ ] Add comment section
+- [ ] Display scores
 
 
 

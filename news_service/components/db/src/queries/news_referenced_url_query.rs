@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
-// Direct referenced tweet URLS
+// Direct & Indirect referenced tweet URLS
 #[derive(FromRow, Deserialize, Serialize, Debug, Clone, async_graphql::SimpleObject)]
 pub struct NewsReferencedUrlQuery {
     pub author_id: i64,
