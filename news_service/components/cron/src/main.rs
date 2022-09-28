@@ -36,6 +36,10 @@ async fn main() -> std::io::Result<()> {
 }
 
 pub async fn start_scheduler() {
+    
+    #[cfg(debug_assertions)]
+    hourly_cron_job().await; // only run in debug mode
+
     let every_second = every(1)
         .hours()
         .in_timezone(&Utc)
