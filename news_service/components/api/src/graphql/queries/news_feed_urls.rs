@@ -1,10 +1,11 @@
 use crate::graphql::errors::GqlError;
-use async_graphql::{ErrorExtensions, FieldResult};
+use async_graphql::{Context, ErrorExtensions, FieldResult};
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use sqlx::postgres::PgPool;
 
-pub async fn news_feed_urls_query(pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
+pub async fn news_feed_urls_query<'a>(ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {
+    let pool = ctx.data::<PgPool>().unwrap();
     let news_feed_urls_result: Option<Vec<NewsFeedUrlQuery>> = get_news_feed_urls(&pool).await;
     match news_feed_urls_result {
         Some(news_feed_urls) => Ok(news_feed_urls),

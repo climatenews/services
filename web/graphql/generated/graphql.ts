@@ -27,10 +27,30 @@ export type NewsFeedUrl = {
   urlScore: Scalars['Int'];
 };
 
+export type NewsFeedUrlReferences = {
+  __typename?: 'NewsFeedUrlReferences';
+  createdAtStr: Scalars['String'];
+  text: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  newsFeedUrlReferences: Array<NewsFeedUrlReferences>;
   newsFeedUrls: Array<NewsFeedUrl>;
 };
+
+
+export type QueryNewsFeedUrlReferencesArgs = {
+  urlId: Scalars['Int'];
+};
+
+export type GetNewsFeedUrlReferencesQueryVariables = Exact<{
+  urlId: Scalars['Int'];
+}>;
+
+
+export type GetNewsFeedUrlReferencesQuery = { __typename?: 'Query', newsFeedUrlReferences: Array<{ __typename?: 'NewsFeedUrlReferences', text: string, username: string, createdAtStr: string }> };
 
 export type GetNewsFeedUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -38,6 +58,15 @@ export type GetNewsFeedUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetNewsFeedUrlsQuery = { __typename?: 'Query', newsFeedUrls: Array<{ __typename?: 'NewsFeedUrl', urlId: number, urlScore: number, numReferences: number, title?: string | null, description?: string | null, expandedUrlParsed: string, expandedUrlHost: string, createdAt: number }> };
 
 
+export const GetNewsFeedUrlReferencesDocument = gql`
+    query GetNewsFeedUrlReferences($urlId: Int!) {
+  newsFeedUrlReferences(urlId: $urlId) {
+    text
+    username
+    createdAtStr
+  }
+}
+    `;
 export const GetNewsFeedUrlsDocument = gql`
     query GetNewsFeedUrls {
   newsFeedUrls {
@@ -60,6 +89,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetNewsFeedUrlReferences(variables: GetNewsFeedUrlReferencesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNewsFeedUrlReferencesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetNewsFeedUrlReferencesQuery>(GetNewsFeedUrlReferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNewsFeedUrlReferences', 'query');
+    },
     GetNewsFeedUrls(variables?: GetNewsFeedUrlsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNewsFeedUrlsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNewsFeedUrlsQuery>(GetNewsFeedUrlsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNewsFeedUrls', 'query');
     }

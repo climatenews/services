@@ -4,7 +4,6 @@ use crate::graphql::Query;
 use async_graphql::{Context, FieldResult, Object};
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::queries::news_feed_url_references_query::NewsFeedUrlReferencesQuery;
-use sqlx::postgres::PgPool;
 
 pub mod news_feed_url_references;
 pub mod news_feed_urls;
@@ -12,8 +11,7 @@ pub mod news_feed_urls;
 #[Object(extends)]
 impl Query {
     async fn news_feed_urls<'a>(&self, ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        news_feed_urls_query(pool).await
+        news_feed_urls_query(ctx).await
     }
 
     async fn news_feed_url_references<'a>(
@@ -21,7 +19,6 @@ impl Query {
         ctx: &'a Context<'_>,
         url_id: i32,
     ) -> FieldResult<Vec<NewsFeedUrlReferencesQuery>> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        news_feed_url_references_query(pool, url_id).await
+        news_feed_url_references_query(ctx, url_id).await
     }
 }

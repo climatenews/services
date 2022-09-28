@@ -1,0 +1,7 @@
+query GetNewsFeedUrlReferences($urlId: Int!) {
+  newsFeedUrlReferences(urlId: $urlId) {
+    text
+    username
+    createdAtStr
+  }
+}
