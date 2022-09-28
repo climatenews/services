@@ -1,11 +1,14 @@
-use crate::graphql::query::Query;
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use sqlx::PgPool;
 use std::fs;
 
 pub mod errors;
-pub mod query;
+pub mod queries;
 
+// Query root
+pub struct Query;
+
+// Schema
 pub type ClimateActionSchema = Schema<Query, EmptyMutation, EmptySubscription>;
 
 pub fn init_graphql_schema(db_pool: PgPool) -> Schema<Query, EmptyMutation, EmptySubscription> {

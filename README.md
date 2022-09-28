@@ -80,3 +80,6 @@ Removing react-rust-postgres_web_1 ... done
 Removing react-rust-postgres_db_1       ... done
 Removing network react-rust-postgres_default
 ```
+
+
+ngrok http --region=us --hostname=climateactioncollective.net.ngrok.io 3000

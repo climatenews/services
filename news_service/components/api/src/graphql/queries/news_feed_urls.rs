@@ -1,11 +1,11 @@
-use super::errors::GqlError;
+use crate::graphql::errors::GqlError;
 use async_graphql::{Context, ErrorExtensions, FieldResult, Object};
+use crate::graphql::Query;
 
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use sqlx::postgres::PgPool;
 
-pub struct Query;
 
 #[Object(extends)]
 impl Query {
@@ -74,7 +74,7 @@ async fn get_news_feed_urls_test() {
                   numReferences
                   title
                   description
-                  expandedUrlParsed
+                  parsedExpandedUrl
                 }
               }
             "#,
