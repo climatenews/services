@@ -7,7 +7,6 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "yarn tsc",
-    "prepare": "husky install",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -32,7 +31,6 @@
     "@types/react": "17.0.37",
     "eslint": "8.4.1",
     "eslint-config-next": "12.0.7",
-    "husky": "^7.0.0",
     "typescript": "4.5.3"
   },
   "prettier": {

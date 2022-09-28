@@ -9,15 +9,16 @@ pub async fn insert_news_tweet_url(
         NewsTweetUrlWithId,
         r#"
             INSERT INTO news_tweet_url ( 
-                url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str
+                url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
              )
-            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9)
+            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING 
-            id, url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str
+            id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
             "#,
         news_tweet_url.url,
         news_tweet_url.expanded_url,
-        news_tweet_url.parsed_expanded_url,
+        news_tweet_url.expanded_url_parsed,
+        news_tweet_url.expanded_url_host,
         news_tweet_url.display_url,
         news_tweet_url.is_twitter_url,
         news_tweet_url.title,
@@ -35,19 +36,19 @@ pub async fn insert_news_tweet_url(
 }
 
 // TODO: Log sqlx errors + ignore RowNotFound errors
-pub async fn find_news_tweet_urls_by_parsed_expanded_url(
+pub async fn find_news_tweet_urls_by_expanded_url_parsed(
     pool: &PgPool,
-    parsed_expanded_url: String,
+    expanded_url_parsed: String,
 ) -> Option<NewsTweetUrlWithId> {
     let news_tweet_url_result = sqlx::query_as!(
         NewsTweetUrlWithId,
         r#"
             SELECT 
-                id, url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str
+                id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
             FROM news_tweet_url   
-            WHERE parsed_expanded_url = $1         
+            WHERE expanded_url_parsed = $1         
             "#,
-            parsed_expanded_url
+            expanded_url_parsed
     )
     .fetch_one(pool)
     .await;

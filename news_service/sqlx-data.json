@@ -60,7 +60,7 @@
           "type_info": "Text"
         },
         {
-          "name": "parsed_expanded_url",
+          "name": "expanded_url_parsed",
           "ordinal": 3,
           "type_info": "Text"
         },
@@ -121,7 +121,7 @@
         ]
       }
     },
-    "query": "\n            INSERT INTO news_tweet_url ( \n                url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str\n             )\n            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9)\n            RETURNING \n            id, url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str\n            "
+    "query": "\n            INSERT INTO news_tweet_url ( \n                url, expanded_url, expanded_url_parsed, display_url, is_twitter_url, title, description, created_at, created_at_str\n             )\n            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9)\n            RETURNING \n            id, url, expanded_url, expanded_url_parsed, display_url, is_twitter_url, title, description, created_at, created_at_str\n            "
   },
   "41608261c57ff62ca0e8c4221f6da5213945b1a57685d45d630e0bf890e2c1c3": {
     "describe": {
@@ -597,7 +597,7 @@
           "type_info": "Text"
         },
         {
-          "name": "parsed_expanded_url",
+          "name": "expanded_url_parsed",
           "ordinal": 6,
           "type_info": "Text"
         }
@@ -615,7 +615,7 @@
         "Left": []
       }
     },
-    "query": "\n        SELECT\n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.created_at,\n            tu.title,\n            tu.description,\n            tu.parsed_expanded_url\n        FROM\n            news_feed_url as nfu\n            JOIN news_tweet_url as tu ON tu.id = nfu.url_id\n            \n        ORDER BY\n            url_score DESC\n        LIMIT 20 \n     "
+    "query": "\n        SELECT\n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.created_at,\n            tu.title,\n            tu.description,\n            tu.expanded_url_parsed\n        FROM\n            news_feed_url as nfu\n            JOIN news_tweet_url as tu ON tu.id = nfu.url_id\n            \n        ORDER BY\n            url_score DESC\n        LIMIT 20 \n     "
   },
   "a783689e1d9446b90265bf4cab2fb453a04b4628cb43e286089c66666a36b253": {
     "describe": {
@@ -756,7 +756,7 @@
           "type_info": "Text"
         },
         {
-          "name": "parsed_expanded_url",
+          "name": "expanded_url_parsed",
           "ordinal": 3,
           "type_info": "Text"
         },
@@ -809,7 +809,7 @@
         ]
       }
     },
-    "query": "\n            SELECT \n                id, url, expanded_url, parsed_expanded_url, display_url, is_twitter_url, title, description, created_at, created_at_str\n            FROM news_tweet_url   \n            WHERE parsed_expanded_url = $1         \n            "
+    "query": "\n            SELECT \n                id, url, expanded_url, expanded_url_parsed, display_url, is_twitter_url, title, description, created_at, created_at_str\n            FROM news_tweet_url   \n            WHERE expanded_url_parsed = $1         \n            "
   },
   "d1a81c7aa39e8aa9d46a0b9cf3a594a7fd159a06e23f9ced3b3f6e3baf7e856c": {
     "describe": {

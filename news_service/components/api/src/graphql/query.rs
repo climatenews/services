@@ -38,7 +38,8 @@ async fn get_news_feed_urls_test() {
     let news_tweet_url = NewsTweetUrl {
         url: String::from("https://t.co/4HPNrqOnZj"),
         expanded_url: String::from("www.climateactioncolective.net"),
-        parsed_expanded_url: String::from("www.climateactioncolective.net"),
+        expanded_url_parsed: String::from("www.climateactioncolective.net"),
+        expanded_url_host: String::from("climateactioncolective.net"),
         display_url: String::from("www.climateactioncolective.net"),
         is_twitter_url: false,
         title: Some(String::from("Climate Action Collective title")),
@@ -73,7 +74,7 @@ async fn get_news_feed_urls_test() {
                   numReferences
                   title
                   description
-                  parsedExpandedUrl
+                  expandedUrlParsed
                 }
               }
             "#,

@@ -9,7 +9,8 @@ type NewsFeedUrl {
 	createdAt: Int!
 	title: String
 	description: String
-	parsedExpandedUrl: String!
+	expandedUrlParsed: String!
+	expandedUrlHost: String!
 }
 
 type Query {

@@ -14,7 +14,7 @@ use db::sql::news_referenced_tweet_url::{
 };
 use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet, truncate_news_tweet};
 use db::sql::news_tweet_url::{
-    find_news_tweet_urls_by_parsed_expanded_url, insert_news_tweet_url, truncate_news_tweet_url,
+    find_news_tweet_urls_by_expanded_url_parsed, insert_news_tweet_url, truncate_news_tweet_url,
 };
 use db::sql::news_twitter_user::{
     find_news_twitter_user_by_user_id, insert_news_twitter_user, truncate_news_twitter_user,
@@ -107,10 +107,15 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
     if let Some(entities) = tweet.entities.clone() {
         if let Some(urls) = entities.urls {
             for url in urls {
-                let parsed_expanded_url = parse_expanded_url(&url.expanded_url);
-                let news_tweet_url_db_result = find_news_tweet_urls_by_parsed_expanded_url(
+                let expanded_url = Url::parse(&url.expanded_url).unwrap();
+                let expanded_url_host = expanded_url.host_str().unwrap();
+                // Remove www prefix from host
+                let expanded_url_host = str::replace(expanded_url_host, "www.", "");
+                let expanded_url_parsed = get_expanded_url_parsed(expanded_url.clone());
+     
+                let news_tweet_url_db_result = find_news_tweet_urls_by_expanded_url_parsed(
                     &db_pool,
-                    parsed_expanded_url.clone(),
+                    expanded_url_parsed.clone(),
                 )
                 .await;
                 match news_tweet_url_db_result {
@@ -122,7 +127,8 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                             let news_tweet_url = NewsTweetUrl {
                                 url: url.url,
                                 expanded_url: url.expanded_url,
-                                parsed_expanded_url: parsed_expanded_url,
+                                expanded_url_parsed: expanded_url_parsed,
+                                expanded_url_host: expanded_url_host,
                                 display_url: url.display_url,
                                 is_twitter_url: is_twitter_url,
                                 title: url.title,
@@ -167,15 +173,18 @@ pub async fn parse_news_referenced_tweet_url(db_pool: &PgPool, tweet_id: i64, ur
 }
 
 // Remove all the query parameters from non-whitelisted urls
-pub fn parse_expanded_url(expanded_url: &str) -> String {
+pub fn get_expanded_url_parsed(mut expanded_url_parsed: Url) -> String {
+
     // Whitelisted Urls
-    if expanded_url.contains("https://www.youtube.com/") {
-        return expanded_url.to_string();
+    if expanded_url_parsed.host_str().unwrap() == "youtube.com" {
+        //TODO parse video param only
+        return expanded_url_parsed.to_string();
     }
-    let mut parsed_expanded_url = Url::parse(expanded_url).unwrap();
-    parsed_expanded_url.set_query(None); //
-    parsed_expanded_url.to_string()
+    // Remove all the query parameters
+    expanded_url_parsed.set_query(None);
+    expanded_url_parsed.to_string()
 }
+
 
 pub fn parse_news_referenced_tweets(tweet: &Tweet) -> Vec<NewsReferencedTweet> {
     let mut news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];

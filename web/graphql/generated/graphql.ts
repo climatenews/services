@@ -19,8 +19,9 @@ export type NewsFeedUrl = {
   __typename?: 'NewsFeedUrl';
   createdAt: Scalars['Int'];
   description?: Maybe<Scalars['String']>;
+  expandedUrlHost: Scalars['String'];
+  expandedUrlParsed: Scalars['String'];
   numReferences: Scalars['Int'];
-  parsedExpandedUrl: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   urlId: Scalars['Int'];
   urlScore: Scalars['Int'];
@@ -34,7 +35,7 @@ export type Query = {
 export type GetNewsFeedUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNewsFeedUrlsQuery = { __typename?: 'Query', newsFeedUrls: Array<{ __typename?: 'NewsFeedUrl', urlId: number, urlScore: number, numReferences: number, title?: string | null, description?: string | null, parsedExpandedUrl: string, createdAt: number }> };
+export type GetNewsFeedUrlsQuery = { __typename?: 'Query', newsFeedUrls: Array<{ __typename?: 'NewsFeedUrl', urlId: number, urlScore: number, numReferences: number, title?: string | null, description?: string | null, expandedUrlParsed: string, expandedUrlHost: string, createdAt: number }> };
 
 
 export const GetNewsFeedUrlsDocument = gql`
@@ -45,7 +46,8 @@ export const GetNewsFeedUrlsDocument = gql`
     numReferences
     title
     description
-    parsedExpandedUrl
+    expandedUrlParsed
+    expandedUrlHost
     createdAt
   }
 }

@@ -12,5 +12,6 @@ pub struct NewsFeedUrlQuery {
     pub title: Option<String>,
     // TODO make non-null
     pub description: Option<String>,
-    pub parsed_expanded_url: String,
+    pub expanded_url_parsed: String,
+    pub expanded_url_host: String,
 }

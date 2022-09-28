@@ -5,7 +5,8 @@ query GetNewsFeedUrls{
       numReferences
       title
       description
-      parsedExpandedUrl
+      expandedUrlParsed
+      expandedUrlHost
       createdAt
     }
 }
