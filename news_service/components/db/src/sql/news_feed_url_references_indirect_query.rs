@@ -1,10 +1,10 @@
 use sqlx::PgPool;
 
-use crate::queries::news_feed_url_shares_query::NewsFeedUrlSharesQuery;
+use crate::queries::news_feed_url_references_query::NewsFeedUrlReferencesQuery;
 
-pub async fn get_indirect_news_feed_url_shares(pool: &PgPool, url_id: i32) -> Option<Vec<NewsFeedUrlSharesQuery>> {
-    let direct_news_feed_url_shares_query_result = sqlx::query_as!(
-        NewsFeedUrlSharesQuery,
+pub async fn get_indirect_news_feed_url_references(pool: &PgPool, url_id: i32) -> Option<Vec<NewsFeedUrlReferencesQuery>> {
+    let direct_news_feed_url_references_query_result = sqlx::query_as!(
+        NewsFeedUrlReferencesQuery,
         r#"
         SELECT 
             t.text,
@@ -22,8 +22,8 @@ pub async fn get_indirect_news_feed_url_shares(pool: &PgPool, url_id: i32) -> Op
     )
     .fetch_all(pool)
     .await;
-    return match direct_news_feed_url_shares_query_result {
-        Ok(direct_news_feed_url_shares) => Some(direct_news_feed_url_shares),
+    return match direct_news_feed_url_references_query_result {
+        Ok(direct_news_feed_url_references) => Some(direct_news_feed_url_references),
         Err(_) => None,
     };
 }
