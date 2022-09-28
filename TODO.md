@@ -8,6 +8,7 @@
 - [ ] set updated_at when not checked?
 - [ ] Add domain (theverge.com)
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
+- [ ] Use decimal for url score or *100 
 
 
 
