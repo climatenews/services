@@ -1,31 +1,31 @@
 import type { NextPage } from 'next'
 import Footer from 'components/generic/footer'
-import NewsContent from 'components/feature/news_content'
-import { NewsFeedUrl, getSdk } from 'graphql/generated/graphql'
+import NewsItemContent from 'components/feature/news_item_content'
+import { NewsFeedUrlReferences, getSdk } from 'graphql/generated/graphql'
 import { graphQLClient } from 'graphql/client';
 import { useRouter } from 'next/router'
 
-interface NewsPageProps {
-  newsFeedUrls: NewsFeedUrl[]
+interface NewsItemPageProps {
+  newsFeedUrlReferences: NewsFeedUrlReferences[]
 }
 
-const NewsItemPage: NextPage<NewsPageProps> = ({ newsFeedUrls }) => {
-  const router = useRouter()
-  const { item_id } = router.query
+const NewsItemPage: NextPage<NewsItemPageProps> = ({ newsFeedUrlReferences }) => {
+
   return (
     <>
-      <p>{item_id}</p>
+      <NewsItemContent newsFeedUrlReferences={newsFeedUrlReferences} />
       <Footer />
     </>
   )
 }
 
 export async function getServerSideProps(context: any) {
+  const { item_id } = context.query
   const sdk = getSdk(graphQLClient)
-  const response = await sdk.GetNewsFeedUrls()
+  const response = await sdk.GetNewsFeedUrlReferences({urlId: Number(item_id)})
   return {
     props: {
-      newsFeedUrls: response.newsFeedUrls
+      newsFeedUrlReferences: response.newsFeedUrlReferences
     },
   }
 }

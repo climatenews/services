@@ -2,7 +2,8 @@
 - [x] Add cron job every 1H
 - [x] Create database using docker?
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
-- [ ] Implement NewsFeedUrlSharesQuery
+- [x] Implement NewsFeedUrlSharesQuery
+- [ ] Dedup news_feed_url_references
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
 - [ ] Fix API tests?
