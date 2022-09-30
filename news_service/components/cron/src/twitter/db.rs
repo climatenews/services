@@ -217,7 +217,6 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         let referenced_tweets: Option<Vec<Tweet>> = get_tweets(twitter_api, split_tweet_ids).await;
         if let Some(referenced_tweets) = referenced_tweets.clone() {
             for referenced_tweet in referenced_tweets {
-                println!("referenced_tweet {:?}", referenced_tweet);
                 parse_and_insert_tweet(&db_pool, &referenced_tweet).await;
             }
         }

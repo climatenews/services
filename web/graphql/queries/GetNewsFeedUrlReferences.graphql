@@ -6,6 +6,8 @@ query GetNewsFeedUrlReferences($urlId: Int!) {
   }
   newsFeedUrlIndirectReferences(urlId: $urlId) {
     text
+    referencedTweetText
+    referencedTweetKind
     username
     createdAtStr
   }

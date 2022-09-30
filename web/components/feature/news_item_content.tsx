@@ -3,6 +3,9 @@ import {
   NewsFeedUrlIndirectReference
 } from "graphql/generated/graphql";
 
+import NewsItemDirectReferences from "./news_item_direct_references";
+import NewsItemIndirectReferences from "./news_item_indirect_references";
+
 interface NewsItemContentProps {
   newsFeedUrlDirectReferences: NewsFeedUrlDirectReference[];
   newsFeedUrlIndirectReferences: NewsFeedUrlIndirectReference[];
@@ -15,45 +18,16 @@ export default function NewsItemContent(props: NewsItemContentProps) {
         Shares
       </h3>
 
-      {props.newsFeedUrlDirectReferences &&
-        props.newsFeedUrlDirectReferences.map(
-          (newsFeedUrlDirectReference: NewsFeedUrlDirectReference) => {
-            return (
-              <>
-                <p className="text-m font-bold">Direct References</p>
-                <ul>
-                  <li key={newsFeedUrlDirectReference.text}>
-                    <p className="text-m font-bold">
-                      {newsFeedUrlDirectReference.username}
-                    </p>
-                    <p className="text-m">{newsFeedUrlDirectReference.text}</p>
-                  </li>
-                </ul>
-              </>
-            );
-          }
-        )}
-
-      {props.newsFeedUrlIndirectReferences &&
-        props.newsFeedUrlIndirectReferences.map(
-          (newsFeedUrlIndirectReference: NewsFeedUrlIndirectReference) => {
-            return (
-              <>
-                <p className="text-m font-bold">Indirect References</p>
-                <ul>
-                  <li key={newsFeedUrlIndirectReference.text}>
-                    <p className="text-m font-bold">
-                      {newsFeedUrlIndirectReference.username}
-                    </p>
-                    <p className="text-m">
-                      {newsFeedUrlIndirectReference.text}
-                    </p>
-                  </li>
-                </ul>
-              </>
-            );
-          }
-        )}
+      {props.newsFeedUrlDirectReferences.length > 0 && (
+        <NewsItemDirectReferences
+          newsFeedUrlDirectReferences={props.newsFeedUrlDirectReferences}
+        />
+      )}
+      {props.newsFeedUrlIndirectReferences.length > 0 && (
+        <NewsItemIndirectReferences
+          newsFeedUrlIndirectReferences={props.newsFeedUrlIndirectReferences}
+        />
+      )}
     </div>
   );
 }

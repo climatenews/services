@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Footer from "components/generic/footer";
 import NewsContent from "components/feature/news_content";
 import { NewsFeedUrl, getSdk } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
@@ -8,12 +7,7 @@ interface NewsPageProps {
 }
 
 const NewsPage: NextPage<NewsPageProps> = ({ newsFeedUrls }) => {
-  return (
-    <>
-      <NewsContent newsFeedUrls={newsFeedUrls} />
-      <Footer />
-    </>
-  );
+  return <NewsContent newsFeedUrls={newsFeedUrls} />;
 };
 
 export async function getServerSideProps(context: any) {

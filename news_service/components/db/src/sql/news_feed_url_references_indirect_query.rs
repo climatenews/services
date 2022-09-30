@@ -11,21 +11,24 @@ pub async fn get_indirect_news_feed_url_references(
         r#"
 
         SELECT 
-        t.text,
-        t.created_at_str,
+        t1.text,
+        t2.text as referenced_tweet_text,
+        rt.referenced_tweet_kind,
+        t1.created_at_str,
         u.username
 
     FROM
         news_referenced_tweet as rt   
-        JOIN news_tweet as t ON t.tweet_id = rt.tweet_id  
-        JOIN news_twitter_user as u ON t.author_id = u.user_id   
+        JOIN news_tweet as t1 ON t1.tweet_id = rt.tweet_id  
+        JOIN news_tweet as t2 ON t2.tweet_id = rt.referenced_tweet_id 
+        JOIN news_twitter_user as u ON t1.author_id = u.user_id   
         JOIN news_referenced_tweet_url as rtu ON rtu.tweet_id = rt.referenced_tweet_id 
         JOIN news_tweet_url as tu ON tu.id = rtu.url_id  
     WHERE
         rtu.url_id = $1
         AND tu.is_twitter_url = False
         AND tu.title IS NOT NULL
-        AND t.in_reply_to_user_id IS NULL            
+        AND t1.in_reply_to_user_id IS NULL            
      "#,
         url_id
     )

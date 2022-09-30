@@ -43,6 +43,8 @@ export type NewsFeedUrlDirectReference = {
 export type NewsFeedUrlIndirectReference = {
   __typename?: "NewsFeedUrlIndirectReference";
   createdAtStr: Scalars["String"];
+  referencedTweetKind: Scalars["String"];
+  referencedTweetText: Scalars["String"];
   text: Scalars["String"];
   username: Scalars["String"];
 };
@@ -77,6 +79,8 @@ export type GetNewsFeedUrlReferencesQuery = {
   newsFeedUrlIndirectReferences: Array<{
     __typename?: "NewsFeedUrlIndirectReference";
     text: string;
+    referencedTweetText: string;
+    referencedTweetKind: string;
     username: string;
     createdAtStr: string;
   }>;
@@ -108,6 +112,8 @@ export const GetNewsFeedUrlReferencesDocument = gql`
     }
     newsFeedUrlIndirectReferences(urlId: $urlId) {
       text
+      referencedTweetText
+      referencedTweetKind
       username
       createdAtStr
     }

@@ -21,6 +21,8 @@ type NewsFeedUrlDirectReference {
 
 type NewsFeedUrlIndirectReference {
 	text: String!
+	referencedTweetText: String!
+	referencedTweetKind: String!
 	createdAtStr: String!
 	username: String!
 }
