@@ -4,6 +4,7 @@
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
 - [x] Implement NewsFeedUrlSharesQuery
 - [x] Add domain (theverge.com)
+- [ ] Add info about tweet to share page
 - [ ] Add referenced twitter users to db
 - [ ] Dedup news_feed_url_references
 - [ ] handle youtube links

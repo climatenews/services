@@ -20,17 +20,19 @@ export default function NewsItemIndirectReferences(
                 className="border-solid border-2 border-sky-500 rounded-md p-4"
               >
                 <p className="text-m font-medium">
-                  {`${capitalize(newsFeedUrlIndirectReference.referencedTweetKind)} by `}
+                
                   <a
                     href={`https://twitter.com/${newsFeedUrlIndirectReference.username}`}
                     className="hover:underline"
                   >
                     {newsFeedUrlIndirectReference.username}
                   </a>
+                  {` (${capitalize(newsFeedUrlIndirectReference.referencedTweetKind)})`}
+                  {/* X retweeted Y */}
                 </p>
 
-                <p className="text-m">{newsFeedUrlIndirectReference.text}</p>
-                {/* <p className="text-m">{newsFeedUrlIndirectReference.referencedTweetText}</p> */}
+                {/* <p className="text-m">{newsFeedUrlIndirectReference.text}</p> */}
+                <p className="text-m">{newsFeedUrlIndirectReference.referencedTweetText}</p>
               </div>
             );
           }
