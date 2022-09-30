@@ -1,20 +1,20 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import type { NextPage } from "next";
+import Head from "next/head";
 
 interface Props {
-  title?: string
-  keywords?: string
-  description?: string
-  websiteUrl?: string
-  type?: string
-  siteName?: string
-  imageSource?: string
-  imageType?: string
-  imageAltText?: string
-  imageWidth?: string
-  imageHeight?: string
-  twitterCard?: string
-  twitterName?: string
+  title?: string;
+  keywords?: string;
+  description?: string;
+  websiteUrl?: string;
+  type?: string;
+  siteName?: string;
+  imageSource?: string;
+  imageType?: string;
+  imageAltText?: string;
+  imageWidth?: string;
+  imageHeight?: string;
+  twitterCard?: string;
+  twitterName?: string;
 }
 
 const Meta: NextPage<Props> = ({
@@ -30,7 +30,7 @@ const Meta: NextPage<Props> = ({
   imageWidth,
   imageHeight,
   twitterCard,
-  twitterName,
+  twitterName
 }) => {
   return (
     <Head>
@@ -65,25 +65,25 @@ const Meta: NextPage<Props> = ({
       <meta name="twitter:image" content={imageSource} />
       <meta name="twitter:image:alt" content={imageAltText} />
     </Head>
-  )
-}
+  );
+};
 
-export default Meta
+export default Meta;
 
 Meta.defaultProps = {
-  title: 'ThankYouNext 🖤',
-  keywords: 'web development, programming, next.js',
+  title: "Climate Action Collective",
+  keywords: "web development, programming, next.js",
   description:
-    'Next.js starter template featuring TypeScript, Tailwind CSS, Preact and much more!',
-  imageSource: 'https://thankyounext.vercel.app/seo.png',
-  imageType: 'image/png',
+    "Next.js starter template featuring TypeScript, Tailwind CSS, Preact and much more!",
+  imageSource: "https://thankyounext.vercel.app/seo.png",
+  imageType: "image/png",
   imageAltText:
-    'ThankYouNext - A highly performant and accessible Next.js starter template',
-  imageWidth: '1600',
-  imageHeight: '882',
-  type: 'website',
-  websiteUrl: 'https://thankyounext.vercel.app/',
-  siteName: 'Next.js Starter',
-  twitterCard: 'summary_large_image',
-  twitterName: '@stvfrnzl',
-}
+    "ThankYouNext - A highly performant and accessible Next.js starter template",
+  imageWidth: "1600",
+  imageHeight: "882",
+  type: "website",
+  websiteUrl: "https://thankyounext.vercel.app/",
+  siteName: "Next.js Starter",
+  twitterCard: "summary_large_image",
+  twitterName: "@stvfrnzl"
+};

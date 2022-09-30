@@ -35,8 +35,8 @@ If you like the component-based approach of **React** but want to build fast, si
 
 ```javascript
 export const config = {
-  unstable_runtimeJS: false,
-}
+  unstable_runtimeJS: false
+};
 ```
 
 This code snippet must be used on the respective page in the `pages` folder to disable client-side JavaScript. Disadvantage: Features like [React Hooks](https://reactjs.org/docs/hooks-intro.html) or [next/image](https://nextjs.org/docs/basic-features/image-optimization) won't work then!
@@ -44,7 +44,7 @@ This code snippet must be used on the respective page in the `pages` folder to d
 This template also uses Preact, which has the same features but a smaller file size than React. If you prefer to use **React**, remove the following line of code in `next.config.js`:
 
 ```javascript
-const withPreact = require('next-plugin-preact')
+const withPreact = require("next-plugin-preact");
 ```
 
 Next, the `withPreact` wrapper must be removed from module.exports:
@@ -56,12 +56,12 @@ module.exports = withPreact({
   async headers() {
     return [
       {
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-    ]
-  },
-})
+        source: "/(.*)",
+        headers: securityHeaders
+      }
+    ];
+  }
+});
 
 // Without Preact:
 module.exports = {
@@ -69,12 +69,12 @@ module.exports = {
   async headers() {
     return [
       {
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-    ]
-  },
-}
+        source: "/(.*)",
+        headers: securityHeaders
+      }
+    ];
+  }
+};
 ```
 
 ## 4. Security
@@ -85,7 +85,7 @@ I have added a few security headers according to the [Next.js documentation](htt
 
 The `Meta` component contains all the content needed for great SEO results. It has predefined props which you can configure anyway you want.
 
-
 # Ubuntu install
+
 sudo apt-get install npm
 sudo apt-get install nodejs

@@ -8,8 +8,7 @@ use db::sql::news_direct_referenced_url_query::get_news_direct_referenced_urls;
 use db::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
 use db::sql::news_indirect_referenced_url_query::get_news_indirect_referenced_urls;
 use db::util::convert::{
-    datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp,
-    seconds_in_hour,
+    datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
 use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;

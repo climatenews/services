@@ -1,7 +1,7 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Result};
+use chrono::Utc;
 use db::init_env;
 use std::env;
-use chrono::{Utc};
 use tokio_schedule::{every, Job};
 
 use crate::news_feed::hourly_cron_job::hourly_cron_job;
@@ -17,7 +17,6 @@ pub async fn health() -> Result<HttpResponse> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-
     init_env();
     // Start scheduler on a new thread
     actix_rt::spawn(async move {
@@ -36,16 +35,12 @@ async fn main() -> std::io::Result<()> {
 }
 
 pub async fn start_scheduler() {
-    
     #[cfg(debug_assertions)]
     hourly_cron_job().await; // only run in debug mode
 
     let every_second = every(1)
         .hours()
         .in_timezone(&Utc)
-        .perform(|| async { 
-            hourly_cron_job().await
-        });
+        .perform(|| async { hourly_cron_job().await });
     every_second.await;
 }
-

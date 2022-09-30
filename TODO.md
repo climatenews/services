@@ -3,13 +3,15 @@
 - [x] Create database using docker?
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
 - [x] Implement NewsFeedUrlSharesQuery
+- [x] Add domain (theverge.com)
 - [ ] Dedup news_feed_url_references
+- [ ] handle youtube links
+- [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
 - [ ] Fix API tests?
 - [ ] set updated_at when not checked?
-- [ ] Add domain (theverge.com)
-- [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
+
 - [ ] Use decimal for url score or *100 
 
 

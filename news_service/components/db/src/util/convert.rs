@@ -1,6 +1,5 @@
 use time::OffsetDateTime;
 
-
 pub fn now_utc_datetime() -> OffsetDateTime {
     OffsetDateTime::now_utc()
 }

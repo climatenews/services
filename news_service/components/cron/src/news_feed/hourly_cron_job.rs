@@ -1,10 +1,10 @@
 use crate::news_feed::cron_job::get_all_user_tweets;
 use crate::news_feed::news_feed::populate_news_feed;
 // use crate::referenced_twitter_users::get_referenced_twitter_users;
+use super::constants::RESET_DB;
 use crate::twitter::db::init_db;
 use crate::twitter::init_twitter_api;
-use chrono::{Local};
-use super::constants::RESET_DB;
+use chrono::Local;
 
 pub async fn hourly_cron_job() {
     println!("schedule_task event - {:?}", Local::now());

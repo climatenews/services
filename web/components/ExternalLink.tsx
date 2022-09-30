@@ -1,8 +1,8 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 
 interface Props {
-  text: string
-  url: string
+  text: string;
+  url: string;
 }
 
 const ExternalLink: NextPage<Props> = ({ url, text }) => {
@@ -27,7 +27,7 @@ const ExternalLink: NextPage<Props> = ({ url, text }) => {
     >
       {text}
     </a>
-  )
-}
+  );
+};
 
-export default ExternalLink
+export default ExternalLink;

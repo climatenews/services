@@ -1,7 +1,7 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 
 interface Props {
-  content: string
+  content: string;
 }
 
 const SkipLink: NextPage<Props> = ({ content }) => {
@@ -25,7 +25,7 @@ const SkipLink: NextPage<Props> = ({ content }) => {
     >
       {content}
     </a>
-  )
-}
+  );
+};
 
-export default SkipLink
+export default SkipLink;

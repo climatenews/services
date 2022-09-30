@@ -9,4 +9,4 @@ generates:
       - "typescript-graphql-request"
     config:
       fetcher:
-        endpoint: 'http://0.0.0.0:8080/graphql' # TODO use 'process.env.ENDPOINT'
+        endpoint: "http://0.0.0.0:8080/graphql" # TODO use 'process.env.ENDPOINT'

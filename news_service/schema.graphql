@@ -13,7 +13,13 @@ type NewsFeedUrl {
 	expandedUrlHost: String!
 }
 
-type NewsFeedUrlReferences {
+type NewsFeedUrlDirectReference {
+	text: String!
+	createdAtStr: String!
+	username: String!
+}
+
+type NewsFeedUrlIndirectReference {
 	text: String!
 	createdAtStr: String!
 	username: String!
@@ -21,7 +27,8 @@ type NewsFeedUrlReferences {
 
 type Query {
 	newsFeedUrls: [NewsFeedUrl!]!
-	newsFeedUrlReferences(urlId: Int!): [NewsFeedUrlReferences!]!
+	newsFeedUrlDirectReferences(urlId: Int!): [NewsFeedUrlDirectReference!]!
+	newsFeedUrlIndirectReferences(urlId: Int!): [NewsFeedUrlIndirectReference!]!
 }
 
 

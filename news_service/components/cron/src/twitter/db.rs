@@ -82,7 +82,7 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
     }
 }
 
-pub async fn parse_tweet(db_pool: &PgPool, tweet: &Tweet) {
+pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet) {
     let tweet_id = numeric_id_to_i64(tweet.id);
     let news_tweet_db = find_news_tweet_by_tweet_id(&db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
@@ -112,7 +112,7 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                 // Remove www prefix from host
                 let expanded_url_host = str::replace(expanded_url_host, "www.", "");
                 let expanded_url_parsed = get_expanded_url_parsed(expanded_url.clone());
-     
+
                 let news_tweet_url_db_result = find_news_tweet_urls_by_expanded_url_parsed(
                     &db_pool,
                     expanded_url_parsed.clone(),
@@ -174,7 +174,6 @@ pub async fn parse_news_referenced_tweet_url(db_pool: &PgPool, tweet_id: i64, ur
 
 // Remove all the query parameters from non-whitelisted urls
 pub fn get_expanded_url_parsed(mut expanded_url_parsed: Url) -> String {
-
     // Whitelisted Urls
     if expanded_url_parsed.host_str().unwrap() == "youtube.com" {
         //TODO parse video param only
@@ -184,7 +183,6 @@ pub fn get_expanded_url_parsed(mut expanded_url_parsed: Url) -> String {
     expanded_url_parsed.set_query(None);
     expanded_url_parsed.to_string()
 }
-
 
 pub fn parse_news_referenced_tweets(tweet: &Tweet) -> Vec<NewsReferencedTweet> {
     let mut news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
@@ -201,7 +199,7 @@ pub fn parse_news_referenced_tweets(tweet: &Tweet) -> Vec<NewsReferencedTweet> {
     news_referenced_tweets
 }
 
-pub async fn parse_all_news_referenced_tweets(
+pub async fn parse_and_insert_all_news_referenced_tweets(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
     all_news_referenced_tweets: Vec<NewsReferencedTweet>,
@@ -219,7 +217,8 @@ pub async fn parse_all_news_referenced_tweets(
         let referenced_tweets: Option<Vec<Tweet>> = get_tweets(twitter_api, split_tweet_ids).await;
         if let Some(referenced_tweets) = referenced_tweets.clone() {
             for referenced_tweet in referenced_tweets {
-                parse_tweet(&db_pool, &referenced_tweet).await;
+                println!("referenced_tweet {:?}", referenced_tweet);
+                parse_and_insert_tweet(&db_pool, &referenced_tweet).await;
             }
         }
     }

@@ -3,7 +3,7 @@ use time::ext::NumericalDuration;
 use time::OffsetDateTime;
 
 pub fn past_365_days() -> OffsetDateTime {
-    //TODO now_utc_timestamp().checked_add((-365).days()).unwrap()
+    //now_utc_timestamp().checked_add((-365).days()).unwrap()
     now_utc_timestamp().checked_add((-7).days()).unwrap()
 }
 

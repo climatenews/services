@@ -3,7 +3,8 @@ use crate::news_feed::user_score::calc_user_score;
 use crate::twitter::api::get_user_tweets;
 use crate::twitter::api::get_users_by_username;
 use crate::twitter::db::{
-    parse_all_news_referenced_tweets, parse_news_referenced_tweets, parse_tweet, parse_twitter_user,
+    parse_and_insert_all_news_referenced_tweets, parse_and_insert_tweet,
+    parse_news_referenced_tweets, parse_twitter_user,
 };
 use crate::util::convert::{numeric_id_to_i64, opt_i64_to_opt_numeric_id};
 use chrono::Local;
@@ -96,11 +97,16 @@ async fn fetch_user_tweet_references(
 ) {
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     for tweet in tweets.clone() {
-        parse_tweet(db_pool, &tweet).await;
+        parse_and_insert_tweet(db_pool, &tweet).await;
         let news_referenced_tweets = parse_news_referenced_tweets(&tweet);
         all_news_referenced_tweets = [all_news_referenced_tweets, news_referenced_tweets].concat();
     }
     if all_news_referenced_tweets.len() > 0 {
-        parse_all_news_referenced_tweets(db_pool, twitter_api, all_news_referenced_tweets).await;
+        parse_and_insert_all_news_referenced_tweets(
+            db_pool,
+            twitter_api,
+            all_news_referenced_tweets,
+        )
+        .await;
     }
 }

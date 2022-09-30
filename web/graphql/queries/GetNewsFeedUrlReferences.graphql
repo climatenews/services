@@ -1,5 +1,10 @@
 query GetNewsFeedUrlReferences($urlId: Int!) {
-  newsFeedUrlReferences(urlId: $urlId) {
+  newsFeedUrlDirectReferences(urlId: $urlId) {
+    text
+    username
+    createdAtStr
+  }
+  newsFeedUrlIndirectReferences(urlId: $urlId) {
     text
     username
     createdAtStr

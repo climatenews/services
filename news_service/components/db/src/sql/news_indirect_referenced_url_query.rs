@@ -27,9 +27,8 @@ pub async fn get_news_indirect_referenced_urls(
             
         WHERE
             tu.is_twitter_url = False
-            AND t.in_reply_to_user_id IS NULL
             AND tu.title IS NOT NULL
-            AND (rt.referenced_tweet_kind = 'retweeted' OR rt.referenced_tweet_kind = 'quoted')
+            AND t.in_reply_to_user_id IS NULL
             AND t.created_at > $1
         ORDER BY  
             t.created_at DESC

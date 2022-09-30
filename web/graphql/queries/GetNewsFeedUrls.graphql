@@ -1,12 +1,12 @@
-query GetNewsFeedUrls{
-    newsFeedUrls {
-      urlId
-      urlScore
-      numReferences
-      title
-      description
-      expandedUrlParsed
-      expandedUrlHost
-      createdAt
-    }
+query GetNewsFeedUrls {
+  newsFeedUrls {
+    urlId
+    urlScore
+    numReferences
+    title
+    description
+    expandedUrlParsed
+    expandedUrlHost
+    createdAt
+  }
 }

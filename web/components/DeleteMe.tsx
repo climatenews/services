@@ -1,7 +1,7 @@
-import type { NextPage } from 'next'
-import Meta from 'components/Meta'
-import SkipLink from 'components/SkipLink'
-import ExternalLink from 'components/ExternalLink'
+import type { NextPage } from "next";
+import Meta from "components/Meta";
+import SkipLink from "components/SkipLink";
+import ExternalLink from "components/ExternalLink";
 
 const DeleteMe: NextPage = () => {
   return (
@@ -25,19 +25,19 @@ const DeleteMe: NextPage = () => {
           Thank&shy;You&shy;Next 🖤
         </h1>
         <p className="text-2xl sm:text-3xl md:text-4xl mb-6 leading-normal font-semibold">
-          A highly performant and accessible{' '}
+          A highly performant and accessible{" "}
           <ExternalLink text="Next.js" url="https://nextjs.org/" /> starter
           template.
         </p>
         <main id="main" className="text-xl sm:text-2xl md:text-3xl pb-8">
           <p className="leading-normal mb-6">
-            It&apos;s meant to be <em>easy to use</em>,{' '}
+            It&apos;s meant to be <em>easy to use</em>,{" "}
             <em>fun to work with</em> and <em>very performant</em>. It was
-            bootstrapped with{' '}
+            bootstrapped with{" "}
             <ExternalLink
               text="create-next-app"
               url="https://nextjs.org/docs/api-reference/create-next-app"
-            />{' '}
+            />{" "}
             and has the following features, among others:
           </p>
           <ul className="list-disc list-inside leading-normal mb-6" role="list">
@@ -71,7 +71,7 @@ const DeleteMe: NextPage = () => {
             </li>
           </ul>
           <p className="mb-6">
-            You can find the GitHub repository here:{' '}
+            You can find the GitHub repository here:{" "}
             <ExternalLink
               text="ThankYouNext at GitHub"
               url="https://github.com/stevefrenzel/thankyounext"
@@ -101,7 +101,7 @@ const DeleteMe: NextPage = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DeleteMe
+export default DeleteMe;
