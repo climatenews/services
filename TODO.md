@@ -5,6 +5,7 @@
 - [x] Implement NewsFeedUrlSharesQuery
 - [x] Add domain (theverge.com)
 - [ ] Add info about tweet to share page
+- [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db
 - [ ] Dedup news_feed_url_references
 - [ ] handle youtube links
