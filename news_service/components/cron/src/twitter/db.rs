@@ -53,6 +53,7 @@ pub async fn truncate_db_tables(db_pool: &PgPool) {
 }
 
 pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwitterUser> {
+    // TODO parse verified status
     let user_id = numeric_id_to_i64(user.id);
     let followers_count = user
         .public_metrics
@@ -64,11 +65,20 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
         .clone()
         .map_or_else(|| 0i32, |pm| pm.listed_count as i32);
 
+    let profile_image_url: Option<String> = user
+    .profile_image_url
+    .clone()
+    .map_or_else(|| None, |url| Some(url.to_string()));
+
+
     let news_twitter_user_db = find_news_twitter_user_by_user_id(&db_pool, user_id).await;
     if news_twitter_user_db.is_none() {
         let news_twitter_user = NewsTwitterUser {
             user_id: user_id,
             username: user.username.clone(),
+            profile_image_url: profile_image_url,
+            description: user.description.clone(),
+            verified: user.verified,
             followers_count: followers_count,
             listed_count: listed_count,
             user_referenced_tweets_count: None,

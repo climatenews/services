@@ -6,6 +6,9 @@ use sqlx::FromRow;
 pub struct NewsTwitterUser {
     pub user_id: i64,
     pub username: String,
+    pub profile_image_url: Option<String>,
+    pub description: Option<String>,
+    pub verified: Option<bool>,
     pub followers_count: i32,
     pub listed_count: i32,
     pub user_referenced_tweets_count: Option<i32>,

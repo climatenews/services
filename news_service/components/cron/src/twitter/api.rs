@@ -18,7 +18,13 @@ static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::ReferencedTweets,
 ];
 
-static USER_FIELDS: [UserField; 1] = [UserField::PublicMetrics];
+static USER_FIELDS: [UserField; 5] = [
+    UserField::PublicMetrics,
+    UserField::ProfileImageUrl,
+    UserField::Description,
+    UserField::Name,
+    UserField::Verified,
+];
 
 pub async fn get_users_by_username(
     twitter_api: &TwitterApi<BearerToken>,

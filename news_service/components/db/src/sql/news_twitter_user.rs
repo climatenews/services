@@ -9,14 +9,17 @@ pub async fn insert_news_twitter_user(
         NewsTwitterUser,
         r#"
             INSERT INTO news_twitter_user ( 
-                user_id, username, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
+                user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
              )
-            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8)
+            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING 
-                user_id, username, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
+            user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
             "#,
         news_twitter_user.user_id,
         news_twitter_user.username,
+        news_twitter_user.profile_image_url,
+        news_twitter_user.description,
+        news_twitter_user.verified,
         news_twitter_user.followers_count,
         news_twitter_user.listed_count,
         news_twitter_user.user_referenced_tweets_count,
@@ -36,7 +39,7 @@ pub async fn find_all_news_twitter_users(pool: &PgPool) -> Option<Vec<NewsTwitte
     let query = sqlx::query_as!(
         NewsTwitterUser,
         r#"
-            SELECT user_id, username, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
+            SELECT user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
             FROM news_twitter_user
         "#
     );
@@ -55,7 +58,7 @@ pub async fn find_news_twitter_user_by_user_id(
     let query = sqlx::query_as!(
         NewsTwitterUser,
         r#"
-            SELECT user_id, username, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
+            SELECT user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
             FROM news_twitter_user
             WHERE user_id = $1;
         "#,
@@ -76,7 +79,7 @@ pub async fn find_news_twitter_user_by_username(
     let query = sqlx::query_as!(
         NewsTwitterUser,
         r#"
-            SELECT user_id, username, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
+            SELECT user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at
             FROM news_twitter_user
             WHERE username = $1;
         "#,

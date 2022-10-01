@@ -34,6 +34,8 @@ sqlx database drop &&
 sqlx database create &&  
 sqlx migrate run
 
+sqlx database drop -y && sqlx database create &&  sqlx migrate run
+
 # sqlx offline mode
 export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action  cargo sqlx prepare 
 
