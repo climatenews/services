@@ -1,8 +1,8 @@
 pub static MAX_TWEET_RESULTS: usize = 100;
-pub static REQUEST_SLEEP_DURATION: u64 = 1500;
+pub static REQUEST_SLEEP_DURATION: u64 = 2000;
 pub static RESET_DB: bool = false;
 
-pub static TWITTER_USERNAMES: [&str; 52] = [
+pub static TWITTER_USERNAMES: [&str; 53] = [
     "GretaThunberg",  // Climate and environmental activist
     "ayanaeliza",     // Marine biologist
     "MichaelEMann",   // Scientist/Author
@@ -50,9 +50,11 @@ pub static TWITTER_USERNAMES: [&str; 52] = [
     "DoctorVive",     // Founding Director @EndClimtSilence
     "jabeckx",        // Director, Drawdown Lab
     "DavidSuzukiFDN", // academic, science broadcaster, and environmental activist
-    "dgelles",        //Climate reporter
-    "simondonner",    //Climate scientist
+    "dgelles",        // Climate reporter
+    "simondonner",    // Climate scientist
     "catabreu_",      // Founder of Destination Zero
-    "katearonoff",    //Climate @NewRepublic
-    "naomioreskes",   //Writing @SciAm
+    "katearonoff",    // Climate @NewRepublic
+    "naomioreskes",   // Writing @SciAm
+    "NASAClimate",    // NASA Climate
+
 ];

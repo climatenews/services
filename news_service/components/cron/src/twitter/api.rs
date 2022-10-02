@@ -67,26 +67,6 @@ pub async fn get_users_by_author_id(
     user_vec
 }
 
-//split items into max 100 elements
-pub fn split_requests_into_max_amount<T>(items: Vec<T>) -> Vec<Vec<T>>
-where
-    T: Clone,
-{
-    let mut count = 0usize;
-    let items_len = items.len();
-
-    let mut split_items_vec: Vec<Vec<T>> = vec![];
-    loop {
-        if count + MAX_TWEET_RESULTS >= items_len {
-            // last elements in vec
-            split_items_vec.push(items[count..items_len].to_vec());
-            break;
-        }
-        split_items_vec.push(items[count..count + MAX_TWEET_RESULTS].to_vec());
-        count += MAX_TWEET_RESULTS;
-    }
-    split_items_vec
-}
 
 pub async fn get_user_tweets(
     twitter_api: &TwitterApi<BearerToken>,
@@ -168,3 +148,128 @@ pub async fn get_tweets(
     sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     tweets
 }
+
+
+
+//split items into max 100 elements
+pub fn split_requests_into_max_amount<T>(items: Vec<T>) -> Vec<Vec<T>>
+where
+    T: Clone,
+{
+    let mut count = 0usize;
+    let items_len = items.len();
+
+    let mut split_items_vec: Vec<Vec<T>> = vec![];
+    loop {
+        if count + MAX_TWEET_RESULTS >= items_len {
+            // last elements in vec
+            split_items_vec.push(items[count..items_len].to_vec());
+            break;
+        }
+        split_items_vec.push(items[count..count + MAX_TWEET_RESULTS].to_vec());
+        count += MAX_TWEET_RESULTS;
+    }
+    split_items_vec
+}
+
+
+// Retry logic:
+
+
+
+// pub fn parse_response<T>(response: Result<ApiResponse<BearerToken, Vec<T>, ()>, Error>){
+
+    
+//     match response {
+//         Err(twitter_v2::Error::Request(ref e)) if e.is_timeout() || e.is_connect() || e.status() == Some(reqwest::StatusCode::TOO_MANY_REQUESTS) => {
+//           log::warn!("retrying due to request error: {}", e);
+//         },
+//         Err(twitter_v2::Error::Api(ref e)) if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS => {
+//             log::warn!("retrying due to 429 response {}", e);
+//         },
+//         Err(e) => return Err(anyhow!(e)),
+//         _ => {
+//           response = new_response;
+//         }
+//       }
+
+// }
+
+
+// Source: https://github.com/jpopesculian/twitter-v2-rs/issues/8
+// type DefaultRateLimiter = governor::RateLimiter<governor::state::NotKeyed, governor::state::InMemoryState, governor::clock::DefaultClock>;
+// type OptionResponse<Auth, T, Meta> = twitter_v2::Result<Option<twitter_v2::ApiResponse<Auth, Vec<T>, Meta>>>;
+// type Response<Auth, T, Meta> = twitter_v2::Result<twitter_v2::ApiResponse<Auth, Vec<T>, Meta>>;
+
+// pub async fn get_list_members<Auth>(api: &TwitterApi<Auth>, rl: &DefaultRateLimiter, list_id: u64) -> Result<Vec<User>>
+// where Auth: Authorization + Send + Sync + std::fmt::Debug {
+//   get_all_pages(rl,
+//                 async || {
+//                   api.get_list_members(list_id)
+//                     .user_fields([UserField::Id, UserField::Name])
+//                     .max_results(100)
+//                     .send()
+//                     .await
+//                 },
+//                 None)
+//     .await
+//     .with_context(|| format!("Failed to fetch list members for list {list_id}"))
+// }
+
+// pub async fn retry<Auth, T, Meta, F, Fut>(rl: &DefaultRateLimiter, func: F) -> OptionResponse<Auth, T, Meta>
+// where Auth: Authorization + Send + Sync + std::fmt::Debug,
+//       T: serde::de::DeserializeOwned + Clone + Debug + Send + Sync,
+//       F: Fn() -> Fut,
+//       Fut: std::future::Future<Output = OptionResponse<Auth, T, Meta>> {
+//   loop {
+//     rl.until_ready().await;
+//     match func().await {
+//       Err(twitter_v2::Error::Request(ref e)) if e.is_timeout() || e.is_connect() => {
+//         warn!(error=?e, "retrying due to request error");
+//       },
+//       Err(twitter_v2::Error::Api(ref e)) if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS => {
+//         warn!(error=?e, "retrying due to 429 response");
+//         // TODO(db48x): extend the twitter_v2 crate to expose the
+//         //   rate–limiting information provided by the twitter api
+//       },
+//       response => {
+//         if let Ok(Some(ref r)) = response {
+//           tracing::info!(url=%r.url(), "success");
+//         }
+//         return response;
+//       }
+//     }
+//   }
+// }
+
+// pub async fn get_all_pages<Auth, T, Meta, F, Fut>(rl: &DefaultRateLimiter,
+//                                                   func: F,
+//                                                   expected: Option<usize>) -> Result<Vec<T>>
+// where Auth: Authorization + Send + Sync + std::fmt::Debug,
+//       T: serde::de::DeserializeOwned + Clone + Debug + Send + Sync,
+//       Meta: twitter_v2::meta::PaginationMeta + serde::de::DeserializeOwned + Send + Sync,
+//       F: Fn() -> Fut,
+//       Fut: std::future::Future<Output = Response<Auth, T, Meta>> {
+//   let mut items: Vec<T> = match expected {
+//     Some(v) => Vec::with_capacity(v),
+//     _ => Vec::new(),
+//   };
+//   let mut response: OptionResponse<Auth, T, Meta> = retry(rl, async || func().await.map(Some)).await;
+//   loop {
+//     match response {
+//       Err(e) => return Err(anyhow!(e)),
+//       Ok(None) => break,
+//       Ok(Some(ref r)) => {
+//         if let Some(new_items) = r.data() {
+//           items.extend_from_slice(&new_items);
+//         }
+//         if matches!(r.meta(), Some(meta) if meta.next_token().is_some()) {
+//           response = retry(rl, async || r.next_page().await).await;
+//         } else {
+//           break;
+//         }
+//       }
+//     }
+//   }
+//   Ok(items)
+// }

@@ -8,6 +8,7 @@
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?
+- [ ] Handle Cron API errors gracefully, retry failed API requests 2 times
 - [ ] Dedup news_feed_url_references
 - [ ] handle youtube links
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
