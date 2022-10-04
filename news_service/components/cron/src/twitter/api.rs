@@ -1,13 +1,12 @@
+use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
+use crate::util::convert::i64_to_numeric_id;
+use crate::util::helpers::past_365_days;
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
 use twitter_v2::query::{Exclude, TweetField, UserField};
-use twitter_v2::{Tweet, TwitterApi, User};
-
-use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
-use crate::util::convert::i64_to_numeric_id;
-use crate::util::helpers::past_365_days;
+use twitter_v2::{Error, Tweet, TwitterApi, User};
 
 static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::AuthorId,
@@ -32,14 +31,13 @@ pub async fn get_users_by_username(
 ) -> Option<Vec<User>> {
     //TODO split in to max 100 users per request
     println!("API - get_users_by_username: {}", usernames.len());
-    let users = twitter_api
+    let users_response = twitter_api
         .get_users_by_usernames(usernames)
         .user_fields(USER_FIELDS)
         .send()
-        .await
-        .unwrap()
-        .into_data();
-    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
+        .await;
+    parse_error_response(&users_response).await;
+    let users = users_response.unwrap().into_data();
     users
 }
 
@@ -52,21 +50,19 @@ pub async fn get_users_by_author_id(
     let split_author_ids_vec =
         split_requests_into_max_amount(author_ids.iter().map(|i| i64_to_numeric_id(*i)).collect());
     for split_author_ids in split_author_ids_vec {
-        let users = twitter_api
+        let users_response = twitter_api
             .get_users(split_author_ids)
             .user_fields(USER_FIELDS)
             .send()
-            .await
-            .unwrap()
-            .into_data()
-            .unwrap();
+            .await;
+
+        parse_error_response(&users_response).await;
+        let users = users_response.unwrap().into_data().unwrap();
         user_vec = [user_vec, users].concat();
-        sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     }
 
     user_vec
 }
-
 
 pub async fn get_user_tweets(
     twitter_api: &TwitterApi<BearerToken>,
@@ -88,7 +84,6 @@ pub async fn get_user_tweets(
             .exclude([Exclude::Replies])
             .send()
             .await
-            .unwrap()
     } else {
         twitter_api
             .get_user_tweets(user_id)
@@ -98,15 +93,16 @@ pub async fn get_user_tweets(
             .exclude([Exclude::Replies])
             .send()
             .await
-            .unwrap()
     };
+    parse_error_response(&tweets_api_response).await;
+
+    let tweets_api_response = tweets_api_response.unwrap();
 
     if let Some(new_tweets) = tweets_api_response.clone().into_data() {
         tweets = [tweets, new_tweets].concat();
     }
-    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     let mut next_page_response = tweets_api_response.next_page().await;
-    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
+    parse_error_response(&next_page_response).await;
     loop {
         match next_page_response {
             Err(e) => {
@@ -124,12 +120,11 @@ pub async fn get_user_tweets(
                     tweets = [tweets, new_tweets].concat();
                 }
                 let new_response = next_page_result.next_page().await;
-                sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
+                parse_error_response(&new_response).await;
                 next_page_response = new_response;
             }
         }
     }
-    println!("API - num_tweets: {}", tweets.len());
     tweets
 }
 
@@ -138,18 +133,15 @@ pub async fn get_tweets(
     tweet_ids: Vec<NumericId>,
 ) -> Option<Vec<Tweet>> {
     println!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
-    let tweets = twitter_api
+    let tweets_response = twitter_api
         .get_tweets(tweet_ids)
         .tweet_fields(TWEET_FIELDS)
         .send()
-        .await
-        .unwrap()
-        .into_data();
-    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
+        .await;
+    parse_error_response(&tweets_response).await;
+    let tweets = tweets_response.unwrap().into_data();
     tweets
 }
-
-
 
 //split items into max 100 elements
 pub fn split_requests_into_max_amount<T>(items: Vec<T>) -> Vec<Vec<T>>
@@ -172,29 +164,35 @@ where
     split_items_vec
 }
 
-
 // Retry logic:
 
-
-
-// pub fn parse_response<T>(response: Result<ApiResponse<BearerToken, Vec<T>, ()>, Error>){
-
-    
-//     match response {
-//         Err(twitter_v2::Error::Request(ref e)) if e.is_timeout() || e.is_connect() || e.status() == Some(reqwest::StatusCode::TOO_MANY_REQUESTS) => {
-//           log::warn!("retrying due to request error: {}", e);
-//         },
-//         Err(twitter_v2::Error::Api(ref e)) if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS => {
-//             log::warn!("retrying due to 429 response {}", e);
-//         },
-//         Err(e) => return Err(anyhow!(e)),
-//         _ => {
-//           response = new_response;
-//         }
-//       }
-
-// }
-
+pub async fn parse_error_response<T>(response: &Result<T, Error>) {
+    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
+    match response {
+        Err(twitter_v2::Error::Request(ref e)) => {
+            if e.is_timeout() {
+                log::warn!("Request error timeout: {}", e);
+            } else if e.is_connect() {
+                log::warn!("Request error connect: {}", e);
+            } else if e.status() == Some(reqwest::StatusCode::TOO_MANY_REQUESTS) {
+                log::warn!("Request error too many requests: {}", e);
+            } else {
+                log::warn!("Request error unhandled: {}", e);
+            }
+        }
+        Err(twitter_v2::Error::Api(ref e)) => {
+            if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS {
+                log::warn!("Api error due to 429 response {}", e);
+            } else {
+                log::warn!("Api error unhandled: {}", e);
+            }
+        }
+        Err(e) => {
+            log::warn!("generic error unhandled {}", e);
+        }
+        Ok(_) => {}
+    }
+}
 
 // Source: https://github.com/jpopesculian/twitter-v2-rs/issues/8
 // type DefaultRateLimiter = governor::RateLimiter<governor::state::NotKeyed, governor::state::InMemoryState, governor::clock::DefaultClock>;

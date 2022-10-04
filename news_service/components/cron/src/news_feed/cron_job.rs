@@ -37,7 +37,6 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
             println!("username: {}", user.username);
             let news_twitter_user = parse_twitter_user(db_pool, &user).await.unwrap();
             let last_updated_diff = now_utc_timestamp() - news_twitter_user.last_updated_at;
-            println!("last_updated_diff: {} seconds_in_hour() {}, news_twitter_user.last_tweet_id {:?}", last_updated_diff, seconds_in_hour(), news_twitter_user.last_tweet_id);
             // Check if user has not been updated in over an hour or has no recent tweets
             if last_updated_diff > seconds_in_hour() || news_twitter_user.last_tweet_id.is_none() {
                 let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);

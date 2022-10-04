@@ -56,5 +56,4 @@ pub static TWITTER_USERNAMES: [&str; 53] = [
     "katearonoff",    // Climate @NewRepublic
     "naomioreskes",   // Writing @SciAm
     "NASAClimate",    // NASA Climate
-
 ];

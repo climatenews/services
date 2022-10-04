@@ -66,10 +66,9 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
         .map_or_else(|| 0i32, |pm| pm.listed_count as i32);
 
     let profile_image_url: Option<String> = user
-    .profile_image_url
-    .clone()
-    .map_or_else(|| None, |url| Some(url.to_string()));
-
+        .profile_image_url
+        .clone()
+        .map_or_else(|| None, |url| Some(url.to_string()));
 
     let news_twitter_user_db = find_news_twitter_user_by_user_id(&db_pool, user_id).await;
     if news_twitter_user_db.is_none() {
