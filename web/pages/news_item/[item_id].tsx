@@ -2,26 +2,22 @@ import type { NextPage } from "next";
 import Footer from "components/generic/footer";
 import NewsItemContent from "components/feature/news_item_content";
 import {
-  NewsFeedUrlDirectReference,
-  NewsFeedUrlIndirectReference,
+  NewsFeedUrlReference,
   getSdk
 } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
 
 interface NewsItemPageProps {
-  newsFeedUrlDirectReferences: NewsFeedUrlDirectReference[];
-  newsFeedUrlIndirectReferences: NewsFeedUrlIndirectReference[];
+  newsFeedUrlReferences: NewsFeedUrlReference[];
 }
 
 const NewsItemPage: NextPage<NewsItemPageProps> = ({
-  newsFeedUrlDirectReferences,
-  newsFeedUrlIndirectReferences
+  newsFeedUrlReferences
 }) => {
   return (
     <>
       <NewsItemContent
-        newsFeedUrlDirectReferences={newsFeedUrlDirectReferences}
-        newsFeedUrlIndirectReferences={newsFeedUrlIndirectReferences}
+        newsFeedUrlReferences={newsFeedUrlReferences}
       />
       <Footer />
     </>
@@ -36,8 +32,7 @@ export async function getServerSideProps(context: any) {
   });
   return {
     props: {
-      newsFeedUrlDirectReferences: response.newsFeedUrlDirectReferences,
-      newsFeedUrlIndirectReferences: response.newsFeedUrlIndirectReferences
+      newsFeedUrlReferences: response.newsFeedUrlReferences,
     }
   };
 }

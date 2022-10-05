@@ -4,16 +4,19 @@
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
 - [x] Implement NewsFeedUrlSharesQuery
 - [x] Add domain (theverge.com)
+- [ ] Handle Cron API errors gracefully, retry failed API requests 2 times
+
 - [ ] Add info about tweet to share page e.g Reddit
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?
-- [ ] Handle Cron API errors gracefully, retry failed API requests 2 times
+
 - [ ] Dedup news_feed_url_references
 - [ ] handle youtube links
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
+- [ ] Send errors to Slack 
 - [ ] Fix API tests?
 - [ ] set updated_at when not checked?
 - [ ] use verified status in score
@@ -35,7 +38,7 @@
 - [ ] Add User accounts
 - [ ] Add comment section
 - [ ] Display scores
-
+- [ ] Count API requests
 
 
 - [x] Pagination support e.g [link](https://github.com/ekuinox/mikage/blob/7c96ae27021a6e9236a8408a05ea15efdf59f291/src/twitter.rs)

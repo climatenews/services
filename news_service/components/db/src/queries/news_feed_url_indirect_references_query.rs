@@ -7,6 +7,7 @@ use sqlx::FromRow;
 pub struct NewsFeedUrlIndirectReferencesQuery {
     pub text: String,
     pub referenced_tweet_text: String,
+    pub referenced_tweet_id: i64,
     pub referenced_tweet_kind: String,
     pub created_at_str: String,
     pub username: String,

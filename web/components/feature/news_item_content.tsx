@@ -1,14 +1,11 @@
 import {
-  NewsFeedUrlDirectReference,
-  NewsFeedUrlIndirectReference
+  NewsFeedUrlReference
 } from "graphql/generated/graphql";
 
-import NewsItemDirectReferences from "./news_item_direct_references";
-import NewsItemIndirectReferences from "./news_item_indirect_references";
+import NewsItemReferences from "./news_item_references";
 
 interface NewsItemContentProps {
-  newsFeedUrlDirectReferences: NewsFeedUrlDirectReference[];
-  newsFeedUrlIndirectReferences: NewsFeedUrlIndirectReference[];
+  newsFeedUrlReferences: NewsFeedUrlReference[];
 }
 
 export default function NewsItemContent(props: NewsItemContentProps) {
@@ -18,14 +15,9 @@ export default function NewsItemContent(props: NewsItemContentProps) {
         Shares
       </h3>
 
-      {props.newsFeedUrlDirectReferences.length > 0 && (
-        <NewsItemDirectReferences
-          newsFeedUrlDirectReferences={props.newsFeedUrlDirectReferences}
-        />
-      )}
-      {props.newsFeedUrlIndirectReferences.length > 0 && (
-        <NewsItemIndirectReferences
-          newsFeedUrlIndirectReferences={props.newsFeedUrlIndirectReferences}
+      {props.newsFeedUrlReferences.length > 0 && (
+        <NewsItemReferences
+          newsFeedUrlReferences={props.newsFeedUrlReferences}
         />
       )}
     </div>

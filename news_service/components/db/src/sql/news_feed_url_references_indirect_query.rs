@@ -13,6 +13,7 @@ pub async fn get_indirect_news_feed_url_references(
         SELECT 
         t1.text,
         t2.text as referenced_tweet_text,
+        t2.tweet_id as referenced_tweet_id,
         rt.referenced_tweet_kind,
         t1.created_at_str,
         u.username

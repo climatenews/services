@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::util::helpers::past_7_days;
+use crate::util::helpers::past_3_days;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::queries::news_referenced_url_query::NewsReferencedUrlQuery;
@@ -27,7 +27,7 @@ pub async fn populate_news_feed(db_pool: &PgPool) {
     println!("populate_news_feed - {:?}", Local::now());
     //TODO clear and update scores every 1 hour
     truncate_news_feed_url(db_pool).await.unwrap();
-    let last_week_timestamp = past_7_days().unix_timestamp();
+    let last_week_timestamp = past_3_days().unix_timestamp();
 
     // author_id -> user_score
     let mut author_to_score_map: HashMap<i64, i32> = HashMap::new();

@@ -15,6 +15,7 @@ pub async fn get_referenced_twitter_users(db_pool: &PgPool, twitter_api: &Twitte
         news_user_referenced_tweets.len()
     );
 
+    // author_id -> [tweet_id]
     let mut author_map: HashMap<i64, HashSet<i64>> = HashMap::new();
 
     for news_user_referenced_tweet in news_user_referenced_tweets {

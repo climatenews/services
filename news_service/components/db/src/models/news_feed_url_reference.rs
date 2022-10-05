@@ -1,0 +1,12 @@
+
+
+// Combined News feed URL references
+#[derive(Debug, Clone, async_graphql::SimpleObject)]
+pub struct NewsFeedUrlReference {
+    pub tweet_id: i64,
+    pub tweet_text: String,
+    pub tweet_created_at_str: String,
+    pub author_username: String,
+    pub retweeted_by_usernames: Vec<String>,
+    pub url_id: i32,
+}

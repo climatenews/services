@@ -15,20 +15,34 @@ type NewsFeedUrl {
 
 type NewsFeedUrlDirectReference {
 	text: String!
+	tweetId: Int!
+	authorId: Int!
 	createdAtStr: String!
 	username: String!
+	urlId: Int!
 }
 
 type NewsFeedUrlIndirectReference {
 	text: String!
 	referencedTweetText: String!
+	referencedTweetId: Int!
 	referencedTweetKind: String!
 	createdAtStr: String!
 	username: String!
 }
 
+type NewsFeedUrlReference {
+	tweetId: Int!
+	tweetText: String!
+	tweetCreatedAtStr: String!
+	authorUsername: String!
+	retweetedByUsernames: [String!]!
+	urlId: Int!
+}
+
 type Query {
 	newsFeedUrls: [NewsFeedUrl!]!
+	newsFeedUrlReferences(urlId: Int!): [NewsFeedUrlReference!]!
 	newsFeedUrlDirectReferences(urlId: Int!): [NewsFeedUrlDirectReference!]!
 	newsFeedUrlIndirectReferences(urlId: Int!): [NewsFeedUrlIndirectReference!]!
 }
