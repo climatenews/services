@@ -4,7 +4,7 @@
 - [x] Add migrations to code "sqlx::migrate!("./migrations")"
 - [x] Implement NewsFeedUrlSharesQuery
 - [x] Add domain (theverge.com)
-- [ ] Handle Cron API errors gracefully, retry failed API requests 2 times
+- [x] Handle Cron API errors gracefully
 
 - [ ] Add info about tweet to share page e.g Reddit
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
@@ -21,6 +21,7 @@
 - [ ] set updated_at when not checked?
 - [ ] use verified status in score
 - [ ] Use decimal for url score or *100 
+- [ ] retry failed API requests 2 times
 
 
 
