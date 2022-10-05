@@ -4,9 +4,8 @@ use crate::util::helpers::past_3_days;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::queries::news_referenced_url_query::NewsReferencedUrlQuery;
-use db::sql::news_direct_referenced_url_query::get_news_direct_referenced_urls;
+use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
-use db::sql::news_indirect_referenced_url_query::get_news_indirect_referenced_urls;
 use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
@@ -29,62 +28,69 @@ pub async fn populate_news_feed(db_pool: &PgPool) {
     truncate_news_feed_url(db_pool).await.unwrap();
     let last_week_timestamp = past_3_days().unix_timestamp();
 
-    // author_id -> user_score
-    let mut author_to_score_map: HashMap<i64, i32> = HashMap::new();
-    // url_id -> [TweetInfo, TweetInfo]
-    let mut url_to_tweet_map: HashMap<i32, Vec<TweetInfo>> = HashMap::new();
+    // Direct & indirect references
+    let news_referenced_urls =
+        get_news_referenced_urls(db_pool, last_week_timestamp).await;
+    
+    let author_score_map: HashMap<i64, i32> =  populate_author_score_map(
+        &news_referenced_urls,
+    );
 
-    // Direct references
-    let news_direct_referenced_urls =
-        get_news_direct_referenced_urls(db_pool, last_week_timestamp).await;
-    update_author_to_score_map(
-        &mut author_to_score_map,
-        &mut url_to_tweet_map,
-        &news_direct_referenced_urls,
+    let url_to_tweet_map: HashMap<i32, Vec<TweetInfo>> = populate_url_to_tweet_map(
+        &news_referenced_urls,
     );
-    // Indirect references
-    let news_indirect_referenced_urls =
-        get_news_indirect_referenced_urls(db_pool, last_week_timestamp).await;
-    update_author_to_score_map(
-        &mut author_to_score_map,
-        &mut url_to_tweet_map,
-        &news_indirect_referenced_urls,
-    );
+
     // Insert News feed urls
-    populate_news_feed_urls(db_pool, author_to_score_map, url_to_tweet_map).await;
+    populate_news_feed_urls(db_pool, author_score_map, url_to_tweet_map).await;
     println!("populate_news_feed complete - {:?}", Local::now());
 }
 
-fn update_author_to_score_map(
-    author_to_score_map: &mut HashMap<i64, i32>,
-    url_to_tweet_map: &mut HashMap<i32, Vec<TweetInfo>>,
-    news_direct_referenced_urls: &Option<Vec<NewsReferencedUrlQuery>>,
-) {
-    if let Some(news_direct_referenced_urls) = news_direct_referenced_urls {
-        for news_direct_referenced_url in news_direct_referenced_urls {
-            let url_id = news_direct_referenced_url.url_id;
-            let author_id = news_direct_referenced_url.author_id;
-            let created_at = news_direct_referenced_url.created_at;
-            let user_score = news_direct_referenced_url
+
+// Populate a map of author_id to score
+// author_id -> user_score
+fn populate_author_score_map(
+    news_referenced_urls: &Option<Vec<NewsReferencedUrlQuery>>,
+) -> HashMap<i64, i32> {
+    let mut author_score_map: HashMap<i64, i32> = HashMap::new();
+    if let Some(news_referenced_urls) = news_referenced_urls {
+        for news_referenced_url in news_referenced_urls {
+            let author_id = news_referenced_url.author_id;
+            let user_score = news_referenced_url
                 .user_score
                 .map_or_else(|| 0, |us| us);
 
+            author_score_map.insert(author_id, user_score);
+        }
+    }
+    author_score_map
+}
+
+// Populate a map Urls shared in tweets.
+// url_id -> [TweetInfo, TweetInfo]
+fn populate_url_to_tweet_map(
+    news_referenced_urls: &Option<Vec<NewsReferencedUrlQuery>>,
+) -> HashMap<i32, Vec<TweetInfo>> {
+    let mut url_to_tweet_map: HashMap<i32, Vec<TweetInfo>> = HashMap::new();
+    if let Some(news_referenced_urls) = news_referenced_urls {
+        for news_referenced_url in news_referenced_urls {
+            // Populate TweetInfo
+            let url_id = news_referenced_url.url_id;
+            let author_id = news_referenced_url.author_id;
+            let created_at = news_referenced_url.created_at;
             let tweet_info = TweetInfo {
                 author_id,
                 created_at,
             };
-            // Author score
-            author_to_score_map.insert(author_id, user_score);
-            // Urls shared by authors.
+            // check if url exists in the map
             if url_to_tweet_map.contains_key(&url_id) {
                 let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
                 let mut tweet_info_vec = tweet_info_vec.clone();
-                //  De-duped to avoid multiple URLs by one author.
+                // Ensures URL is not already added by same author
                 if tweet_info_vec
                     .iter()
                     .find(|ti| ti.author_id == author_id)
                     .is_none()
-                {
+                {                   
                     tweet_info_vec.push(tweet_info);
                 }
                 url_to_tweet_map.insert(url_id, tweet_info_vec);
@@ -93,21 +99,24 @@ fn update_author_to_score_map(
             }
         }
     }
+    url_to_tweet_map
 }
 
 async fn populate_news_feed_urls(
     db_pool: &PgPool,
-    author_to_score_map: HashMap<i64, i32>,
+    author_score_map: HashMap<i64, i32>,
     url_to_tweet_map: HashMap<i32, Vec<TweetInfo>>,
 ) {
     // URLS with shared by author count + score
     for url_id in url_to_tweet_map.keys() {
         let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
+        // Sum total score for url based on author scores
         let url_score: i32 = tweet_info_vec
             .iter()
-            .map(|tweet_info| author_to_score_map.get(&tweet_info.author_id).unwrap())
+            .map(|tweet_info| author_score_map.get(&tweet_info.author_id).unwrap())
             .sum();
 
+        // Find the first date the url was tweeted
         let first_created_at: i64 = tweet_info_vec
             .iter()
             .map(|tweet_info| tweet_info.created_at)
@@ -118,8 +127,10 @@ async fn populate_news_feed_urls(
         let time_since_first_created = now_utc_timestamp() - first_created_at;
         let hours_since_first_created = time_since_first_created / seconds_in_hour();
 
+        // Calculate url score factoring in time decay
         let time_decayed_url_score = time_decayed_url_score(url_score, hours_since_first_created);
 
+        // Number of references/shares
         let num_references = tweet_info_vec.len() as i32;
         let news_feed_url = NewsFeedUrl {
             url_id: *url_id,
@@ -131,9 +142,9 @@ async fn populate_news_feed_urls(
         insert_news_feed_url(db_pool, news_feed_url).await;
     }
 }
+
 // 0.2 = too old
 // 0.5 = too new
-
 // url_score / (( hours_since_first_created +2 )^gravity)
 fn time_decayed_url_score(url_score: i32, hours_since_first_created: i64) -> i32 {
     let gravity = dec!(0.4);
