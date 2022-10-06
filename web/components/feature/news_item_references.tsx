@@ -10,7 +10,7 @@ export default function NewsItemDirectReferences(
   return (
     <>
       {/* <p className="text-m font-bold">Shares</p> */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4">
         {props.newsFeedUrlReferences.map(
           (newsFeedUrlReference: NewsFeedUrlReference) => {
             return (
