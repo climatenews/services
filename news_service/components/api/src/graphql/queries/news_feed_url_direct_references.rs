@@ -1,7 +1,7 @@
 use crate::graphql::errors::GqlError;
 use async_graphql::{Context, ErrorExtensions, FieldResult};
-use db::queries::news_feed_url_direct_references_query::NewsFeedUrlDirectReferencesQuery;
-use db::sql::news_feed_url_references_direct_query::get_direct_news_feed_url_references;
+use db::queries::news_feed_url_references_query::NewsFeedUrlDirectReferencesQuery;
+use db::sql::news_feed_url_references_query::get_direct_news_feed_url_references;
 use sqlx::postgres::PgPool;
 
 pub async fn news_feed_url_direct_references_query<'a>(

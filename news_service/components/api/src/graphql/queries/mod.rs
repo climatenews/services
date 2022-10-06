@@ -7,7 +7,7 @@ use db::queries::news_feed_url_indirect_references_query::NewsFeedUrlIndirectRef
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::{
     models::news_feed_url_reference::NewsFeedUrlReference,
-    queries::news_feed_url_direct_references_query::NewsFeedUrlDirectReferencesQuery,
+    queries::news_feed_url_references_query::NewsFeedUrlDirectReferencesQuery,
 };
 use sqlx::postgres::PgPool;
 

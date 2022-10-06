@@ -3,9 +3,9 @@ use itertools::Itertools;
 use crate::graphql::errors::GqlError;
 use async_graphql::{ErrorExtensions, FieldResult};
 use db::models::news_feed_url_reference::NewsFeedUrlReference;
-use db::queries::news_feed_url_direct_references_query::NewsFeedUrlDirectReferencesQuery;
+use db::queries::news_feed_url_references_query::NewsFeedUrlDirectReferencesQuery;
 use db::queries::news_feed_url_indirect_references_query::NewsFeedUrlIndirectReferencesQuery;
-use db::sql::news_feed_url_references_direct_query::get_direct_news_feed_url_references;
+use db::sql::news_feed_url_references_query::get_direct_news_feed_url_references;
 use db::sql::news_feed_url_references_indirect_query::get_indirect_news_feed_url_references;
 use sqlx::postgres::PgPool;
 

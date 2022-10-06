@@ -1,8 +1,7 @@
 pub mod news_referenced_url_query;
 pub mod news_feed_url;
 pub mod news_feed_url_query;
-pub mod news_feed_url_references_direct_query;
-pub mod news_feed_url_references_indirect_query;
+pub mod news_feed_url_references_query;
 pub mod news_referenced_tweet;
 pub mod news_referenced_tweet_url;
 pub mod news_tweet;
