@@ -5,8 +5,8 @@
 - [x] Implement NewsFeedUrlSharesQuery
 - [x] Add domain (theverge.com)
 - [x] Handle Cron API errors gracefully
-- [ ] Add optionals to NewsFeedUrlReferencesQuery, show debug log
-- [ ] Add info about tweet to share page e.g Reddit
+- [x] Add optionals to NewsFeedUrlReferencesQuery, show debug log
+- [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?

@@ -16,7 +16,7 @@ export default function NewsItemDirectReferences(
             return (
               <div
                 key={newsFeedUrlReference.tweetId}
-                className="border-solid border-2 border-sky-500 rounded-md p-4"
+                className="border-solid border-2 border-gray-400 rounded-md p-4"
               >
                 <p className="text-m font-medium">
                   <a
@@ -27,10 +27,10 @@ export default function NewsItemDirectReferences(
                   </a>
                 </p>
                 <p className="text-m">{newsFeedUrlReference.tweetText}</p>
-                <p className="text-m font-bold">
+                {/* <p className="text-m font-bold">
                   Retweeted by{" "}
                   {newsFeedUrlReference.retweetedByUsernames.join(", ")}
-                </p>
+                </p> */}
               </div>
             );
           }
