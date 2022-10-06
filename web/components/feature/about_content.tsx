@@ -13,19 +13,25 @@ export default function AboutContent() {
           <h1 className="text-base font-semibold uppercase tracking-wider text-primary">
             Climate Action Collective
           </h1>
-          <p className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            About Us
+          </p>
+          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+            Climate Action Collective Canada is a benefit company registered in
+            BC, Canada in 2022. We aim to improve climate related education and
+            make tools for individuals and corporations to take meaningful
+            climate action.
+          </p>
+          <p className="mt-8 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Engaging climate content
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-            Let's make climate change unboring. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut.
-          </p>
-          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+            Let's make climate change unboring. Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut.
+            eiusmod tempor incididunt ut.
           </p>
+
         </div>
       </div>
     </div>

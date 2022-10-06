@@ -50,7 +50,6 @@ export default function Header(props: HeaderProps) {
                 <a href="/about">About</a>
               </li>
             </ul>
-            
           </div>
         </section>
       </nav>
