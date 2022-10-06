@@ -15,7 +15,9 @@ pub async fn get_news_feed_url_references(
             t.text,
             t.tweet_id,
             t.author_id,
-            t.created_at_str
+            t.created_at_str,
+            u.username,
+            rt.referenced_tweet_kind
         FROM
             news_referenced_tweet_url as rtu 
             JOIN news_tweet_url as tu ON tu.id = rtu.url_id

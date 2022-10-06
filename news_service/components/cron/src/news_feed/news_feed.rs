@@ -4,8 +4,8 @@ use crate::util::helpers::past_3_days;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::queries::news_referenced_url_query::NewsReferencedUrlQuery;
-use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
+use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
@@ -29,22 +29,17 @@ pub async fn populate_news_feed(db_pool: &PgPool) {
     let last_week_timestamp = past_3_days().unix_timestamp();
 
     // Direct & indirect references
-    let news_referenced_urls =
-        get_news_referenced_urls(db_pool, last_week_timestamp).await;
-    
-    let author_score_map: HashMap<i64, i32> =  populate_author_score_map(
-        &news_referenced_urls,
-    );
+    let news_referenced_urls = get_news_referenced_urls(db_pool, last_week_timestamp).await;
 
-    let url_to_tweet_map: HashMap<i32, Vec<TweetInfo>> = populate_url_to_tweet_map(
-        &news_referenced_urls,
-    );
+    let author_score_map: HashMap<i64, i32> = populate_author_score_map(&news_referenced_urls);
+
+    let url_to_tweet_map: HashMap<i32, Vec<TweetInfo>> =
+        populate_url_to_tweet_map(&news_referenced_urls);
 
     // Insert News feed urls
     populate_news_feed_urls(db_pool, author_score_map, url_to_tweet_map).await;
     println!("populate_news_feed complete - {:?}", Local::now());
 }
-
 
 // Populate a map of author_id to score
 // author_id -> user_score
@@ -55,9 +50,7 @@ fn populate_author_score_map(
     if let Some(news_referenced_urls) = news_referenced_urls {
         for news_referenced_url in news_referenced_urls {
             let author_id = news_referenced_url.author_id;
-            let user_score = news_referenced_url
-                .user_score
-                .map_or_else(|| 0, |us| us);
+            let user_score = news_referenced_url.user_score.map_or_else(|| 0, |us| us);
 
             author_score_map.insert(author_id, user_score);
         }
@@ -90,7 +83,7 @@ fn populate_url_to_tweet_map(
                     .iter()
                     .find(|ti| ti.author_id == author_id)
                     .is_none()
-                {                   
+                {
                     tweet_info_vec.push(tweet_info);
                 }
                 url_to_tweet_map.insert(url_id, tweet_info_vec);

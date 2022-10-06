@@ -27,24 +27,6 @@ export type NewsFeedUrl = {
   urlScore: Scalars['Int'];
 };
 
-export type NewsFeedUrlDirectReference = {
-  __typename?: 'NewsFeedUrlDirectReference';
-  createdAtStr: Scalars['String'];
-  text: Scalars['String'];
-  tweetId: Scalars['Int'];
-  urlId: Scalars['Int'];
-  username: Scalars['String'];
-};
-
-export type NewsFeedUrlIndirectReference = {
-  __typename?: 'NewsFeedUrlIndirectReference';
-  createdAtStr: Scalars['String'];
-  referencedTweetKind: Scalars['String'];
-  referencedTweetText: Scalars['String'];
-  text: Scalars['String'];
-  username: Scalars['String'];
-};
-
 export type NewsFeedUrlReference = {
   __typename?: 'NewsFeedUrlReference';
   authorUsername: Scalars['String'];
@@ -57,20 +39,8 @@ export type NewsFeedUrlReference = {
 
 export type Query = {
   __typename?: 'Query';
-  newsFeedUrlDirectReferences: Array<NewsFeedUrlDirectReference>;
-  newsFeedUrlIndirectReferences: Array<NewsFeedUrlIndirectReference>;
   newsFeedUrlReferences: Array<NewsFeedUrlReference>;
   newsFeedUrls: Array<NewsFeedUrl>;
-};
-
-
-export type QueryNewsFeedUrlDirectReferencesArgs = {
-  urlId: Scalars['Int'];
-};
-
-
-export type QueryNewsFeedUrlIndirectReferencesArgs = {
-  urlId: Scalars['Int'];
 };
 
 
