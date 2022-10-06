@@ -1,3 +1,4 @@
+import { getCurrentYear } from "app/time";
 import { useState } from "react";
 
 interface HeaderProps {
@@ -8,8 +9,8 @@ export default function Header(props: HeaderProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between py-2">
-      <h3 className="text-2xl font-bold text-gray-900 text-left my-4">
+    <div className="flex items-center justify-between my-4">
+      <h3 className="text-2xl font-bold text-gray-900 text-left">
         {props.title}
       </h3>
       <nav>
@@ -18,9 +19,9 @@ export default function Header(props: HeaderProps) {
             className="space-y-2"
             onClick={() => setIsNavOpen((prev) => !prev)}
           >
-            <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
-            <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
-            <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
+            <span className="block h-0.5 w-8 animate-pulse bg-gray-900"></span>
+            <span className="block h-0.5 w-8 animate-pulse bg-gray-900"></span>
+            <span className="block h-0.5 w-8 animate-pulse bg-gray-900"></span>
           </div>
 
           <div className={isNavOpen ? "showMenuNav" : "hideMenuNav"}>
@@ -29,7 +30,7 @@ export default function Header(props: HeaderProps) {
               onClick={() => setIsNavOpen(false)}
             >
               <svg
-                className="h-8 w-8 text-gray-600"
+                className="h-8 w-8 text-gray-900"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -41,14 +42,15 @@ export default function Header(props: HeaderProps) {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-            <ul className="flex flex-col items-center justify-center min-h-[150px]">
-              <li className="border-b border-gray-400 my-8 uppercase">
+            <ul className="flex flex-col items-center justify-around min-h-[150px]">
+              <li className="text-3xl font-bold border-b border-gray-400 my-8">
                 <a href="/">Climate News</a>
               </li>
-              <li className="border-b border-gray-400 my-8 uppercase">
+              <li className="text-3xl font-bold my-8">
                 <a href="/about">About</a>
               </li>
             </ul>
+            
           </div>
         </section>
       </nav>

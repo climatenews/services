@@ -22,3 +22,5 @@ export function timeSince(date: Date): String {
   }
   return "Invalid date";
 }
+
+export const getCurrentYear = () => new Date().getFullYear();

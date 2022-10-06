@@ -1,3 +1,5 @@
+import { getCurrentYear } from "app/time";
+
 const navigation = {
   main: [
     { name: "Swap", href: "/swap", current: true },
@@ -42,7 +44,7 @@ const navigation = {
     }
   ]
 };
-const getCurrentYear = () => new Date().getFullYear();
+
 
 export default function Footer() {
   return (
