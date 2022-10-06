@@ -1,14 +1,30 @@
 import type { NextPage } from "next";
-import Footer from "components/generic/footer";
-import AboutContent from "components/feature/about_content";
+import NewsContent from "components/feature/news_content";
+import { NewsFeedUrl, getSdk } from "graphql/generated/graphql";
+import { graphQLClient } from "graphql/client";
+import Header from "components/generic/header";
 
-const Home: NextPage = () => {
+interface NewsPageProps {
+  newsFeedUrls: NewsFeedUrl[];
+}
+
+const NewsPage: NextPage<NewsPageProps> = ({ newsFeedUrls }) => {
   return (
     <>
-      <AboutContent />
-      <Footer />
+      <Header title="Climate News" />
+      <NewsContent newsFeedUrls={newsFeedUrls} />
     </>
   );
 };
 
-export default Home;
+export async function getServerSideProps(context: any) {
+  const sdk = getSdk(graphQLClient);
+  const response = await sdk.GetNewsFeedUrls();
+  return {
+    props: {
+      newsFeedUrls: response.newsFeedUrls
+    }
+  };
+}
+
+export default NewsPage;

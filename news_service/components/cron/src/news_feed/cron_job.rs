@@ -20,12 +20,13 @@ use db::util::convert::seconds_in_hour;
 use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::{Tweet, TwitterApi, User};
+use log::info;
 
 pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
-    println!("get_all_user_tweets - {:?}", Local::now());
+    info!("get_all_user_tweets - {:?}", Local::now());
     fetch_user_tweets(db_pool, twitter_api).await;
     update_news_twitter_users_scores(db_pool).await;
-    println!("get_all_user_tweets complete - {:?}", Local::now());
+    info!("get_all_user_tweets complete - {:?}", Local::now());
 }
 
 async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
@@ -34,7 +35,7 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec()).await;
     if let Some(users) = users {
         for user in users {
-            println!("username: {}", user.username);
+            info!("username: {}", user.username);
             let news_twitter_user = parse_twitter_user(db_pool, &user).await.unwrap();
             let last_updated_diff = now_utc_timestamp() - news_twitter_user.last_updated_at;
             // Check if user has not been updated in over an hour or has no recent tweets

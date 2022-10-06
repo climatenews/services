@@ -1,6 +1,4 @@
-import {
-  NewsFeedUrlReference
-} from "graphql/generated/graphql";
+import { NewsFeedUrlReference } from "graphql/generated/graphql";
 
 import NewsItemReferences from "./news_item_references";
 

@@ -9,7 +9,7 @@ export default function NewsItemDirectReferences(
 ) {
   return (
     <>
-      <p className="text-m font-bold">Shares</p>
+      {/* <p className="text-m font-bold">Shares</p> */}
       <div className="grid grid-cols-2 gap-4">
         {props.newsFeedUrlReferences.map(
           (newsFeedUrlReference: NewsFeedUrlReference) => {
@@ -27,7 +27,10 @@ export default function NewsItemDirectReferences(
                   </a>
                 </p>
                 <p className="text-m">{newsFeedUrlReference.tweetText}</p>
-                <p className="text-m font-bold">Retweeted by {newsFeedUrlReference.retweetedByUsernames.join(", ")}</p>
+                <p className="text-m font-bold">
+                  Retweeted by{" "}
+                  {newsFeedUrlReference.retweetedByUsernames.join(", ")}
+                </p>
               </div>
             );
           }

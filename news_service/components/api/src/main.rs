@@ -5,6 +5,7 @@ use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use db::{init_db_pool, init_env};
 use std::env;
+use log::info;
 
 pub mod graphql;
 
@@ -39,7 +40,8 @@ async fn async_main() {
     let host = env::var("API_HOST").expect("HOST is not set");
     let port = env::var("API_PORT").expect("PORT is not set");
 
-    println!("Playground: http://{}:{}/playground", host, port);
+    info!("Playground: http://{}:{}/playground", host, port);
+
 
     HttpServer::new(move || {
         App::new()

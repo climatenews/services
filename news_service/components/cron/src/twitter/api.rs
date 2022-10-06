@@ -7,6 +7,7 @@ use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
 use twitter_v2::query::{Exclude, TweetField, UserField};
 use twitter_v2::{Error, Tweet, TwitterApi, User};
+use log::info;
 
 static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::AuthorId,
@@ -30,7 +31,7 @@ pub async fn get_users_by_username(
     usernames: Vec<&str>,
 ) -> Option<Vec<User>> {
     //TODO split in to max 100 users per request
-    println!("API - get_users_by_username: {}", usernames.len());
+    info!("API - get_users_by_username: {}", usernames.len());
     let users_response = twitter_api
         .get_users_by_usernames(usernames)
         .user_fields(USER_FIELDS)
@@ -45,7 +46,7 @@ pub async fn get_users_by_author_id(
     twitter_api: &TwitterApi<BearerToken>,
     author_ids: Vec<i64>,
 ) -> Vec<User> {
-    println!("API - get_users_by_author_id: {}", author_ids.len());
+    info!("API - get_users_by_author_id: {}", author_ids.len());
     let mut user_vec: Vec<User> = vec![];
     let split_author_ids_vec =
         split_requests_into_max_amount(author_ids.iter().map(|i| i64_to_numeric_id(*i)).collect());
@@ -71,7 +72,7 @@ pub async fn get_user_tweets(
 ) -> Vec<Tweet> {
     let start_time = past_365_days();
 
-    println!("API - get_user_tweets: {}", user_id);
+    info!("API - get_user_tweets: {}", user_id);
     let mut tweets: Vec<Tweet> = vec![];
     let tweets_api_response = if let Some(last_tweet_id) = last_tweet_id {
         // Use last_tweet_id
@@ -106,15 +107,15 @@ pub async fn get_user_tweets(
     loop {
         match next_page_response {
             Err(e) => {
-                println!("next_page_response error: {}", e);
+                info!("next_page_response error: {}", e);
                 break;
             } //return Err(anyhow!(e)),
             Ok(None) => {
-                // println!("next_page_response None");
+                // info!("next_page_response None");
                 break;
             }
             Ok(Some(ref next_page_result)) => {
-                // println!("next_page_response Some");
+                // info!("next_page_response Some");
                 let new_tweets: Option<Vec<Tweet>> = next_page_result.clone().into_data();
                 if let Some(new_tweets) = new_tweets {
                     tweets = [tweets, new_tweets].concat();
@@ -132,7 +133,7 @@ pub async fn get_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     tweet_ids: Vec<NumericId>,
 ) -> Option<Vec<Tweet>> {
-    println!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
+    info!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
     let tweets_response = twitter_api
         .get_tweets(tweet_ids)
         .tweet_fields(TWEET_FIELDS)

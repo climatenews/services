@@ -1,10 +1,6 @@
 import type { NextPage } from "next";
-import Footer from "components/generic/footer";
 import NewsItemContent from "components/feature/news_item_content";
-import {
-  NewsFeedUrlReference,
-  getSdk
-} from "graphql/generated/graphql";
+import { NewsFeedUrlReference, getSdk } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
 
 interface NewsItemPageProps {
@@ -14,14 +10,7 @@ interface NewsItemPageProps {
 const NewsItemPage: NextPage<NewsItemPageProps> = ({
   newsFeedUrlReferences
 }) => {
-  return (
-    <>
-      <NewsItemContent
-        newsFeedUrlReferences={newsFeedUrlReferences}
-      />
-      <Footer />
-    </>
-  );
+  return <NewsItemContent newsFeedUrlReferences={newsFeedUrlReferences} />;
 };
 
 export async function getServerSideProps(context: any) {
@@ -32,7 +21,7 @@ export async function getServerSideProps(context: any) {
   });
   return {
     props: {
-      newsFeedUrlReferences: response.newsFeedUrlReferences,
+      newsFeedUrlReferences: response.newsFeedUrlReferences
     }
   };
 }

@@ -1,16 +1,15 @@
 use std::collections::{HashMap, HashSet};
-
 use db::sql::news_user_referenced_tweet_query::get_all_news_user_referenced_tweet_query;
 use sqlx::PgPool;
 use twitter_v2::{authorization::BearerToken, TwitterApi, User};
-
+use log::info;
 use crate::{twitter::api::get_users_by_author_id, util::convert::numeric_id_to_i64};
 
 pub async fn get_referenced_twitter_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
     let news_user_referenced_tweets = get_all_news_user_referenced_tweet_query(&db_pool)
         .await
         .unwrap();
-    println!(
+    info!(
         "news_user_referenced_tweets: {:?} ",
         news_user_referenced_tweets.len()
     );
@@ -47,7 +46,7 @@ pub async fn get_referenced_twitter_users(db_pool: &PgPool, twitter_api: &Twitte
             .unwrap()
             .len();
 
-        println!(
+        info!(
             "username: {} referenced_tweets: {}",
             twitter_user.username, tweet_hashset_len
         )

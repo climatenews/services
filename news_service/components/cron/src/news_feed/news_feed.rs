@@ -14,6 +14,7 @@ use rust_decimal::Decimal;
 use rust_decimal::MathematicalOps;
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
+use log::info;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 // Basic tweet info for score calculation
@@ -23,7 +24,7 @@ pub struct TweetInfo {
 }
 
 pub async fn populate_news_feed(db_pool: &PgPool) {
-    println!("populate_news_feed - {:?}", Local::now());
+    info!("populate_news_feed - {:?}", Local::now());
     //TODO clear and update scores every 1 hour
     truncate_news_feed_url(db_pool).await.unwrap();
     let last_week_timestamp = past_3_days().unix_timestamp();
@@ -38,7 +39,7 @@ pub async fn populate_news_feed(db_pool: &PgPool) {
 
     // Insert News feed urls
     populate_news_feed_urls(db_pool, author_score_map, url_to_tweet_map).await;
-    println!("populate_news_feed complete - {:?}", Local::now());
+    info!("populate_news_feed complete - {:?}", Local::now());
 }
 
 // Populate a map of author_id to score

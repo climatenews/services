@@ -7,11 +7,9 @@ interface NewsContentProps {
 }
 
 export default function NewsContent(props: NewsContentProps) {
+  //{`${newsFeedUrl.urlScore}. `}
   return (
     <div className="container mx-auto ">
-      <h3 className="text-2xl font-bold text-gray-900 text-left my-4">
-        Climate News
-      </h3>
       <ul>
         {props.newsFeedUrls &&
           props.newsFeedUrls.map((newsFeedUrl: NewsFeedUrl, index: number) => {
@@ -19,7 +17,6 @@ export default function NewsContent(props: NewsContentProps) {
               <li key={newsFeedUrl.expandedUrlParsed}>
                 <div className="flex items-baseline">
                   <p className="text-lg mr-1">
-                    {`${newsFeedUrl.urlScore}. `}
                     <a
                       className="hover:underline"
                       href={newsFeedUrl.expandedUrlParsed}
@@ -31,7 +28,7 @@ export default function NewsContent(props: NewsContentProps) {
                     ({newsFeedUrl.expandedUrlHost})
                   </p>
                 </div>
-                <p className="text-s text-gray-400 ml-5">
+                <p className="text-s text-gray-400">
                   <Link
                     href={{
                       pathname: "/news_item/[item_id]",
