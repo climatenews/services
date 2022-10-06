@@ -17,7 +17,14 @@ export default function AboutContent() {
             Engaging climate content
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-            Let's make climate change unboring
+            Let's make climate change unboring. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut.
+          </p>
+          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut.
           </p>
         </div>
       </div>
