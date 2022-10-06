@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface HeaderProps {
-  title: string;
+  title?: string;
 }
 
 export default function Header(props: HeaderProps) {
@@ -43,10 +43,10 @@ export default function Header(props: HeaderProps) {
             </div>
             <ul className="flex flex-col items-center justify-center min-h-[150px]">
               <li className="border-b border-gray-400 my-8 uppercase">
-                <a href="/about">News</a>
+                <a href="/">Climate News</a>
               </li>
               <li className="border-b border-gray-400 my-8 uppercase">
-                <a href="/portfolio">About</a>
+                <a href="/about">About</a>
               </li>
             </ul>
           </div>

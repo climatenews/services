@@ -61,7 +61,7 @@ export default function Footer() {
           ))}
         </div>
         <p className="mt-8 text-center text-base text-gray-400">
-          &copy; {getCurrentYear()} Climate Action Collective Canada Inc
+          &copy; {getCurrentYear()} Climate Action Collective Canada
         </p>
       </div>
     </footer>

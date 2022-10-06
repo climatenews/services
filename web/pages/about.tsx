@@ -5,7 +5,7 @@ import Header from "components/generic/header";
 const AboutPage: NextPage = () => {
   return (
     <>
-      <Header title="About" />
+      <Header  />
       <AboutContent />
     </>
   );
