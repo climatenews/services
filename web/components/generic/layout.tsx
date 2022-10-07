@@ -1,10 +1,11 @@
 import Footer from "components/generic/footer";
+import NavBar from "components/generic/navbar";
 
 export default function Layout({ children }) {
   return (
     <>
       <main>
-        <div className="container mx-auto px-4">{children}</div>
+        <div>{children}</div>
       </main>
       <Footer />
     </>

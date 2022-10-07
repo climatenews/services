@@ -2,7 +2,8 @@ import type { NextPage } from "next";
 import NewsItemContent from "components/feature/news_item_content";
 import { NewsFeedUrlReference, getSdk } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
-import Header from "components/generic/header";
+import Meta from "components/generic/meta";
+import NavBar from "components/generic/navbar";
 
 interface NewsItemPageProps {
   newsFeedUrlReferences: NewsFeedUrlReference[];
@@ -13,7 +14,8 @@ const NewsItemPage: NextPage<NewsItemPageProps> = ({
 }) => {
   return (
     <>
-      <Header />
+      <Meta />
+      <NavBar pageRoute="/" />
       <NewsItemContent newsFeedUrlReferences={newsFeedUrlReferences} />
     </>
   );

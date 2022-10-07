@@ -2,7 +2,8 @@ import type { NextPage } from "next";
 import NewsContent from "components/feature/news_content";
 import { NewsFeedUrl, getSdk } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
-import Header from "components/generic/header";
+import Meta from "components/generic/meta";
+import NavBar from "components/generic/navbar";
 
 interface NewsPageProps {
   newsFeedUrls: NewsFeedUrl[];
@@ -11,8 +12,10 @@ interface NewsPageProps {
 const NewsPage: NextPage<NewsPageProps> = ({ newsFeedUrls }) => {
   return (
     <>
-      <Header title="Climate News" />
+      <Meta />
+      <NavBar pageRoute="/" />
       <NewsContent newsFeedUrls={newsFeedUrls} />
+      {/* <Header title="Climate News" /> */}
     </>
   );
 };

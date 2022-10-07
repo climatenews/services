@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import AboutContent from "components/feature/about_content";
-import Header from "components/generic/header";
+import Meta from "components/generic/meta";
+import NavBar from "components/generic/navbar";
 
 const AboutPage: NextPage = () => {
   return (
     <>
-      <Header />
+      <Meta />
+      <NavBar pageRoute="/about" />
       <AboutContent />
     </>
   );

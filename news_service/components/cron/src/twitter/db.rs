@@ -270,6 +270,7 @@ pub fn get_expanded_url_parsed(expanded_url: Url) -> String {
     expanded_url_parsed.set_query(None);
 
     // Handle Youtube URL params
+    // TODO convert mobile links to desktop
     if expanded_url.host_str().unwrap().contains("youtube.com") {
         let hash_query: HashMap<String, String> = expanded_url.clone().query_pairs().into_owned().collect();
         if let Some(v_param) = hash_query.get("v"){

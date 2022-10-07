@@ -9,6 +9,8 @@
 - [x] handle youtube links
 - [x] Add link images
 - [x] Add last checked at to user
+- [x] Add request timeout
+
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
@@ -24,12 +26,9 @@
 - [ ] Use decimal for url score or *100 
 - [ ] retry failed API requests 2 times
 
-
-
 # Web
-
-- [ ] Nav Menu
-- [ ] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
+- [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
+- [ ] Transparent nav menu with logo
 - [ ] Use env variable for graphql host
 - [ ] Add request caching / cache busting every hour - next.js website
 

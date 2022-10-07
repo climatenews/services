@@ -18,36 +18,31 @@ export default function NewsContent(props: NewsContentProps) {
                 className="my-2 grid lg:grid-cols-9 grid-cols-6"
                 key={newsFeedUrl.expandedUrlParsed}
               >
-
                 {/* Title */}
                 <div className="lg:col-start-3 col-span-5">
                   <p className="text-lg lg:text-xl">
-                  <Link
+                    <Link
                       href={{
                         pathname: "/news_item/[item_id]",
                         query: { item_id: newsFeedUrl.urlId }
                       }}
                     >
-                    <a
-                      className="hover:underline"
-                    >
-                      {newsFeedUrl?.title}
-                    </a>
+                      <a className="hover:underline">{newsFeedUrl?.title}</a>
                     </Link>
                   </p>
 
                   <p className="text-xs text-sky-400">
-                  <a
+                    <a
                       className="hover:underline"
                       href={newsFeedUrl.expandedUrlParsed}
                     >
-                     {newsFeedUrl.displayUrl}
+                      {newsFeedUrl.displayUrl}
                     </a>
                   </p>
 
                   {/* Subtitle */}
                   <p className="text-sm text-gray-400 mt-1">
-                  <Link
+                    <Link
                       href={{
                         pathname: "/news_item/[item_id]",
                         query: { item_id: newsFeedUrl.urlId }
@@ -59,8 +54,9 @@ export default function NewsContent(props: NewsContentProps) {
                         }`}
                       </a>
                     </Link>
-                    {` | Tweeted by @${newsFeedUrl.firstReferencedByUsername} ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
-
+                    {` | Tweeted by @${
+                      newsFeedUrl.firstReferencedByUsername
+                    } ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
                   </p>
                 </div>
                 {/* Image preview */}
