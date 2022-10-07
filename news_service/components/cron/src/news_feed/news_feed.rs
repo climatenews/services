@@ -137,7 +137,7 @@ async fn populate_news_feed_urls(
 // 0.5 = too new
 // url_score / (( hours_since_first_created +2 )^gravity)
 fn time_decayed_url_score(url_score: i32, hours_since_first_created: i64) -> i32 {
-    let gravity = dec!(0.4);
+    let gravity = dec!(0.3);
     let hour_addition = dec!(2);
     let url_score: Decimal = url_score.into();
     let hours_since_first_created: Decimal = hours_since_first_created.into();
