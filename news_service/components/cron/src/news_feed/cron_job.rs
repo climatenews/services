@@ -117,7 +117,7 @@ async fn fetch_user_tweet_references(
         let news_referenced_tweets = parse_news_referenced_tweets(&tweet);
         all_news_referenced_tweets = [all_news_referenced_tweets, news_referenced_tweets].concat();
     }
-    if all_news_referenced_tweets.len() > 0 {
+    if !all_news_referenced_tweets.is_empty() {
         parse_and_insert_all_news_referenced_tweets(
             db_pool,
             twitter_api,

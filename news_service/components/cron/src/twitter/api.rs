@@ -38,8 +38,8 @@ pub async fn get_users_by_username(
         .send()
         .await;
     parse_error_response(&users_response).await;
-    let users = users_response.unwrap().into_data();
-    users
+    
+    users_response.unwrap().into_data()
 }
 
 pub async fn get_users_by_author_id(
@@ -140,8 +140,8 @@ pub async fn get_tweets(
         .send()
         .await;
     parse_error_response(&tweets_response).await;
-    let tweets = tweets_response.unwrap().into_data();
-    tweets
+    
+    tweets_response.unwrap().into_data()
 }
 
 //split items into max 100 elements

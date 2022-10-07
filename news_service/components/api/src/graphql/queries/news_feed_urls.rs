@@ -6,7 +6,7 @@ use sqlx::postgres::PgPool;
 
 pub async fn news_feed_urls_query<'a>(ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {
     let pool = ctx.data::<PgPool>().unwrap();
-    let news_feed_urls_result: Option<Vec<NewsFeedUrlQuery>> = get_news_feed_urls(&pool).await;
+    let news_feed_urls_result: Option<Vec<NewsFeedUrlQuery>> = get_news_feed_urls(pool).await;
     match news_feed_urls_result {
         Some(news_feed_urls) => Ok(news_feed_urls),
         None => Err(GqlError::NotFound.extend()),

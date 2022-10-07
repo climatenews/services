@@ -41,12 +41,12 @@ pub async fn init_db(reset_db: bool) -> PgPool {
 }
 
 pub async fn truncate_db_tables(db_pool: &PgPool) {
-    truncate_news_twitter_user(&db_pool).await.unwrap();
-    truncate_news_tweet(&db_pool).await.unwrap();
-    truncate_news_referenced_tweet(&db_pool).await.unwrap();
-    truncate_news_tweet_url(&db_pool).await.unwrap();
-    truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
-    truncate_news_feed_url(&db_pool).await.unwrap();
+    truncate_news_twitter_user(db_pool).await.unwrap();
+    truncate_news_tweet(db_pool).await.unwrap();
+    truncate_news_referenced_tweet(db_pool).await.unwrap();
+    truncate_news_tweet_url(db_pool).await.unwrap();
+    truncate_news_referenced_tweet_url(db_pool).await.unwrap();
+    truncate_news_feed_url(db_pool).await.unwrap();
 }
 
 pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwitterUser> {
@@ -67,23 +67,23 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
         .clone()
         .map_or_else(|| None, |url| Some(url.to_string()));
 
-    let news_twitter_user_db = find_news_twitter_user_by_user_id(&db_pool, user_id).await;
+    let news_twitter_user_db = find_news_twitter_user_by_user_id(db_pool, user_id).await;
     if news_twitter_user_db.is_none() {
         let news_twitter_user = NewsTwitterUser {
-            user_id: user_id,
+            user_id,
             username: user.username.clone(),
-            profile_image_url: profile_image_url,
+            profile_image_url,
             description: user.description.clone(),
             verified: user.verified,
-            followers_count: followers_count,
-            listed_count: listed_count,
+            followers_count,
+            listed_count,
             user_referenced_tweets_count: None,
             user_score: None,
             last_tweet_id: None,
             last_updated_at: now_utc_timestamp(),
             last_checked_at: now_utc_timestamp(),
         };
-        insert_news_twitter_user(&db_pool, news_twitter_user).await
+        insert_news_twitter_user(db_pool, news_twitter_user).await
     } else {
         news_twitter_user_db
     }
@@ -91,11 +91,11 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
 
 pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet) {
     let tweet_id = numeric_id_to_i64(tweet.id);
-    let news_tweet_db = find_news_tweet_by_tweet_id(&db_pool, tweet_id).await;
+    let news_tweet_db = find_news_tweet_by_tweet_id(db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
         if let (Some(author_id), Some(created_at)) = (tweet.author_id, tweet.created_at) {
             let news_tweet = NewsTweet {
-                tweet_id: tweet_id,
+                tweet_id,
                 author_id: numeric_id_to_i64(author_id),
                 conversation_id: opt_numeric_id_to_opt_i64(tweet.conversation_id),
                 in_reply_to_user_id: opt_numeric_id_to_opt_i64(tweet.in_reply_to_user_id),
@@ -103,10 +103,10 @@ pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet) {
                 created_at: created_at.unix_timestamp(),
                 created_at_str: datetime_to_str(created_at),
             };
-            insert_news_tweet(&db_pool, news_tweet).await.unwrap();
+            insert_news_tweet(db_pool, news_tweet).await.unwrap();
         }
     }
-    parse_tweet_urls(&db_pool, tweet).await;
+    parse_tweet_urls(db_pool, tweet).await;
 }
 
 pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
@@ -121,7 +121,7 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                 let expanded_url_parsed = get_expanded_url_parsed(expanded_url.clone());
 
                 let news_tweet_url_db_result = find_news_tweet_urls_by_expanded_url_parsed(
-                    &db_pool,
+                    db_pool,
                     expanded_url_parsed.clone(),
                 )
                 .await;
@@ -138,19 +138,19 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                             let news_tweet_url = NewsTweetUrl {
                                 url: url.url,
                                 expanded_url: url.expanded_url,
-                                expanded_url_parsed: expanded_url_parsed,
-                                expanded_url_host: expanded_url_host,
+                                expanded_url_parsed,
+                                expanded_url_host,
                                 display_url: url.display_url,
-                                is_twitter_url: is_twitter_url,
+                                is_twitter_url,
                                 title: url.title,
                                 description: url.description,
-                                preview_image_thumbnail_url: preview_image_thumbnail_url,
-                                preview_image_url: preview_image_url,
+                                preview_image_thumbnail_url,
+                                preview_image_url,
                                 created_at: created_at.unix_timestamp(),
                                 created_at_str: datetime_to_str(created_at),
                             };
 
-                            let news_tweet_url_db = insert_news_tweet_url(&db_pool, news_tweet_url)
+                            let news_tweet_url_db = insert_news_tweet_url(db_pool, news_tweet_url)
                                 .await
                                 .unwrap();
                             parse_and_insert_news_referenced_tweet_url(
@@ -196,7 +196,7 @@ pub fn parse_tweet_url_images(
             return (Some(preview_image_thumbnail_url), Some(preview_image_url));
         }
     }
-    return (None, None);
+    (None, None)
 }
 
 pub async fn parse_and_insert_news_referenced_tweet_url(
@@ -205,13 +205,13 @@ pub async fn parse_and_insert_news_referenced_tweet_url(
     url_id: i32,
 ) {
     let news_referenced_tweet_url = NewsReferencedTweetUrl {
-        tweet_id: tweet_id,
-        url_id: url_id,
+        tweet_id,
+        url_id,
     };
     let news_referenced_tweet_url_vec =
-        find_news_referenced_tweet_url_by_tweet_id_and_url_id(&db_pool, tweet_id, url_id).await;
+        find_news_referenced_tweet_url_by_tweet_id_and_url_id(db_pool, tweet_id, url_id).await;
     if news_referenced_tweet_url_vec.is_none() {
-        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url)
+        insert_news_referenced_tweet_url(db_pool, news_referenced_tweet_url)
             .await
             .unwrap();
     }
@@ -262,7 +262,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         let referenced_tweets: Option<Vec<Tweet>> = get_tweets(twitter_api, split_tweet_ids).await;
         if let Some(referenced_tweets) = referenced_tweets.clone() {
             for referenced_tweet in referenced_tweets {
-                parse_and_insert_tweet(&db_pool, &referenced_tweet).await;
+                parse_and_insert_tweet(db_pool, &referenced_tweet).await;
             }
         }
     }

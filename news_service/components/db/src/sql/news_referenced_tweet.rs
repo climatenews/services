@@ -37,10 +37,10 @@ pub async fn find_all_news_referenced_tweets(pool: &PgPool) -> Option<Vec<NewsRe
     )
     .fetch_all(pool)
     .await;
-    return match news_referenced_tweet_result {
+    match news_referenced_tweet_result {
         Ok(news_referenced_tweet_vec) => Some(news_referenced_tweet_vec),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn truncate_news_referenced_tweet(pool: &PgPool) -> anyhow::Result<()> {

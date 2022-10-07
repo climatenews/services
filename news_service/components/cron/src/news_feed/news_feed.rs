@@ -80,10 +80,8 @@ fn populate_url_to_tweet_map(
                 let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
                 let mut tweet_info_vec = tweet_info_vec.clone();
                 // Ensures URL is not already added by same author
-                if tweet_info_vec
-                    .iter()
-                    .find(|ti| ti.author_id == author_id)
-                    .is_none()
+                if !tweet_info_vec
+                    .iter().any(|ti| ti.author_id == author_id)
                 {
                     tweet_info_vec.push(tweet_info);
                 }
@@ -103,7 +101,7 @@ async fn populate_news_feed_urls(
 ) {
     // URLS with shared by author count + score
     for url_id in url_to_tweet_map.keys() {
-        let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
+        let tweet_info_vec = url_to_tweet_map.get(url_id).unwrap();
         // Sum total score for url based on author scores
         let url_score: i32 = tweet_info_vec
             .iter()
@@ -129,7 +127,7 @@ async fn populate_news_feed_urls(
         let news_feed_url = NewsFeedUrl {
             url_id: *url_id,
             url_score: time_decayed_url_score,
-            num_references: num_references,
+            num_references,
             created_at: first_created_at,
             created_at_str: datetime_to_str(first_created_at_datetime),
         };

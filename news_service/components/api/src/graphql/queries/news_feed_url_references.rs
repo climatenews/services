@@ -12,7 +12,7 @@ pub async fn news_feed_url_references_query<'a>(
     url_id: i32,
 ) -> FieldResult<Vec<NewsFeedUrlReference>> {
     let news_feed_url_references_result: Option<Vec<NewsFeedUrlReferencesQuery>> =
-        get_news_feed_url_references(&pool, url_id).await;
+        get_news_feed_url_references(pool, url_id).await;
 
     if let Some(news_feed_url_references_query) = news_feed_url_references_result {
         let mut news_feed_url_references: Vec<NewsFeedUrlReference> = vec![];
@@ -29,8 +29,8 @@ pub async fn news_feed_url_references_query<'a>(
                 tweet_id: news_feed_url_reference_query.tweet_id,
                 tweet_text: news_feed_url_reference_query.text,
                 tweet_created_at_str: news_feed_url_reference_query.created_at_str,
-                author_username: author_username,
-                retweeted_by_usernames: retweeted_by_usernames,
+                author_username,
+                retweeted_by_usernames,
             };
             news_feed_url_references.push(news_feed_url_reference);
         }

@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
     // Start Web server
     HttpServer::new(|| App::new().service(health))
         .bind(format!("{}:{}", host, port))
-        .expect(&format!("Couldn't bind to port {}", port))
+        .unwrap_or_else(|_| panic!("Couldn't bind to port {}", port))
         .run()
         .await
 }

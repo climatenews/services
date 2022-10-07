@@ -46,10 +46,10 @@ pub async fn find_all_news_twitter_users(pool: &PgPool) -> Option<Vec<NewsTwitte
     );
 
     let news_twitter_users_result = query.fetch_all(pool).await;
-    return match news_twitter_users_result {
+    match news_twitter_users_result {
         Ok(news_twitter_users) => Some(news_twitter_users),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn find_news_twitter_user_by_user_id(
@@ -67,10 +67,10 @@ pub async fn find_news_twitter_user_by_user_id(
     );
 
     let news_twitter_user_result = query.fetch_one(pool).await;
-    return match news_twitter_user_result {
+    match news_twitter_user_result {
         Ok(news_twitter_user) => Some(news_twitter_user),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn find_news_twitter_user_by_username(
@@ -88,10 +88,10 @@ pub async fn find_news_twitter_user_by_username(
     );
 
     let news_twitter_user_result = query.fetch_one(pool).await;
-    return match news_twitter_user_result {
+    match news_twitter_user_result {
         Ok(news_twitter_user) => Some(news_twitter_user),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn update_news_twitter_user_last_checked_at(

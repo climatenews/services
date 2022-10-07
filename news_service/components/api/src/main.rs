@@ -57,7 +57,7 @@ async fn async_main() {
     })
     .workers(N_WORKERS)
     .bind(format!("{}:{}", host, port))
-    .expect(&format!("Couldn't bind to port {}", port))
+    .unwrap_or_else(|_| panic!("Couldn't bind to port {}", port))
     .run()
     .await
     .unwrap();

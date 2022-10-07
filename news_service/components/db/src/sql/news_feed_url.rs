@@ -39,10 +39,10 @@ pub async fn find_all_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrl>> 
     );
 
     let news_feed_urls_result = query.fetch_all(pool).await;
-    return match news_feed_urls_result {
+    match news_feed_urls_result {
         Ok(news_feed_urls) => Some(news_feed_urls),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn truncate_news_feed_url(pool: &PgPool) -> anyhow::Result<()> {

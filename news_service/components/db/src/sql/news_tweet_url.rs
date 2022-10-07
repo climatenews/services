@@ -31,10 +31,10 @@ pub async fn insert_news_tweet_url(
     .fetch_one(pool)
     .await;
 
-    return match news_tweet_url_result {
+    match news_tweet_url_result {
         Ok(news_tweet_url) => Some(news_tweet_url),
         Err(_) => None,
-    };
+    }
 }
 
 // TODO: Log sqlx errors + ignore RowNotFound errors
@@ -54,10 +54,10 @@ pub async fn find_news_tweet_urls_by_expanded_url_parsed(
     )
     .fetch_one(pool)
     .await;
-    return match news_tweet_url_result {
+    match news_tweet_url_result {
         Ok(news_tweet_url) => Some(news_tweet_url),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn truncate_news_tweet_url(pool: &PgPool) -> anyhow::Result<()> {

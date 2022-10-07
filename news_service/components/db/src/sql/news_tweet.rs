@@ -40,10 +40,10 @@ pub async fn find_news_tweet_by_tweet_id(pool: &PgPool, tweet_id: i64) -> Option
     )
     .fetch_one(pool)
     .await;
-    return match news_tweet_result {
+    match news_tweet_result {
         Ok(news_tweet) => Some(news_tweet),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn truncate_news_tweet(pool: &PgPool) -> anyhow::Result<()> {

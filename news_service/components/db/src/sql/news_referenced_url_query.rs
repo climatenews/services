@@ -40,8 +40,8 @@ pub async fn get_news_referenced_urls(
     )
     .fetch_all(pool)
     .await;
-    return match news_referenced_url_query_result {
+    match news_referenced_url_query_result {
         Ok(news_referenced_urls) => Some(news_referenced_urls),
         Err(_) => None,
-    };
+    }
 }

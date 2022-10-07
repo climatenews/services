@@ -30,8 +30,8 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
     )
     .fetch_all(pool)
     .await;
-    return match news_feed_url_query_result {
+    match news_feed_url_query_result {
         Ok(news_feed_urls) => Some(news_feed_urls),
         Err(_) => None,
-    };
+    }
 }

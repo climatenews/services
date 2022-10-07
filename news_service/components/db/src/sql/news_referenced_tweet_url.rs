@@ -43,10 +43,10 @@ pub async fn find_news_referenced_tweet_url_by_tweet_id_and_url_id(
     )
     .fetch_one(pool)
     .await;
-    return match news_referenced_tweet_url_result {
+    match news_referenced_tweet_url_result {
         Ok(news_referenced_tweet_url_vec) => Some(news_referenced_tweet_url_vec),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn truncate_news_referenced_tweet_url(pool: &PgPool) -> anyhow::Result<()> {

@@ -33,10 +33,10 @@ pub async fn get_news_user_referenced_tweet_query(
     )
     .fetch_all(pool)
     .await;
-    return match news_user_referenced_tweet_query_result {
+    match news_user_referenced_tweet_query_result {
         Ok(news_user_referenced_tweets) => Some(news_user_referenced_tweets),
         Err(_) => None,
-    };
+    }
 }
 
 pub async fn get_all_news_user_referenced_tweet_query(
@@ -63,8 +63,8 @@ pub async fn get_all_news_user_referenced_tweet_query(
     )
     .fetch_all(pool)
     .await;
-    return match news_user_referenced_tweet_query_result {
+    match news_user_referenced_tweet_query_result {
         Ok(news_user_referenced_tweets) => Some(news_user_referenced_tweets),
         Err(_) => None,
-    };
+    }
 }

@@ -6,7 +6,7 @@ use std::collections::{HashMap, HashSet};
 use twitter_v2::{authorization::BearerToken, TwitterApi, User};
 
 pub async fn get_referenced_twitter_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
-    let news_user_referenced_tweets = get_all_news_user_referenced_tweet_query(&db_pool)
+    let news_user_referenced_tweets = get_all_news_user_referenced_tweet_query(db_pool)
         .await
         .unwrap();
     info!(
@@ -32,7 +32,7 @@ pub async fn get_referenced_twitter_users(db_pool: &PgPool, twitter_api: &Twitte
 
     let mut popular_referenced_author_ids: Vec<i64> = vec![];
     for author_id in author_map.keys() {
-        let tweet_hashset_len = author_map.get(&author_id).unwrap().len();
+        let tweet_hashset_len = author_map.get(author_id).unwrap().len();
         if tweet_hashset_len > 50 && tweet_hashset_len <= 100 {
             popular_referenced_author_ids.push(*author_id);
         }

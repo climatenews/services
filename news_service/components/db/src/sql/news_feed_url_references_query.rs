@@ -34,8 +34,8 @@ pub async fn get_news_feed_url_references(
     )
     .fetch_all(pool)
     .await;
-    return match news_feed_url_references_query_result {
+    match news_feed_url_references_query_result {
         Ok(news_feed_url_references) => Some(news_feed_url_references),
         Err(_) => None,
-    };
+    }
 }
