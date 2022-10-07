@@ -7,6 +7,7 @@ pub struct NewsFeedUrl {
     pub url_id: i32,
     pub url_score: i32,
     pub num_references: i32,
+    pub first_referenced_by: i64,
     pub created_at: i64,
     pub created_at_str: String,
 }

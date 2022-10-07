@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::util::helpers::past_3_days;
+use crate::util::helpers::past_5_days;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::queries::news_referenced_url_query::NewsReferencedUrlQuery;
@@ -27,7 +27,7 @@ pub async fn populate_news_feed(db_pool: &PgPool) {
     info!("populate_news_feed - {:?}", Local::now());
     //TODO clear and update scores every 1 hour
     truncate_news_feed_url(db_pool).await.unwrap();
-    let last_week_timestamp = past_3_days().unix_timestamp();
+    let last_week_timestamp = past_5_days().unix_timestamp();
 
     // Direct & indirect references
     let news_referenced_urls = get_news_referenced_urls(db_pool, last_week_timestamp).await;
@@ -106,15 +106,14 @@ async fn populate_news_feed_urls(
             .map(|tweet_info| author_score_map.get(&tweet_info.author_id).unwrap())
             .sum();
 
-        // Find the first date the url was tweeted
-        let first_created_at: i64 = tweet_info_vec
+        // Find the first tweet that shared the url
+        let first_tweet: &TweetInfo = tweet_info_vec
             .iter()
-            .map(|tweet_info| tweet_info.created_at)
-            .min()
+            .min_by_key(|tweet_info| tweet_info.created_at)
             .unwrap();
 
-        let first_created_at_datetime = datetime_from_unix_timestamp(first_created_at);
-        let time_since_first_created = now_utc_timestamp() - first_created_at;
+        // TODO move logic into helper function
+        let time_since_first_created = now_utc_timestamp() - first_tweet.created_at;
         let hours_since_first_created = time_since_first_created / seconds_in_hour();
 
         // Calculate url score factoring in time decay
@@ -126,8 +125,9 @@ async fn populate_news_feed_urls(
             url_id: *url_id,
             url_score: time_decayed_url_score,
             num_references,
-            created_at: first_created_at,
-            created_at_str: datetime_to_str(first_created_at_datetime),
+            first_referenced_by: first_tweet.author_id,
+            created_at: first_tweet.created_at,
+            created_at_str: datetime_to_str(datetime_from_unix_timestamp(first_tweet.created_at)),
         };
         insert_news_feed_url(db_pool, news_feed_url).await;
     }

@@ -7,8 +7,8 @@ pub fn past_365_days() -> OffsetDateTime {
     // now_utc_timestamp().checked_add((-7).days()).unwrap()
 }
 
-pub fn past_3_days() -> OffsetDateTime {
-    now_utc_timestamp().checked_add((-3).days()).unwrap()
+pub fn past_5_days() -> OffsetDateTime {
+    now_utc_timestamp().checked_add((-5).days()).unwrap()
 }
 
 fn now_utc_timestamp() -> OffsetDateTime {
