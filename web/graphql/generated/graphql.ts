@@ -28,6 +28,8 @@ export type NewsFeedUrl = {
   expandedUrlHost: Scalars["String"];
   expandedUrlParsed: Scalars["String"];
   numReferences: Scalars["Int"];
+  previewImageThumbnailUrl?: Maybe<Scalars["String"]>;
+  previewImageUrl?: Maybe<Scalars["String"]>;
   title?: Maybe<Scalars["String"]>;
   urlId: Scalars["Int"];
   urlScore: Scalars["Int"];
@@ -78,11 +80,13 @@ export type GetNewsFeedUrlsQuery = {
     urlId: number;
     urlScore: number;
     numReferences: number;
+    createdAt: number;
     title?: string | null;
     description?: string | null;
     expandedUrlParsed: string;
     expandedUrlHost: string;
-    createdAt: number;
+    previewImageThumbnailUrl?: string | null;
+    previewImageUrl?: string | null;
   }>;
 };
 
@@ -103,11 +107,13 @@ export const GetNewsFeedUrlsDocument = gql`
       urlId
       urlScore
       numReferences
+      createdAt
       title
       description
       expandedUrlParsed
       expandedUrlHost
-      createdAt
+      previewImageThumbnailUrl
+      previewImageUrl
     }
   }
 `;

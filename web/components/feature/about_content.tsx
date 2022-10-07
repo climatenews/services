@@ -31,7 +31,6 @@ export default function AboutContent() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut.
           </p>
-
         </div>
       </div>
     </div>

@@ -14,9 +14,23 @@ export default function NewsContent(props: NewsContentProps) {
         {props.newsFeedUrls &&
           props.newsFeedUrls.map((newsFeedUrl: NewsFeedUrl, index: number) => {
             return (
-              <li className="my-2" key={newsFeedUrl.expandedUrlParsed}>
-                <div className="flex items-baseline">
-                  <p className="text-lg mr-1">
+              <li
+                className="my-2 grid grid-cols-12 justify-items-start"
+                key={newsFeedUrl.expandedUrlParsed}
+              >
+                <div className="col-span-1 justify-items-start px-2">
+                  <img
+                    className="mx-auto h-auto w-auto rounded-xl"
+                    src={
+                      newsFeedUrl.previewImageThumbnailUrl
+                        ? newsFeedUrl.previewImageThumbnailUrl
+                        : "https://via.placeholder.com/150"
+                    }
+                    alt="TODO"
+                  />
+                </div>
+                <div className="col-span-11 justify-items-center">
+                  <p className="text-xl">
                     <a
                       className="hover:underline"
                       href={newsFeedUrl.expandedUrlParsed}
@@ -24,23 +38,27 @@ export default function NewsContent(props: NewsContentProps) {
                       {newsFeedUrl?.title}
                     </a>
                   </p>
-                  <p className="text-xs text-gray-400">
-                    ({newsFeedUrl.expandedUrlHost})
+
+                  <p className="text-base text-gray-400">
+                    {newsFeedUrl.expandedUrlHost}
+                    {` | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
+                  </p>
+
+                  <p className="text-lg text-gray-400">
+                    <Link
+                      href={{
+                        pathname: "/news_item/[item_id]",
+                        query: { item_id: newsFeedUrl.urlId }
+                      }}
+                    >
+                      <a className=" hover:underline">
+                        {`${newsFeedUrl.numReferences} ${
+                          newsFeedUrl.numReferences == 1 ? "Share" : "Shares"
+                        }`}
+                      </a>
+                    </Link>
                   </p>
                 </div>
-                <p className="text-sm text-gray-400">
-                  <Link
-                    href={{
-                      pathname: "/news_item/[item_id]",
-                      query: { item_id: newsFeedUrl.urlId }
-                    }}
-                  >
-                    <a className="hover:underline">
-                      {newsFeedUrl.numReferences} Shares
-                    </a>
-                  </Link>
-                  {` | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
-                </p>
               </li>
             );
           })}
