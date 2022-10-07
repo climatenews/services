@@ -13,6 +13,8 @@ pub struct NewsTweetUrlWithId {
     pub is_twitter_url: bool,
     pub title: Option<String>,
     pub description: Option<String>,
+    pub preview_image_thumbnail_url: Option<String>,
+    pub preview_image_url: Option<String>,
     pub created_at: i64,
     pub created_at_str: String,
 }
@@ -27,6 +29,8 @@ pub struct NewsTweetUrl {
     pub is_twitter_url: bool,
     pub title: Option<String>,
     pub description: Option<String>,
+    pub preview_image_thumbnail_url: Option<String>,
+    pub preview_image_url: Option<String>,
     pub created_at: i64,
     pub created_at_str: String,
 }

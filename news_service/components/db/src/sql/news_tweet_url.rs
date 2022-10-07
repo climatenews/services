@@ -9,11 +9,11 @@ pub async fn insert_news_tweet_url(
         NewsTweetUrlWithId,
         r#"
             INSERT INTO news_tweet_url ( 
-                url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
+                url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str
              )
-            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING 
-            id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
+                id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str
             "#,
         news_tweet_url.url,
         news_tweet_url.expanded_url,
@@ -23,6 +23,8 @@ pub async fn insert_news_tweet_url(
         news_tweet_url.is_twitter_url,
         news_tweet_url.title,
         news_tweet_url.description,
+        news_tweet_url.preview_image_thumbnail_url,
+        news_tweet_url.preview_image_url,
         news_tweet_url.created_at,
         news_tweet_url.created_at_str,
     )
@@ -44,7 +46,7 @@ pub async fn find_news_tweet_urls_by_expanded_url_parsed(
         NewsTweetUrlWithId,
         r#"
             SELECT 
-                id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, created_at, created_at_str
+                id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str
             FROM news_tweet_url   
             WHERE expanded_url_parsed = $1         
             "#,

@@ -11,6 +11,8 @@ type NewsFeedUrl {
 	description: String
 	expandedUrlParsed: String!
 	expandedUrlHost: String!
+	previewImageThumbnailUrl: String
+	previewImageUrl: String
 }
 
 type NewsFeedUrlReference {

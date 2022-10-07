@@ -15,4 +15,5 @@ pub struct NewsTwitterUser {
     pub user_score: Option<i32>,
     pub last_tweet_id: Option<i64>,
     pub last_updated_at: i64,
+    pub last_checked_at: i64,
 }

@@ -1,13 +1,13 @@
 use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
 use crate::util::helpers::past_365_days;
+use log::info;
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
 use twitter_v2::query::{Exclude, TweetField, UserField};
 use twitter_v2::{Error, Tweet, TwitterApi, User};
-use log::info;
 
 static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::AuthorId,

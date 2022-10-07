@@ -14,4 +14,7 @@ pub struct NewsFeedUrlQuery {
     pub description: Option<String>,
     pub expanded_url_parsed: String,
     pub expanded_url_host: String,
+    pub preview_image_thumbnail_url: Option<String>,
+    pub preview_image_url: Option<String>,
+    
 }

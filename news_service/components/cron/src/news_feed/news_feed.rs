@@ -9,12 +9,12 @@ use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
+use log::info;
 use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 use rust_decimal::MathematicalOps;
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
-use log::info;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 // Basic tweet info for score calculation

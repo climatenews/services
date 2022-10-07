@@ -1,3 +1,8 @@
+use super::api::{get_tweets, split_requests_into_max_amount};
+use crate::util::convert::{
+    i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
+    referenced_tweet_kind_to_string,
+};
 use db::init_db_pool;
 use db::models::news_referenced_tweet::NewsReferencedTweet;
 use db::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
@@ -20,20 +25,12 @@ use db::sql::news_twitter_user::{
     find_news_twitter_user_by_user_id, insert_news_twitter_user, truncate_news_twitter_user,
 };
 use db::util::convert::{datetime_to_str, now_utc_timestamp};
-use url::Url;
-
+use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
+use twitter_v2::data::UrlImage;
 use twitter_v2::id::NumericId;
 use twitter_v2::{Tweet, TwitterApi, User};
-
-use sqlx::PgPool;
-
-use crate::util::convert::{
-    i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
-    referenced_tweet_kind_to_string,
-};
-
-use super::api::{get_tweets, split_requests_into_max_amount};
+use url::Url;
 
 pub async fn init_db(reset_db: bool) -> PgPool {
     let db_pool = init_db_pool().await.unwrap();
@@ -84,6 +81,7 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
             user_score: None,
             last_tweet_id: None,
             last_updated_at: now_utc_timestamp(),
+            last_checked_at: now_utc_timestamp(),
         };
         insert_news_twitter_user(&db_pool, news_twitter_user).await
     } else {
@@ -133,6 +131,10 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                             let is_twitter_url =
                                 url.expanded_url.starts_with("https://twitter.com")
                                     || url.expanded_url.starts_with("https://mobile.twitter.com");
+
+                            let (preview_image_thumbnail_url, preview_image_url) =
+                                parse_tweet_url_images(url.images);
+
                             let news_tweet_url = NewsTweetUrl {
                                 url: url.url,
                                 expanded_url: url.expanded_url,
@@ -142,6 +144,8 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                                 is_twitter_url: is_twitter_url,
                                 title: url.title,
                                 description: url.description,
+                                preview_image_thumbnail_url: preview_image_thumbnail_url,
+                                preview_image_url: preview_image_url,
                                 created_at: created_at.unix_timestamp(),
                                 created_at_str: datetime_to_str(created_at),
                             };
@@ -149,7 +153,7 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                             let news_tweet_url_db = insert_news_tweet_url(&db_pool, news_tweet_url)
                                 .await
                                 .unwrap();
-                            parse_news_referenced_tweet_url(
+                            parse_and_insert_news_referenced_tweet_url(
                                 db_pool,
                                 tweet_id,
                                 news_tweet_url_db.id,
@@ -158,8 +162,12 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                         }
                     }
                     Some(news_tweet_url_db) => {
-                        parse_news_referenced_tweet_url(db_pool, tweet_id, news_tweet_url_db.id)
-                            .await;
+                        parse_and_insert_news_referenced_tweet_url(
+                            db_pool,
+                            tweet_id,
+                            news_tweet_url_db.id,
+                        )
+                        .await;
                     }
                 }
             }
@@ -167,7 +175,35 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
     }
 }
 
-pub async fn parse_news_referenced_tweet_url(db_pool: &PgPool, tweet_id: i64, url_id: i32) {
+// Parses the preview image thumbnail and preview image for a shared link
+pub fn parse_tweet_url_images(
+    url_images: Option<Vec<UrlImage>>,
+) -> (Option<String>, Option<String>) {
+    if let Some(images) = url_images {
+        let mut preview_image_thumbnail_url: Option<String> = None;
+        let mut preview_image_url: Option<String> = None;
+
+        for image in images {
+            if image.width == 150 && image.height == 150 {
+                preview_image_thumbnail_url = Some(String::from(image.url));
+            } else {
+                preview_image_url = Some(String::from(image.url));
+            }
+        }
+        if let (Some(preview_image_thumbnail_url), Some(preview_image_url)) =
+            (preview_image_thumbnail_url, preview_image_url)
+        {
+            return (Some(preview_image_thumbnail_url), Some(preview_image_url));
+        }
+    }
+    return (None, None);
+}
+
+pub async fn parse_and_insert_news_referenced_tweet_url(
+    db_pool: &PgPool,
+    tweet_id: i64,
+    url_id: i32,
+) {
     let news_referenced_tweet_url = NewsReferencedTweetUrl {
         tweet_id: tweet_id,
         url_id: url_id,

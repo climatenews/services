@@ -6,6 +6,7 @@
 ```sh
 curl https://sh.rustup.rs -sSf | sh
 rustup install stable
+cargo clippy --fix
 ```
 
 #### Install Postgres

@@ -3,8 +3,8 @@ use crate::news_feed::news_feed::populate_news_feed;
 // use crate::referenced_twitter_users::get_referenced_twitter_users;
 use crate::twitter::init_twitter_api;
 use chrono::Local;
-use sqlx::PgPool;
 use log::info;
+use sqlx::PgPool;
 
 pub async fn hourly_cron_job(db_pool: &PgPool) {
     info!("schedule_task event - {:?}", Local::now());

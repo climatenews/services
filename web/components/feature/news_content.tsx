@@ -14,7 +14,7 @@ export default function NewsContent(props: NewsContentProps) {
         {props.newsFeedUrls &&
           props.newsFeedUrls.map((newsFeedUrl: NewsFeedUrl, index: number) => {
             return (
-              <li key={newsFeedUrl.expandedUrlParsed}>
+              <li className="my-2" key={newsFeedUrl.expandedUrlParsed}>
                 <div className="flex items-baseline">
                   <p className="text-lg mr-1">
                     <a
@@ -28,7 +28,7 @@ export default function NewsContent(props: NewsContentProps) {
                     ({newsFeedUrl.expandedUrlHost})
                   </p>
                 </div>
-                <p className="text-s text-gray-400">
+                <p className="text-sm text-gray-400">
                   <Link
                     href={{
                       pathname: "/news_item/[item_id]",

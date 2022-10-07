@@ -15,7 +15,10 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
             tu.title,
             tu.description,
             tu.expanded_url_parsed,
-            tu.expanded_url_host
+            tu.expanded_url_host,
+            tu.preview_image_thumbnail_url,
+            tu.preview_image_url
+            
         FROM
             news_feed_url as nfu
             JOIN news_tweet_url as tu ON tu.id = nfu.url_id
