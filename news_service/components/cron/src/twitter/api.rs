@@ -38,7 +38,7 @@ pub async fn get_users_by_username(
         .send()
         .await;
     parse_error_response(&users_response).await;
-    
+
     users_response.unwrap().into_data()
 }
 
@@ -140,7 +140,7 @@ pub async fn get_tweets(
         .send()
         .await;
     parse_error_response(&tweets_response).await;
-    
+
     tweets_response.unwrap().into_data()
 }
 

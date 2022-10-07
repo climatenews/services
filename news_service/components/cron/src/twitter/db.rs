@@ -204,10 +204,7 @@ pub async fn parse_and_insert_news_referenced_tweet_url(
     tweet_id: i64,
     url_id: i32,
 ) {
-    let news_referenced_tweet_url = NewsReferencedTweetUrl {
-        tweet_id,
-        url_id,
-    };
+    let news_referenced_tweet_url = NewsReferencedTweetUrl { tweet_id, url_id };
     let news_referenced_tweet_url_vec =
         find_news_referenced_tweet_url_by_tweet_id_and_url_id(db_pool, tweet_id, url_id).await;
     if news_referenced_tweet_url_vec.is_none() {

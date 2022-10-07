@@ -80,9 +80,7 @@ fn populate_url_to_tweet_map(
                 let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
                 let mut tweet_info_vec = tweet_info_vec.clone();
                 // Ensures URL is not already added by same author
-                if !tweet_info_vec
-                    .iter().any(|ti| ti.author_id == author_id)
-                {
+                if !tweet_info_vec.iter().any(|ti| ti.author_id == author_id) {
                     tweet_info_vec.push(tweet_info);
                 }
                 url_to_tweet_map.insert(url_id, tweet_info_vec);

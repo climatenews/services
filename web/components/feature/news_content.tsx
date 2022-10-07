@@ -15,12 +15,12 @@ export default function NewsContent(props: NewsContentProps) {
           props.newsFeedUrls.map((newsFeedUrl: NewsFeedUrl, index: number) => {
             return (
               <li
-                className="my-2 grid grid-cols-12 justify-items-start"
+                className="my-2 grid lg:grid-cols-9 grid-cols-6"
                 key={newsFeedUrl.expandedUrlParsed}
               >
 
-                <div className="col-start-4 col-span-5 justify-items-start">
-                  <p className="text-xl">
+                <div className="lg:col-start-3 col-span-5">
+                  <p className="text-lg lg:text-xl">
                     <a
                       className="hover:underline"
                       href={newsFeedUrl.expandedUrlParsed}
@@ -30,12 +30,7 @@ export default function NewsContent(props: NewsContentProps) {
                   </p>
 
                   <p className="text-base text-gray-400">
-                    {newsFeedUrl.expandedUrlHost}
-                    {` | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
-                  </p>
-
-                  <p className="text-lg text-gray-400">
-                    <Link
+                  <Link
                       href={{
                         pathname: "/news_item/[item_id]",
                         query: { item_id: newsFeedUrl.urlId }
@@ -44,12 +39,15 @@ export default function NewsContent(props: NewsContentProps) {
                       <a className=" hover:underline">
                         {`${newsFeedUrl.numReferences} ${
                           newsFeedUrl.numReferences == 1 ? "Share" : "Shares"
-                        }`}
+                        } | `}
                       </a>
                     </Link>
+                    {newsFeedUrl.expandedUrlHost}
+                    {` | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
+
                   </p>
                 </div>
-                <div className="col-span-1 justify-items-start ml-2">
+                <div className="col-span-1">
                   <Link
                     href={{
                       pathname: "/news_item/[item_id]",
@@ -58,7 +56,7 @@ export default function NewsContent(props: NewsContentProps) {
                   >
                     <a className=" hover:underline">
                       <img
-                        className="mx-auto h-20 w-20 rounded-md"
+                        className="mx-auto h-15 w-15 rounded lg:h-20 lg:w-20 lg:rounded-md"
                         src={
                           newsFeedUrl.previewImageThumbnailUrl
                             ? newsFeedUrl.previewImageThumbnailUrl
