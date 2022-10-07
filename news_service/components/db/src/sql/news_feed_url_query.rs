@@ -16,6 +16,7 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
             tu.description,
             tu.expanded_url_parsed,
             tu.expanded_url_host,
+            tu.display_url,
             tu.preview_image_thumbnail_url,
             tu.preview_image_url
             
