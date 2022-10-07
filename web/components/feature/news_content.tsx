@@ -18,18 +18,8 @@ export default function NewsContent(props: NewsContentProps) {
                 className="my-2 grid grid-cols-12 justify-items-start"
                 key={newsFeedUrl.expandedUrlParsed}
               >
-                <div className="col-span-1 justify-items-start px-2">
-                  <img
-                    className="mx-auto h-auto w-auto rounded-xl"
-                    src={
-                      newsFeedUrl.previewImageThumbnailUrl
-                        ? newsFeedUrl.previewImageThumbnailUrl
-                        : "https://via.placeholder.com/150"
-                    }
-                    alt="TODO"
-                  />
-                </div>
-                <div className="col-span-11 justify-items-center">
+
+                <div className="col-start-4 col-span-5 justify-items-start">
                   <p className="text-xl">
                     <a
                       className="hover:underline"
@@ -58,6 +48,26 @@ export default function NewsContent(props: NewsContentProps) {
                       </a>
                     </Link>
                   </p>
+                </div>
+                <div className="col-span-1 justify-items-start ml-2">
+                  <Link
+                    href={{
+                      pathname: "/news_item/[item_id]",
+                      query: { item_id: newsFeedUrl.urlId }
+                    }}
+                  >
+                    <a className=" hover:underline">
+                      <img
+                        className="mx-auto h-20 w-20 rounded-md"
+                        src={
+                          newsFeedUrl.previewImageThumbnailUrl
+                            ? newsFeedUrl.previewImageThumbnailUrl
+                            : "https://via.placeholder.com/150"
+                        }
+                        alt="TODO"
+                      />
+                    </a>
+                  </Link>
                 </div>
               </li>
             );

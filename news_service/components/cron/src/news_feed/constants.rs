@@ -2,16 +2,16 @@ pub static MAX_TWEET_RESULTS: usize = 100;
 pub static REQUEST_SLEEP_DURATION: u64 = 2000;
 pub static RESET_DB: bool = false;
 
-pub static TWITTER_USERNAMES: [&str; 2] = [
+pub static TWITTER_USERNAMES: [&str; 8] = [
     "GretaThunberg", // Climate and environmental activist
     "ayanaeliza",    // Marine biologist
                      // "MichaelEMann",   // Scientist/Author
-                     // "DrShepherd2013", // Atm Sci Prof, Fmr AMS Prez/NASA scientist
-                     // "KHayhoe",        // Climate Scientist
-                     // "ed_hawkins",     // Climate scientist, NCAS/University of Reading
-                     // "climategeek",    // Climate Scientist
-                     // "ZLabe",          // Climate Scientist (Atmospheric) PhD
-                     // "ClimateOfGavin", // Climate scientist
+                     "DrShepherd2013", // Atm Sci Prof, Fmr AMS Prez/NASA scientist
+                     "KHayhoe",        // Climate Scientist
+                     "ed_hawkins",     // Climate scientist, NCAS/University of Reading
+                     "climategeek",    // Climate Scientist
+                     "ZLabe",          // Climate Scientist (Atmospheric) PhD
+                     "ClimateOfGavin", // Climate scientist
                      // "ClimateHuman",   // NASA climate scientist
                      // "DrKWilkinson",   // Climate author
                      // "DrKateMarvel",   // Climate scientist @NASAGISS
