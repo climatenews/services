@@ -6,6 +6,7 @@ type NewsFeedUrl {
 	urlId: Int!
 	urlScore: Int!
 	numReferences: Int!
+	firstReferencedByUsername: String!
 	createdAt: Int!
 	title: String
 	description: String

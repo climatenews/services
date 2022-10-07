@@ -49,6 +49,9 @@ sudo service postgresql stop
 ```
 Mozilla example: https://github.com/mozilla-services/cjms
 
+# running tests
+cargo test --package cron --bin cron -- twitter::db::tests::get_expanded_url_parsed_youtube_params_test --exact --nocapture 
+
 # Ubuntu
 
 ## NVM

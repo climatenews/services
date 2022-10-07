@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use super::api::{get_tweets, split_requests_into_max_amount};
 use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
@@ -214,17 +216,6 @@ pub async fn parse_and_insert_news_referenced_tweet_url(
     }
 }
 
-// Remove all the query parameters from non-whitelisted urls
-pub fn get_expanded_url_parsed(mut expanded_url_parsed: Url) -> String {
-    // Whitelisted Urls
-    if expanded_url_parsed.host_str().unwrap() == "youtube.com" {
-        //TODO parse video param only
-        return expanded_url_parsed.to_string();
-    }
-    // Remove all the query parameters
-    expanded_url_parsed.set_query(None);
-    expanded_url_parsed.to_string()
-}
 
 pub fn parse_news_referenced_tweets(tweet: &Tweet) -> Vec<NewsReferencedTweet> {
     let mut news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
@@ -269,4 +260,75 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
             .await
             .unwrap();
     }
+}
+
+// Remove all the query parameters from non-whitelisted urls
+pub fn get_expanded_url_parsed(expanded_url: Url) -> String {
+    let expanded_url = expanded_url;
+    let mut expanded_url_parsed = expanded_url.clone();
+    // Remove all the query parameters
+    expanded_url_parsed.set_query(None);
+
+    // Handle Youtube URL params
+    if expanded_url.host_str().unwrap().contains("youtube.com") {
+        let hash_query: HashMap<String, String> = expanded_url.clone().query_pairs().into_owned().collect();
+        if let Some(v_param) = hash_query.get("v"){
+            expanded_url_parsed.set_query(Some(&format!("v={}", v_param)));
+        }
+        if let Some(list_param) = hash_query.get("list"){
+            expanded_url_parsed.set_query(Some(&format!("list={}", list_param)));
+        }
+    }
+    expanded_url_parsed.to_string()
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn get_expanded_url_parsed_params_test() {
+        let expanded_url =  Url::parse(
+            "https://github.com/rust-lang/rust/issues?labels=E-easy&state=open"
+        ).unwrap();
+        let expanded_url_parsed = get_expanded_url_parsed(expanded_url);
+        assert_eq!(expanded_url_parsed, "https://github.com/rust-lang/rust/issues");
+    }
+
+    #[test]
+    fn get_expanded_url_parsed_no_params_test() {
+        let expanded_url =  Url::parse(
+            "http://youtube.com/ecopracticas"
+        ).unwrap();
+        let expanded_url_parsed = get_expanded_url_parsed(expanded_url);
+        assert_eq!(expanded_url_parsed, "http://youtube.com/ecopracticas");
+    }
+
+    #[test]
+    fn get_expanded_url_parsed_youtube_params_test() {
+        let expanded_url =  Url::parse(
+            "https://m.youtube.com/watch?v=3SPVIUV2_uY"
+        ).unwrap();
+        let expanded_url_parsed = get_expanded_url_parsed(expanded_url);
+        assert_eq!(expanded_url_parsed, "https://m.youtube.com/watch?v=3SPVIUV2_uY");
+    }
+
+    #[test]
+    fn get_expanded_url_parsed_youtube_mobile_params_test() {
+        let expanded_url =  Url::parse(
+            "http://youtube.com/watch?v=3TTF-muHLIQ&feature=youtu.be"
+        ).unwrap();
+        let expanded_url_parsed = get_expanded_url_parsed(expanded_url);
+        assert_eq!(expanded_url_parsed, "http://youtube.com/watch?v=3TTF-muHLIQ");
+    }
+
+    #[test]
+    fn get_expanded_url_parsed_youtube_playlist_params_test() {
+        let expanded_url =  Url::parse(
+            "https://www.youtube.com/playlist?list=PLhQpDGfX5e7CSp3rm5SDv7D_idfkRzje-"
+        ).unwrap();
+        let expanded_url_parsed = get_expanded_url_parsed(expanded_url);
+        assert_eq!(expanded_url_parsed, "https://www.youtube.com/playlist?list=PLhQpDGfX5e7CSp3rm5SDv7D_idfkRzje-");
+    }
+
 }

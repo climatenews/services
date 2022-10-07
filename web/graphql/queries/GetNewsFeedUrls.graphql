@@ -3,6 +3,7 @@ query GetNewsFeedUrls {
     urlId
     urlScore
     numReferences
+    firstReferencedByUsername
     createdAt
     title
     description

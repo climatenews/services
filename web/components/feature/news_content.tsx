@@ -59,7 +59,7 @@ export default function NewsContent(props: NewsContentProps) {
                         }`}
                       </a>
                     </Link>
-                    {` | Posted by @drvolts ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
+                    {` | Tweeted by @${newsFeedUrl.firstReferencedByUsername} ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
 
                   </p>
                 </div>

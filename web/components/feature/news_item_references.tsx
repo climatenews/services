@@ -20,7 +20,7 @@ export default function NewsItemDirectReferences(
               >
                 <p className="text-m font-medium">
                   <a
-                    href={`https://twitter.com/${newsFeedUrlReference.username}`}
+                    href={`https://twitter.com/${newsFeedUrlReference.authorUsername}`}
                     className="hover:underline"
                   >
                     {newsFeedUrlReference.authorUsername}

@@ -11,6 +11,7 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
             nfu.url_id, 
             nfu.url_score,
             nfu.num_references,
+            u.username as first_referenced_by_username,
             nfu.created_at,
             tu.title,
             tu.description,
@@ -23,6 +24,7 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
         FROM
             news_feed_url as nfu
             JOIN news_tweet_url as tu ON tu.id = nfu.url_id
+            JOIN news_twitter_user as u ON u.user_id = nfu.first_referenced_by
             
         ORDER BY
             url_score DESC

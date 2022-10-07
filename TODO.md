@@ -6,15 +6,14 @@
 - [x] Add domain (theverge.com)
 - [x] Handle Cron API errors gracefully
 - [x] Add optionals to NewsFeedUrlReferencesQuery, show debug log
-- [ ] Add link images
-- [ ] Add last checked at to user
+- [x] handle youtube links
+- [x] Add link images
+- [x] Add last checked at to user
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?
-
 - [ ] Dedup news_feed_url_references
-- [ ] handle youtube links
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
