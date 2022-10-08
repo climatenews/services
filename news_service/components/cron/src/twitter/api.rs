@@ -1,6 +1,6 @@
 use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
-use crate::util::helpers::past_365_days;
+use db::util::time::past_year;
 use log::info;
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
@@ -70,7 +70,7 @@ pub async fn get_user_tweets(
     user_id: NumericId,
     last_tweet_id: Option<NumericId>,
 ) -> Vec<Tweet> {
-    let start_time = past_365_days();
+    let start_time = past_year();
 
     info!("API - get_user_tweets: {}", user_id);
     let mut tweets: Vec<Tweet> = vec![];

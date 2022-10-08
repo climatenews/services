@@ -2,7 +2,7 @@ use sqlx::PgPool;
 
 use crate::queries::news_feed_url_query::NewsFeedUrlQuery;
 
-pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> {
+pub async fn get_news_feed_urls(pool: &PgPool, timestamp: i64) -> Option<Vec<NewsFeedUrlQuery>> {
     //TODO ensure links were created in past week
     let news_feed_url_query_result = sqlx::query_as!(
         NewsFeedUrlQuery,
@@ -25,11 +25,14 @@ pub async fn get_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrlQuery>> 
             news_feed_url as nfu
             JOIN news_tweet_url as tu ON tu.id = nfu.url_id
             JOIN news_twitter_user as u ON u.user_id = nfu.first_referenced_by
-            
+        WHERE
+            nfu.created_at > $1    
         ORDER BY
-            url_score DESC
+            -- url_score DESC
+            num_references DESC
         LIMIT 20 
-     "#
+     "#,
+     timestamp
     )
     .fetch_all(pool)
     .await;

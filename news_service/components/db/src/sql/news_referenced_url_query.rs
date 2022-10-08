@@ -32,7 +32,7 @@ pub async fn get_news_referenced_urls(
             AND tu.title IS NOT NULL
             AND u.username IS NOT NULL
             AND t.in_reply_to_user_id IS NULL
-            AND t.created_at > $1
+        AND t.created_at > $1
         ORDER BY  
             t.created_at DESC
      "#,
