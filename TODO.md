@@ -25,6 +25,8 @@
 - [ ] use verified status in score
 - [ ] Use decimal for url score or *100 
 - [ ] retry failed API requests 2 times
+- [ ] terraform git action - https://learn.hashicorp.com/tutorials/terraform/github-actions
+- [ ] update terraform admin user 
 
 # Web
 - [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
