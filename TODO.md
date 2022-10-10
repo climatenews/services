@@ -10,7 +10,8 @@
 - [x] Add link images
 - [x] Add last checked at to user
 - [x] Add request timeout
-- [ ] IMport list of users
+- [x] Import list of users
+- [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
