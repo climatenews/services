@@ -54,10 +54,14 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         let news_twitter_user = parse_twitter_user(db_pool, &user).await.unwrap();
         let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
         let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
-        info!(
-            "username: {} last_checked {} mins ago, last_updated: {} mins ago",
-            user.username, last_checked_minutes_diff, last_updated_minutes_diff
-        );
+        if news_twitter_user.last_tweet_id.is_some() {
+            info!(
+                "username: {} last_checked {} mins ago, last_updated: {} mins ago",
+                user.username, last_checked_minutes_diff, last_updated_minutes_diff
+            );
+        }else{
+            info!("Adding username: {}",user.username);
+        }
         // Check if last_checked is over 30 mins or has no recent tweets
         if last_checked_minutes_diff > 30i64 || news_twitter_user.last_tweet_id.is_none() {
             let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);

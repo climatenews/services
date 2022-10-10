@@ -9,7 +9,7 @@ interface NewsContentProps {
 export default function NewsContent(props: NewsContentProps) {
   //{`${newsFeedUrl.urlScore}. `}
   return (
-    <div className="container mx-auto ">
+    <div className="container mx-auto p-2">
       <ul>
         {props.newsFeedUrls &&
           props.newsFeedUrls.map((newsFeedUrl: NewsFeedUrl, index: number) => {
@@ -49,14 +49,9 @@ export default function NewsContent(props: NewsContentProps) {
                       }}
                     >
                       <a className="hover:underline">
-                        {`${newsFeedUrl.numReferences} ${
-                          newsFeedUrl.numReferences == 1 ? "Share" : "Shares"
-                        }`}
+                        {`(${newsFeedUrl.numReferences}) Shared by @${newsFeedUrl.firstReferencedByUsername} and 2 others`}
                       </a>
                     </Link>
-                    {` | Tweeted by @${
-                      newsFeedUrl.firstReferencedByUsername
-                    } ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
                   </p>
                 </div>
                 {/* Image preview */}
