@@ -1,11 +1,13 @@
 use crate::news_feed::constants::TWITTER_USERNAMES;
 use crate::news_feed::user_score::calc_user_score;
+use crate::twitter::api::get_list_members;
 use crate::twitter::api::get_user_tweets;
 use crate::twitter::api::get_users_by_username;
 use crate::twitter::db::{
     parse_and_insert_all_news_referenced_tweets, parse_and_insert_tweet,
     parse_news_referenced_tweets, parse_twitter_user,
 };
+use crate::util::convert::i64_to_numeric_id;
 use crate::util::convert::{numeric_id_to_i64, opt_i64_to_opt_numeric_id};
 use chrono::Local;
 use db::models::news_referenced_tweet::NewsReferencedTweet;
@@ -23,37 +25,47 @@ use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::{Tweet, TwitterApi, User};
 
+use super::constants::TWITTER_LISTS;
+
 pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
     info!("get_all_user_tweets - {:?}", Local::now());
     fetch_user_tweets(db_pool, twitter_api).await;
     update_news_twitter_users_scores(db_pool).await;
-    info!("get_all_user_tweets complete - {:?}", Local::now());
+    // info!("get_all_user_tweets complete - {:?}", Local::now());
 }
 
 async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
     // TODO avoid making API request if use is in the db?
-    let users: Option<Vec<User>> =
-        get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec()).await;
-    if let Some(users) = users {
-        for user in users {
-            let news_twitter_user = parse_twitter_user(db_pool, &user).await.unwrap();
-            let last_checked_minutes_diff =
-                datetime_minutes_diff(news_twitter_user.last_checked_at);
-            let last_updated_minutes_diff =
-                datetime_minutes_diff(news_twitter_user.last_updated_at);
-            info!(
-                "username: {} last_checked {} mins ago, last_updated: {} mins ago",
-                user.username, last_checked_minutes_diff, last_updated_minutes_diff
-            );
-            // Check if last_checked is over 30 mins or has no recent tweets
-            if last_checked_minutes_diff > 30i64 || news_twitter_user.last_tweet_id.is_none() {
-                let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
-                let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await;
-                fetch_user_tweet_references(db_pool, twitter_api, &tweets).await;
-                update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
-            }
-            update_user_last_checked_at(db_pool, &news_twitter_user).await;
+    let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
+        .await
+        .unwrap();
+    info!("1 users: {} ", users.len());
+    for list_id in TWITTER_LISTS {
+        let list_users: Vec<User> = get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
+        info!("2 list_users: {} ", list_users.len());
+        users = [users, list_users].concat();
+        info!("3 users: {} ", users.len());
+    }
+    // Remove duplicate users
+    users.dedup_by(|a, b| a.username == b.username);
+    info!("4 users: {} ", users.len());
+
+    for user in users {
+        let news_twitter_user = parse_twitter_user(db_pool, &user).await.unwrap();
+        let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
+        let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
+        info!(
+            "username: {} last_checked {} mins ago, last_updated: {} mins ago",
+            user.username, last_checked_minutes_diff, last_updated_minutes_diff
+        );
+        // Check if last_checked is over 30 mins or has no recent tweets
+        if last_checked_minutes_diff > 30i64 || news_twitter_user.last_tweet_id.is_none() {
+            let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
+            let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await;
+            fetch_user_tweet_references(db_pool, twitter_api, &tweets).await;
+            update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
         }
+        update_user_last_checked_at(db_pool, &news_twitter_user).await;
     }
 }
 

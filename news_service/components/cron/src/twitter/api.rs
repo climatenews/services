@@ -26,6 +26,56 @@ static USER_FIELDS: [UserField; 5] = [
     UserField::Verified,
 ];
 
+pub async fn get_list_members(
+    twitter_api: &TwitterApi<BearerToken>,
+    list_id: NumericId,
+) -> Vec<User> {
+    info!("API - get_list_members: {}", list_id);
+    let mut users: Vec<User> = vec![];
+    let list_users_response = twitter_api
+        .get_list_members(list_id)
+        .user_fields(USER_FIELDS)
+        .send()
+        .await;
+
+    parse_error_response(&list_users_response).await;
+
+    let list_users_response = list_users_response.unwrap();
+
+    if let Some(new_tweets) = list_users_response.clone().into_data() {
+        users = [users, new_tweets].concat();
+    }
+    // TODO make pagination generic
+    let mut next_page_response = list_users_response.next_page().await;
+    parse_error_response(&next_page_response).await;
+    loop {
+        match next_page_response {
+            Err(e) => {
+                info!("get_list_members - next_page_response error: {}", e);
+                break;
+            } //return Err(anyhow!(e)),
+            Ok(None) => {
+                // info!("next_page_response None");
+                break;
+            }
+            Ok(Some(ref next_page_result)) => {
+                info!("get_list_members - next_page_response");
+                let new_users: Option<Vec<User>> = next_page_result.clone().into_data();
+                if let Some(new_users) = new_users {
+                    users = [users, new_users].concat();
+                }
+                let new_response = next_page_result.next_page().await;
+                parse_error_response(&new_response).await;
+                next_page_response = new_response;
+            }
+        }
+    }
+    users
+    // parse_error_response(&users_response).await;
+
+    // users_response.unwrap().into_data()
+}
+
 pub async fn get_users_by_username(
     twitter_api: &TwitterApi<BearerToken>,
     usernames: Vec<&str>,
