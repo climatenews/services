@@ -15,9 +15,13 @@ use rust_decimal_macros::dec;
 //
 // url_score / (( hours_since_first_created +2 )^gravity)
 //
-// A gravity of 0.4 is used in the ranking algorithm 
+// A gravity of 0.4 is used in the ranking algorithm
 // Set it to 0.5 for newer results or 0.2 to older results
-pub fn time_decayed_url_score(gravity: Decimal, url_score: i32, hours_since_first_created: i64) -> i32 {
+pub fn time_decayed_url_score(
+    gravity: Decimal,
+    url_score: i32,
+    hours_since_first_created: i64,
+) -> i32 {
     let hour_addition = dec!(2);
     let url_score: Decimal = url_score.into();
     let hours_since_first_created: Decimal = hours_since_first_created.into();
@@ -40,7 +44,8 @@ mod tests {
         let gravity = dec!(0.4);
         let url_score = 600;
         let hours_since_first_created = 5;
-        let time_decayed_url_score = time_decayed_url_score(gravity, url_score, hours_since_first_created);
+        let time_decayed_url_score =
+            time_decayed_url_score(gravity, url_score, hours_since_first_created);
         assert_eq!(time_decayed_url_score, 226);
     }
 
@@ -49,7 +54,8 @@ mod tests {
         let gravity = dec!(0.4);
         let url_score = 600;
         let hours_since_first_created = 24;
-        let time_decayed_url_score = time_decayed_url_score(gravity, url_score, hours_since_first_created);
+        let time_decayed_url_score =
+            time_decayed_url_score(gravity, url_score, hours_since_first_created);
         assert_eq!(time_decayed_url_score, 117);
     }
 }

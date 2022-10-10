@@ -2,8 +2,8 @@ pub static MAX_TWEET_RESULTS: usize = 100;
 pub static REQUEST_SLEEP_DURATION: u64 = 2000;
 pub static RESET_DB: bool = false;
 
-pub static _TWITTER_LISTS: [&str; 1] = [
-    "1053067173961326594", // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
+pub static TWITTER_LISTS: [i64; 1] = [
+    1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
 ];
 
 pub static TWITTER_USERNAMES: [&str; 89] = [

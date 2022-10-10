@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::news_feed::algorithm::helper::{populate_url_to_tweet_map, populate_author_score_map};
+use crate::news_feed::algorithm::helper::{populate_author_score_map, populate_url_to_tweet_map};
 use crate::news_feed::models::tweet_info::TweetInfo;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
@@ -11,8 +11,8 @@ use db::util::convert::{
 };
 use db::util::time::past_days;
 use log::info;
-use sqlx::PgPool;
 use rust_decimal_macros::dec;
+use sqlx::PgPool;
 
 use super::time_decay::time_decayed_url_score;
 // Used for experimantation
@@ -62,7 +62,8 @@ async fn populate_news_feed_urls_v1(
         // Calculate url score factoring in time decay
         // 0.5 for newer results
         let gravity = dec!(0.5);
-        let time_decayed_url_score = time_decayed_url_score(gravity, url_score, hours_since_first_created);
+        let time_decayed_url_score =
+            time_decayed_url_score(gravity, url_score, hours_since_first_created);
 
         // Number of references/shares
         let num_references = tweet_info_vec.len() as i32;
@@ -77,5 +78,3 @@ async fn populate_news_feed_urls_v1(
         insert_news_feed_url(db_pool, news_feed_url).await;
     }
 }
-
-
