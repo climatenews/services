@@ -58,3 +58,6 @@ cargo test --package cron --bin cron -- twitter::db::tests::get_expanded_url_par
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 ```
+
+cargo sqlx prepare
+SQLX_OFFLINE=true cargo build --release --bin api

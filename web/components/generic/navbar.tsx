@@ -7,7 +7,7 @@ const navigation = [
   { name: "About", href: "/about" }
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 

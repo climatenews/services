@@ -11,8 +11,10 @@
 - [x] Add last checked at to user
 - [x] Add request timeout
 - [x] Import list of users
+- [x] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
+- [ ] Make openAI request manually? best prompt to use?
+- [ ] Prepare model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
 - [ ] Cache list users in db
-- [ ] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
 - [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29

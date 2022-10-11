@@ -1,0 +1,15 @@
+[package]
+name = "ml"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+db = { path = "../db" }
+
+# Runtime - same version as OpenAI API
+tokio = { version = "^0.2.5", features = ["full"]}
+ 
+# OpenAI API
+openai-api = "0.1.4"
