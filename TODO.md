@@ -11,6 +11,7 @@
 - [x] Add last checked at to user
 - [x] Add request timeout
 - [x] Import list of users
+- [ ] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
 - [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
@@ -28,6 +29,7 @@
 - [ ] retry failed API requests 2 times
 - [ ] terraform git action - https://learn.hashicorp.com/tutorials/terraform/github-actions
 - [ ] update terraform admin user 
+- [ ] use k8s? https://kompose.io/cd 
 
 # Web
 - [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"

@@ -1,5 +1,4 @@
-name: climate-action-collective
-version: '3'
+version: '3.4'
 services:
   web:
     build:
