@@ -41,7 +41,7 @@ pub async fn start_scheduler() {
     #[cfg(debug_assertions)]
     hourly_cron_job(&db_pool).await; // only run in debug mode
 
-    let every_second = every(1)
+    let every_second = every(2)
         .hours()
         .in_timezone(&Utc)
         .perform(|| async { hourly_cron_job(&db_pool).await });

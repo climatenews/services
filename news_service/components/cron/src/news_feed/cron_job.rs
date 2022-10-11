@@ -39,12 +39,17 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
         .unwrap();
-    info!("1 users: {} ", users.len());
     for list_id in TWITTER_LISTS {
         let list_users: Vec<User> = get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
-        info!("2 list_users: {} ", list_users.len());
-        users = [users, list_users].concat();
-        info!("3 users: {} ", users.len());
+        for list_user in list_users {
+            let followers_count = list_user
+                .public_metrics
+                .clone()
+                .map_or_else(|| 0i32, |pm| pm.followers_count as i32);
+            if followers_count > 1000 {
+                users.push(list_user);
+            }
+        }
     }
     // Remove duplicate users
     users.dedup_by(|a, b| a.username == b.username);
@@ -59,8 +64,8 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
                 "username: {} last_checked {} mins ago, last_updated: {} mins ago",
                 user.username, last_checked_minutes_diff, last_updated_minutes_diff
             );
-        }else{
-            info!("Adding username: {}",user.username);
+        } else {
+            info!("Adding username: {}", user.username);
         }
         // Check if last_checked is over 30 mins or has no recent tweets
         if last_checked_minutes_diff > 30i64 || news_twitter_user.last_tweet_id.is_none() {

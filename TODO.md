@@ -11,6 +11,7 @@
 - [x] Add last checked at to user
 - [x] Add request timeout
 - [x] Import list of users
+- [ ] Cache list users in db
 - [ ] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
 - [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query

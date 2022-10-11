@@ -1,5 +1,5 @@
 pub static MAX_TWEET_RESULTS: usize = 100;
-pub static REQUEST_SLEEP_DURATION: u64 = 2000;
+pub static REQUEST_SLEEP_DURATION: u64 = 1500;
 pub static RESET_DB: bool = false;
 
 pub static TWITTER_LISTS: [i64; 1] = [

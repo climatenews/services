@@ -49,7 +49,7 @@ export default function NewsContent(props: NewsContentProps) {
                       }}
                     >
                       <a className="hover:underline">
-                        {`(${newsFeedUrl.numReferences}) Shared by @${newsFeedUrl.firstReferencedByUsername} and 2 others`}
+                        {`Shared by @${newsFeedUrl.firstReferencedByUsername} and ${newsFeedUrl.numReferences -1} others`}
                       </a>
                     </Link>
                   </p>
