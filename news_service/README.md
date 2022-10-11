@@ -37,11 +37,6 @@ sqlx migrate run
 
 sqlx database drop -y && sqlx database create &&  sqlx migrate run
 
-# sqlx offline mode
-export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action  cargo sqlx prepare 
-
-cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action cargo sqlx prepare --merged
-
 
 $ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null" > .git/hooks/pre-commit 
 # stop database
@@ -59,5 +54,8 @@ cargo test --package cron --bin cron -- twitter::db::tests::get_expanded_url_par
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 ```
 
-cargo sqlx prepare
+# sqlx offline mode
+cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action cargo sqlx prepare --merged
+
+
 SQLX_OFFLINE=true cargo build --release --bin api
