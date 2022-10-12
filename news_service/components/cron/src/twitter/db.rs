@@ -10,6 +10,7 @@ use db::models::news_referenced_tweet::NewsReferencedTweet;
 use db::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
 use db::models::news_tweet::NewsTweet;
 use db::models::news_tweet_url::NewsTweetUrl;
+use db::models::news_twitter_list::NewsTwitterList;
 use db::models::news_twitter_user::NewsTwitterUser;
 use db::sql::news_feed_url::truncate_news_feed_url;
 use db::sql::news_referenced_tweet::{
@@ -23,10 +24,13 @@ use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet, trunca
 use db::sql::news_tweet_url::{
     find_news_tweet_urls_by_expanded_url_parsed, insert_news_tweet_url, truncate_news_tweet_url,
 };
+use db::sql::news_twitter_list::{
+    find_news_twitter_list_by_list_id, insert_news_twitter_list, truncate_news_twitter_list,
+};
 use db::sql::news_twitter_user::{
     find_news_twitter_user_by_user_id, insert_news_twitter_user, truncate_news_twitter_user,
 };
-use db::util::convert::{datetime_to_str, now_utc_timestamp};
+use db::util::convert::datetime_to_str;
 use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::data::UrlImage;
@@ -43,12 +47,26 @@ pub async fn init_db(reset_db: bool) -> PgPool {
 }
 
 pub async fn truncate_db_tables(db_pool: &PgPool) {
+    truncate_news_twitter_list(db_pool).await.unwrap();
     truncate_news_twitter_user(db_pool).await.unwrap();
     truncate_news_tweet(db_pool).await.unwrap();
     truncate_news_referenced_tweet(db_pool).await.unwrap();
     truncate_news_tweet_url(db_pool).await.unwrap();
     truncate_news_referenced_tweet_url(db_pool).await.unwrap();
     truncate_news_feed_url(db_pool).await.unwrap();
+}
+
+pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Option<NewsTwitterList> {
+    let news_twitter_list_db = find_news_twitter_list_by_list_id(db_pool, list_id).await;
+    if news_twitter_list_db.is_none() {
+        let news_twitter_list = NewsTwitterList {
+            list_id,
+            last_checked_at: 0,
+        };
+        insert_news_twitter_list(db_pool, news_twitter_list).await
+    } else {
+        news_twitter_list_db
+    }
 }
 
 pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwitterUser> {
@@ -82,8 +100,8 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
             user_referenced_tweets_count: None,
             user_score: None,
             last_tweet_id: None,
-            last_updated_at: now_utc_timestamp(),
-            last_checked_at: now_utc_timestamp(),
+            last_updated_at: 0,
+            last_checked_at: 0,
         };
         insert_news_twitter_user(db_pool, news_twitter_user).await
     } else {

@@ -6,7 +6,7 @@ pub static TWITTER_LISTS: [i64; 1] = [
     1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
 ];
 
-pub static TWITTER_USERNAMES: [&str; 89] = [
+pub static TWITTER_USERNAMES: [&str; 63] = [
     "GretaThunberg",  // Climate and environmental activist
     "ayanaeliza",     // Marine biologist
     "MichaelEMann",   // Scientist/Author
@@ -70,31 +70,4 @@ pub static TWITTER_USERNAMES: [&str; 89] = [
     "CarolineLucas",  // Green MP & Guardian columnist
     "damiengayle",    // Guardian environment correspondent
     "michaelgoodier", // Journalist @GuardianData
-    // List
-    "MichaelFWehner",  // @BerkeleyLab Senior Scientist
-    "DrLouis_K",       // Climate activist, physicist
-    "GregorSemieniuk", // Researching economics of the low-carbon transition
-    "SoilEcon",        //Nat’l Economist at @USDA_NRCS
-    "DrKimberley",     // @NASA Climate Scientist
-    "tridatta1",       // Polar scientist studying the Antarctic and Greenland ice sheets
-    "MPKarami",        // climate scientist @SMHI working on climate modelling,
-    "BKAByrne",        // Scientist at @NASAJPL
-    "IngridSmet_geo",  // Scientist @Fieldcode1
-    "DrSAHenderson",   // Assistant Prof at @UW_AOS
-    "Vicki_A_Arroyo",  //  Administrator for Policy @EPA
-    "ladgram",         // Chief.res.sci. @NiomrLagos
-    "EBrennanScience", // Scientist @USDA_ARS
-    "_ZSpace_",        //  Polar Oceanographer
-    "ProfBillMcGuire", // Volcanologist, climate scientist
-    "AaronPutnam14",   // Associate Professor of Earth Science @UMaine
-    "LuijkxIngrid",    // Assistant professor @WUR (MAQ), carbon cycle
-    "BessKoffman",     // Ice core scientist studying dust, winds, and climate
-    "rondax_en", // Academic Meteorologist and Climate Scientist at the Department of Geophysics and (CR)2, University of Chile
-    "JenKayCU",  // Associate Professor @CUBoulderATOC @CIRESnews
-    "Jones_MattW", //  Research Fellow at @ueaenv / @TyndallCentre
-    "wormmaps",  //  asst prof @georgetown_ghss director @viralemergence one-time @ipcc_ch & @ipbes
-    "DB_Millet", // Atmospheric chemist
-    "JZisSuperFly", // Exploring Earth's Ice from Space
-    "scubasanchez", // climate scientist
-    "Ros_Rodriguez_", // Environmental Activist | PhD candidate @ces_uc
 ];

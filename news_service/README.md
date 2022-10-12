@@ -59,3 +59,7 @@ cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5
 
 
 SQLX_OFFLINE=true cargo build --release --bin api
+
+# docker compose
+sudo docker-compose up -d --build
+sudo docker-compose logs --tail="all" -f

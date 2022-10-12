@@ -31,7 +31,7 @@ pub async fn get_list_members(
     list_id: NumericId,
 ) -> Vec<User> {
     info!("API - get_list_members: {}", list_id);
-    let mut users: Vec<User> = vec![];
+    let mut list_users: Vec<User> = vec![];
     let list_users_response = twitter_api
         .get_list_members(list_id)
         .user_fields(USER_FIELDS)
@@ -42,8 +42,8 @@ pub async fn get_list_members(
 
     let list_users_response = list_users_response.unwrap();
 
-    if let Some(new_tweets) = list_users_response.clone().into_data() {
-        users = [users, new_tweets].concat();
+    if let Some(new_list_users) = list_users_response.clone().into_data() {
+        list_users = [list_users, new_list_users].concat();
     }
     // TODO make pagination generic
     let mut next_page_response = list_users_response.next_page().await;
@@ -51,18 +51,16 @@ pub async fn get_list_members(
     loop {
         match next_page_response {
             Err(e) => {
-                info!("get_list_members - next_page_response error: {}", e);
-                break;
+                panic!("get_list_members - next_page_response error: {}", e);
             } //return Err(anyhow!(e)),
             Ok(None) => {
-                // info!("next_page_response None");
                 break;
             }
             Ok(Some(ref next_page_result)) => {
                 info!("get_list_members - next_page_response");
-                let new_users: Option<Vec<User>> = next_page_result.clone().into_data();
-                if let Some(new_users) = new_users {
-                    users = [users, new_users].concat();
+                let new_list_users: Option<Vec<User>> = next_page_result.clone().into_data();
+                if let Some(new_list_users) = new_list_users {
+                    list_users = [list_users, new_list_users].concat();
                 }
                 let new_response = next_page_result.next_page().await;
                 parse_error_response(&new_response).await;
@@ -70,10 +68,8 @@ pub async fn get_list_members(
             }
         }
     }
-    users
-    // parse_error_response(&users_response).await;
 
-    // users_response.unwrap().into_data()
+    list_users
 }
 
 pub async fn get_users_by_username(
@@ -157,11 +153,9 @@ pub async fn get_user_tweets(
     loop {
         match next_page_response {
             Err(e) => {
-                info!("next_page_response error: {}", e);
-                break;
-            } //return Err(anyhow!(e)),
+                panic!("next_page_response error: {}", e);
+            }
             Ok(None) => {
-                // info!("next_page_response None");
                 break;
             }
             Ok(Some(ref next_page_result)) => {
@@ -244,81 +238,3 @@ pub async fn parse_error_response<T>(response: &Result<T, Error>) {
         Ok(_) => {}
     }
 }
-
-// Source: https://github.com/jpopesculian/twitter-v2-rs/issues/8
-// type DefaultRateLimiter = governor::RateLimiter<governor::state::NotKeyed, governor::state::InMemoryState, governor::clock::DefaultClock>;
-// type OptionResponse<Auth, T, Meta> = twitter_v2::Result<Option<twitter_v2::ApiResponse<Auth, Vec<T>, Meta>>>;
-// type Response<Auth, T, Meta> = twitter_v2::Result<twitter_v2::ApiResponse<Auth, Vec<T>, Meta>>;
-
-// pub async fn get_list_members<Auth>(api: &TwitterApi<Auth>, rl: &DefaultRateLimiter, list_id: u64) -> Result<Vec<User>>
-// where Auth: Authorization + Send + Sync + std::fmt::Debug {
-//   get_all_pages(rl,
-//                 async || {
-//                   api.get_list_members(list_id)
-//                     .user_fields([UserField::Id, UserField::Name])
-//                     .max_results(100)
-//                     .send()
-//                     .await
-//                 },
-//                 None)
-//     .await
-//     .with_context(|| format!("Failed to fetch list members for list {list_id}"))
-// }
-
-// pub async fn retry<Auth, T, Meta, F, Fut>(rl: &DefaultRateLimiter, func: F) -> OptionResponse<Auth, T, Meta>
-// where Auth: Authorization + Send + Sync + std::fmt::Debug,
-//       T: serde::de::DeserializeOwned + Clone + Debug + Send + Sync,
-//       F: Fn() -> Fut,
-//       Fut: std::future::Future<Output = OptionResponse<Auth, T, Meta>> {
-//   loop {
-//     rl.until_ready().await;
-//     match func().await {
-//       Err(twitter_v2::Error::Request(ref e)) if e.is_timeout() || e.is_connect() => {
-//         warn!(error=?e, "retrying due to request error");
-//       },
-//       Err(twitter_v2::Error::Api(ref e)) if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS => {
-//         warn!(error=?e, "retrying due to 429 response");
-//         // TODO(db48x): extend the twitter_v2 crate to expose the
-//         //   rate–limiting information provided by the twitter api
-//       },
-//       response => {
-//         if let Ok(Some(ref r)) = response {
-//           tracing::info!(url=%r.url(), "success");
-//         }
-//         return response;
-//       }
-//     }
-//   }
-// }
-
-// pub async fn get_all_pages<Auth, T, Meta, F, Fut>(rl: &DefaultRateLimiter,
-//                                                   func: F,
-//                                                   expected: Option<usize>) -> Result<Vec<T>>
-// where Auth: Authorization + Send + Sync + std::fmt::Debug,
-//       T: serde::de::DeserializeOwned + Clone + Debug + Send + Sync,
-//       Meta: twitter_v2::meta::PaginationMeta + serde::de::DeserializeOwned + Send + Sync,
-//       F: Fn() -> Fut,
-//       Fut: std::future::Future<Output = Response<Auth, T, Meta>> {
-//   let mut items: Vec<T> = match expected {
-//     Some(v) => Vec::with_capacity(v),
-//     _ => Vec::new(),
-//   };
-//   let mut response: OptionResponse<Auth, T, Meta> = retry(rl, async || func().await.map(Some)).await;
-//   loop {
-//     match response {
-//       Err(e) => return Err(anyhow!(e)),
-//       Ok(None) => break,
-//       Ok(Some(ref r)) => {
-//         if let Some(new_items) = r.data() {
-//           items.extend_from_slice(&new_items);
-//         }
-//         if matches!(r.meta(), Some(meta) if meta.next_token().is_some()) {
-//           response = retry(rl, async || r.next_page().await).await;
-//         } else {
-//           break;
-//         }
-//       }
-//     }
-//   }
-//   Ok(items)
-// }

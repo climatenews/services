@@ -28,8 +28,8 @@ pub async fn get_news_feed_urls(pool: &PgPool, timestamp: i64) -> Option<Vec<New
         WHERE
             nfu.created_at > $1    
         ORDER BY
-            -- url_score DESC
-            num_references DESC
+            url_score DESC
+            -- num_references DESC
         LIMIT 20 
      "#,
      timestamp

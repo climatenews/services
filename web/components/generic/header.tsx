@@ -1,5 +1,5 @@
-import { getCurrentYear } from "app/time";
 import { useState } from "react";
+import Link from "next/link";
 
 interface HeaderProps {
   title?: string;
@@ -44,10 +44,14 @@ export default function Header(props: HeaderProps) {
             </div>
             <ul className="flex flex-col items-center justify-around min-h-[150px]">
               <li className="text-3xl font-bold border-b border-gray-400 my-8">
-                <a href="/">Climate News</a>
+                <Link href="/">
+                  <a>Climate News</a>
+                </Link>
               </li>
               <li className="text-3xl font-bold my-8">
-                <a href="/about">About</a>
+                <Link href="/about">
+                  <a>About</a>
+                </Link>
               </li>
             </ul>
           </div>

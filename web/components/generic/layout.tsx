@@ -1,7 +1,8 @@
 import Footer from "components/generic/footer";
-import NavBar from "components/generic/navbar";
 
-export default function Layout({ children }) {
+type LayoutProps = React.PropsWithChildren<{}>;
+
+export default function Layout({ children } : LayoutProps) {
   return (
     <>
       <main>

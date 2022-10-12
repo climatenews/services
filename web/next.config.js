@@ -33,6 +33,14 @@ const securityHeaders = [
 ];
 
 module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
   output: "standalone",
   i18n: {
     locales: ["en"],

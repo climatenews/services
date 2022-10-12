@@ -18,7 +18,7 @@ pub async fn populate_news_feed_v1(db_pool: &PgPool) {
     info!("populate_news_feed_v1 - {:?}", Local::now());
     //TODO clear and update scores every 1 hour
     truncate_news_feed_url(db_pool).await.unwrap();
-    let last_week_timestamp = past_days(5).unix_timestamp();
+    let last_week_timestamp = past_days(3).unix_timestamp();
 
     // Direct & indirect references
     let news_referenced_urls = get_news_referenced_urls(db_pool, last_week_timestamp).await;

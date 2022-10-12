@@ -29,10 +29,12 @@
 - [ ] set updated_at when not checked?
 - [ ] use verified status in score
 - [ ] Use decimal for url score or *100 
-- [ ] retry failed API requests 2 times
+- [ ] retry failed API requests 2 times - https://github.com/jpopesculian/twitter-v2-rs/issues/8
 - [ ] terraform git action - https://learn.hashicorp.com/tutorials/terraform/github-actions
 - [ ] update terraform admin user 
 - [ ] use k8s? https://kompose.io/cd 
+- [ ] github action to lint web and services
+- [ ] start cron job if database empty
 
 # Web
 - [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
