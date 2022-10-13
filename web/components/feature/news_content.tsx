@@ -21,16 +21,8 @@ export default function NewsContent(props: NewsContentProps) {
                 {/* Title */}
                 <div className="lg:col-start-3 col-span-5">
                   <p className="text-lg lg:text-xl">
-                    <Link
-                      href={{
-                        pathname: "/news_item/[item_id]",
-                        query: { item_id: newsFeedUrl.urlId }
-                      }}
-                    >
-                      <a className="hover:underline">{newsFeedUrl?.title}</a>
-                    </Link>
+                      <a href={newsFeedUrl.expandedUrlParsed} className="hover:underline">{newsFeedUrl?.title}</a>
                   </p>
-
                   <p className="text-xs text-sky-400">
                     <a
                       className="hover:underline"
@@ -49,7 +41,9 @@ export default function NewsContent(props: NewsContentProps) {
                       }}
                     >
                       <a className="hover:underline">
-                        {`Shared by @${newsFeedUrl.firstReferencedByUsername} and ${newsFeedUrl.numReferences -1} others`}
+                        {`Shared by @${
+                          newsFeedUrl.firstReferencedByUsername
+                        } and ${newsFeedUrl.numReferences - 1} others | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
                       </a>
                     </Link>
                   </p>

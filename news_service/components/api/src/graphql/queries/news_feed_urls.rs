@@ -1,15 +1,17 @@
 use crate::graphql::errors::GqlError;
-use async_graphql::{Context, ErrorExtensions, FieldResult};
+use async_graphql::{ErrorExtensions, FieldResult};
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use db::util::time::past_days;
 use sqlx::postgres::PgPool;
 
+pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
+pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
 
-pub async fn news_feed_urls_query<'a>(ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {
-    let pool = ctx.data::<PgPool>().unwrap();
-    let recent_timestamp = past_days(3).unix_timestamp();
-    let news_feed_urls_result: Option<Vec<NewsFeedUrlQuery>> = get_news_feed_urls(pool, recent_timestamp).await;
+
+pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
+    let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
+    let news_feed_urls_result: Option<Vec<NewsFeedUrlQuery>> = get_news_feed_urls(db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT).await;
     match news_feed_urls_result {
         Some(news_feed_urls) => Ok(news_feed_urls),
         None => Err(GqlError::NotFound.extend()),

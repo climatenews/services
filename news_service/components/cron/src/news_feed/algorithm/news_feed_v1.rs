@@ -3,7 +3,10 @@ use crate::news_feed::algorithm::helper::{populate_author_score_map, populate_ur
 use crate::news_feed::models::tweet_info::TweetInfo;
 use chrono::Local;
 use db::models::news_feed_url::NewsFeedUrl;
-use db::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
+use db::sql::news_feed_url::{
+    find_news_feed_url_by_url_id, insert_news_feed_url, reset_news_feed_url_url_scores,
+    update_news_feed_url_url_score_and_num_references,
+};
 use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
@@ -16,8 +19,6 @@ use std::collections::HashMap;
 
 pub async fn populate_news_feed_v1(db_pool: &PgPool) {
     info!("populate_news_feed_v1 - {:?}", Local::now());
-    //TODO clear and update scores every 1 hour
-    truncate_news_feed_url(db_pool).await.unwrap();
     let last_week_timestamp = past_days(3).unix_timestamp();
 
     // Direct & indirect references
@@ -38,6 +39,8 @@ async fn populate_news_feed_urls_v1(
     author_score_map: HashMap<i64, i32>,
     url_to_tweet_map: HashMap<i32, Vec<TweetInfo>>,
 ) {
+    // Reset news feed URL scores
+    reset_news_feed_url_url_scores(db_pool).await.unwrap();
     // URLS with shared by author count + score
     for url_id in url_to_tweet_map.keys() {
         let tweet_info_vec = url_to_tweet_map.get(url_id).unwrap();
@@ -58,20 +61,39 @@ async fn populate_news_feed_urls_v1(
         let hours_since_first_created = time_since_first_created / seconds_in_hour();
 
         // Calculate url score factoring in time decay
-        let gravity = dec!(0.4);
+        // A gravity of 0.4 is used in the ranking algorithm
+        // Set it to 0.5 for newer results or 0.2 to older results
+        let gravity = dec!(0.3);
         let time_decayed_url_score =
             time_decayed_url_score(gravity, url_score, hours_since_first_created);
 
         // Number of references/shares
         let num_references = tweet_info_vec.len() as i32;
-        let news_feed_url = NewsFeedUrl {
-            url_id: *url_id,
-            url_score: time_decayed_url_score,
-            num_references,
-            first_referenced_by: first_tweet.author_id,
-            created_at: first_tweet.created_at,
-            created_at_str: datetime_to_str(datetime_from_unix_timestamp(first_tweet.created_at)),
-        };
-        insert_news_feed_url(db_pool, news_feed_url).await;
+
+        let news_feed_url_db = find_news_feed_url_by_url_id(db_pool, *url_id).await;
+        if news_feed_url_db.is_none() {
+            let news_feed_url = NewsFeedUrl {
+                url_id: *url_id,
+                url_score: time_decayed_url_score,
+                num_references,
+                first_referenced_by: first_tweet.author_id,
+                created_at: first_tweet.created_at,
+                created_at_str: datetime_to_str(datetime_from_unix_timestamp(
+                    first_tweet.created_at,
+                )),
+            };
+            insert_news_feed_url(db_pool, news_feed_url).await;
+        } else {
+            update_news_feed_url_url_score_and_num_references(
+                db_pool,
+                *url_id,
+                url_score,
+                num_references,
+            )
+            .await
+            .unwrap();
+        }
+        // create query to export NewsFeedUrl to csv as training_data every day
+        // add human_classification, gpt3_classification columns
     }
 }

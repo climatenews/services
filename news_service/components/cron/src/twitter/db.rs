@@ -1,60 +1,30 @@
-use std::collections::HashMap;
-
 use super::api::{get_tweets, split_requests_into_max_amount};
 use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
     referenced_tweet_kind_to_string,
 };
-use db::init_db_pool;
 use db::models::news_referenced_tweet::NewsReferencedTweet;
 use db::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
 use db::models::news_tweet::NewsTweet;
 use db::models::news_tweet_url::NewsTweetUrl;
 use db::models::news_twitter_list::NewsTwitterList;
 use db::models::news_twitter_user::NewsTwitterUser;
-use db::sql::news_feed_url::truncate_news_feed_url;
-use db::sql::news_referenced_tweet::{
-    insert_news_referenced_tweet, truncate_news_referenced_tweet,
-};
+use db::sql::news_referenced_tweet::insert_news_referenced_tweet;
 use db::sql::news_referenced_tweet_url::{
     find_news_referenced_tweet_url_by_tweet_id_and_url_id, insert_news_referenced_tweet_url,
-    truncate_news_referenced_tweet_url,
 };
-use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet, truncate_news_tweet};
-use db::sql::news_tweet_url::{
-    find_news_tweet_urls_by_expanded_url_parsed, insert_news_tweet_url, truncate_news_tweet_url,
-};
-use db::sql::news_twitter_list::{
-    find_news_twitter_list_by_list_id, insert_news_twitter_list, truncate_news_twitter_list,
-};
-use db::sql::news_twitter_user::{
-    find_news_twitter_user_by_user_id, insert_news_twitter_user, truncate_news_twitter_user,
-};
+use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet};
+use db::sql::news_tweet_url::{find_news_tweet_urls_by_expanded_url_parsed, insert_news_tweet_url};
+use db::sql::news_twitter_list::{find_news_twitter_list_by_list_id, insert_news_twitter_list};
+use db::sql::news_twitter_user::{find_news_twitter_user_by_user_id, insert_news_twitter_user};
 use db::util::convert::datetime_to_str;
 use sqlx::PgPool;
+use std::collections::HashMap;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::data::UrlImage;
 use twitter_v2::id::NumericId;
 use twitter_v2::{Tweet, TwitterApi, User};
 use url::Url;
-
-pub async fn init_db(reset_db: bool) -> PgPool {
-    let db_pool = init_db_pool().await.unwrap();
-    if reset_db {
-        truncate_db_tables(&db_pool).await;
-    }
-    db_pool
-}
-
-pub async fn truncate_db_tables(db_pool: &PgPool) {
-    truncate_news_twitter_list(db_pool).await.unwrap();
-    truncate_news_twitter_user(db_pool).await.unwrap();
-    truncate_news_tweet(db_pool).await.unwrap();
-    truncate_news_referenced_tweet(db_pool).await.unwrap();
-    truncate_news_tweet_url(db_pool).await.unwrap();
-    truncate_news_referenced_tweet_url(db_pool).await.unwrap();
-    truncate_news_feed_url(db_pool).await.unwrap();
-}
 
 pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Option<NewsTwitterList> {
     let news_twitter_list_db = find_news_twitter_list_by_list_id(db_pool, list_id).await;

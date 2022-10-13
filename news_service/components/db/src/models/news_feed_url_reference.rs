@@ -7,5 +7,4 @@ pub struct NewsFeedUrlReference {
     pub tweet_created_at_str: String,
     pub author_username: String,
     pub retweeted_by_usernames: Vec<String>,
-
 }

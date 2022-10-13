@@ -26,7 +26,6 @@ pub async fn insert_news_twitter_list(
     }
 }
 
-
 pub async fn find_news_twitter_list_by_list_id(
     pool: &PgPool,
     list_id: i64,
@@ -48,7 +47,6 @@ pub async fn find_news_twitter_list_by_list_id(
     }
 }
 
-
 pub async fn update_news_twitter_list_last_checked_at(
     pool: &PgPool,
     list_id: i64,
@@ -60,7 +58,7 @@ pub async fn update_news_twitter_list_last_checked_at(
             SET last_checked_at = $1
             WHERE list_id = $2
             "#,
-            last_checked_at,
+        last_checked_at,
         list_id
     )
     .execute(pool)
@@ -70,7 +68,6 @@ pub async fn update_news_twitter_list_last_checked_at(
 
     Ok(rows_affected > 0)
 }
-
 
 pub async fn truncate_news_twitter_list(pool: &PgPool) -> anyhow::Result<()> {
     sqlx::query("TRUNCATE news_twitter_list RESTART IDENTITY")

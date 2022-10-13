@@ -13,7 +13,8 @@ pub mod news_feed_urls;
 #[Object(extends)]
 impl Query {
     async fn news_feed_urls<'a>(&self, ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {
-        news_feed_urls_query(ctx).await
+        let db_pool = ctx.data::<PgPool>().unwrap();
+        news_feed_urls_query(db_pool).await
     }
 
     async fn news_feed_url_references<'a>(
@@ -21,7 +22,7 @@ impl Query {
         ctx: &'a Context<'_>,
         url_id: i32,
     ) -> FieldResult<Vec<NewsFeedUrlReference>> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        news_feed_url_references_query(pool, url_id).await
+        let db_pool = ctx.data::<PgPool>().unwrap();
+        news_feed_url_references_query(db_pool, url_id).await
     }
 }

@@ -3,11 +3,10 @@ use actix_web::{get, App, HttpResponse, HttpServer, Result};
 use chrono::Local;
 use chrono::Utc;
 use db::init_env;
+use db::util::db::init_db;
 use log::info;
-use news_feed::constants::RESET_DB;
 use std::env;
 use tokio_schedule::{every, Job};
-use twitter::db::init_db;
 
 pub mod news_feed;
 pub mod twitter;
@@ -39,7 +38,8 @@ async fn main() -> std::io::Result<()> {
 
 pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
-    let db_pool = init_db(RESET_DB).await;
+    let db_pool = init_db().await;
+    
     // #[cfg(debug_assertions)]
     hourly_cron_job(&db_pool).await; // only run in debug mode
 

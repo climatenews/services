@@ -37,15 +37,14 @@ pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<Bear
 }
 
 async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
-    // TODO avoid making API request if use is in the db?
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
         .unwrap();
     for list_id in TWITTER_LISTS {
         let news_twitter_list = parse_twitter_list(db_pool, list_id).await.unwrap();
         let last_checked_hours_diff = datetime_hours_diff(news_twitter_list.last_checked_at);
-        // Check if last_checked is over 24 hours or has no recent tweets
-        if last_checked_hours_diff > 24 {
+        // Check if last_checked is over 7 days
+        if last_checked_hours_diff > (24 * 7) {
             let list_users: Vec<User> =
                 get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
             update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())

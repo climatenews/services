@@ -18,5 +18,4 @@ pub struct NewsFeedUrlQuery {
     pub display_url: String,
     pub preview_image_thumbnail_url: Option<String>,
     pub preview_image_url: Option<String>,
-    
 }

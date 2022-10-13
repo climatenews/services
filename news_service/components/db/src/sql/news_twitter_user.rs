@@ -73,27 +73,6 @@ pub async fn find_news_twitter_user_by_user_id(
     }
 }
 
-pub async fn find_news_twitter_user_by_username(
-    pool: &PgPool,
-    username: &str,
-) -> Option<NewsTwitterUser> {
-    let query = sqlx::query_as!(
-        NewsTwitterUser,
-        r#"
-            SELECT user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at, last_checked_at
-            FROM news_twitter_user
-            WHERE username = $1;
-        "#,
-        username
-    );
-
-    let news_twitter_user_result = query.fetch_one(pool).await;
-    match news_twitter_user_result {
-        Ok(news_twitter_user) => Some(news_twitter_user),
-        Err(_) => None,
-    }
-}
-
 pub async fn update_news_twitter_user_last_checked_at(
     pool: &PgPool,
     user_id: i64,
@@ -105,7 +84,7 @@ pub async fn update_news_twitter_user_last_checked_at(
             SET last_checked_at = $1
             WHERE user_id = $2
             "#,
-            last_checked_at,
+        last_checked_at,
         user_id
     )
     .execute(pool)

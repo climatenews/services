@@ -15,8 +15,6 @@ use rust_decimal_macros::dec;
 //
 // url_score / (( hours_since_first_created +2 )^gravity)
 //
-// A gravity of 0.4 is used in the ranking algorithm
-// Set it to 0.5 for newer results or 0.2 to older results
 pub fn time_decayed_url_score(
     gravity: Decimal,
     url_score: i32,
