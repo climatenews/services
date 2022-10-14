@@ -1,24 +1,28 @@
+use anyhow::Result;
 use db::init_env;
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use db::util::db::init_db;
 use db::util::time::past_days;
+use english_language_detector::EnglishLanguageDetector;
 use serde::Serialize;
-use anyhow::{Result};
-use std::{fs::OpenOptions};
 use std::collections::HashSet;
 use std::fs;
+use std::fs::OpenOptions;
+use std::path::Path;
+
+pub mod english_language_detector;
 
 pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
 pub const NEWS_FEED_URLS_LIMIT: i64 = 700;
 pub const FILE_NAME: &str = "news_feed_urls.jsonl";
+pub const OPENAI_PROMPT_END: &str = " \n\n###\n\n";
 
 #[derive(Debug, Serialize)]
 struct Record {
     completion: String,
     prompt: String,
 }
-
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -28,7 +32,6 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-
 async fn export_news_feed_urls() -> Result<()> {
     let db_pool = init_db().await;
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
@@ -36,35 +39,41 @@ async fn export_news_feed_urls() -> Result<()> {
         get_news_feed_urls(&db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT)
             .await
             .unwrap();
-    fs::remove_file(FILE_NAME)?;
+
+    if Path::new(FILE_NAME).exists() {
+        fs::remove_file(FILE_NAME)?;
+    }
+
+    let english_language_detector = EnglishLanguageDetector::new();
 
     let mut file = OpenOptions::new()
-    .write(true)
-    .create(true)
-    .append(true)
-    .open(FILE_NAME)?;
+        .write(true)
+        .create(true)
+        .append(true)
+        .open(FILE_NAME)?;
 
     let mut news_feed_url_hashset: HashSet<String> = HashSet::new();
     for news_feed_url in news_feed_urls {
         if let (Some(title), Some(description)) = (news_feed_url.title, news_feed_url.description) {
-            let prompt = remove_unicode(format!("{} - {} \n\n###\n\n", title, description));
+            let title_and_description = remove_unicode(format!("{} - {}", title, description));
+            let is_english_language =
+                english_language_detector.is_english_language(title_and_description.clone());
 
-            if !news_feed_url_hashset.contains(&prompt.clone()) {
-                let record = Record {
-                    completion: String::from(" 1\n"),
-                    prompt: prompt.clone(),
-                };
-                jsonl::write(&mut file, &record)?;
-                news_feed_url_hashset.insert(prompt.clone());
+            if is_english_language {
+                let prompt =
+                    remove_unicode(format!("{}{}", title_and_description, OPENAI_PROMPT_END));
 
+                if !news_feed_url_hashset.contains(&prompt.clone()) {
+                    let record = Record {
+                        completion: String::from(" 1\n"),
+                        prompt: prompt.clone(),
+                    };
+                    jsonl::write(&mut file, &record)?;
+                    news_feed_url_hashset.insert(prompt.clone());
+                }
             }
-  
         }
     }
-
-
-
-
     Ok(())
 }
 

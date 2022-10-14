@@ -19,3 +19,5 @@ serde_json = { version = "1.0.64" }
 
 # Misc
 anyhow = "1.0.28"
+
+lingua = "1.4.0"
