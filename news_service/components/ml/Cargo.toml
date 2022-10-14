@@ -11,14 +11,11 @@ db = { path = "../db" }
 # Runtime
 tokio = {version = "1.15.0", features = ["full"]}
 
-csv = "1.1.6"
+jsonl = "4.0.1"
 
 # JSON
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.64" }
 
-# # Runtime - same version as OpenAI API
-# tokio = { version = "^0.2.5", features = ["full"]}
- 
-# OpenAI API
-openai-api = "0.1.4"
+# Misc
+anyhow = "1.0.28"
