@@ -1,4 +1,5 @@
 use super::api::{get_tweets, split_requests_into_max_amount};
+use crate::language::english_language_detector::EnglishLanguageDetector;
 use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
     referenced_tweet_kind_to_string,
@@ -79,7 +80,7 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
     }
 }
 
-pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet) {
+pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet, english_language_detector: &EnglishLanguageDetector) {
     let tweet_id = numeric_id_to_i64(tweet.id);
     let news_tweet_db = find_news_tweet_by_tweet_id(db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
@@ -96,10 +97,10 @@ pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet) {
             insert_news_tweet(db_pool, news_tweet).await.unwrap();
         }
     }
-    parse_tweet_urls(db_pool, tweet).await;
+    parse_tweet_urls(db_pool, tweet, english_language_detector).await;
 }
 
-pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
+pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet, english_language_detector: &EnglishLanguageDetector) {
     let tweet_id = numeric_id_to_i64(tweet.id);
     if let Some(entities) = tweet.entities.clone() {
         if let Some(urls) = entities.urls {
@@ -122,6 +123,10 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                                 url.expanded_url.starts_with("https://twitter.com")
                                     || url.expanded_url.starts_with("https://mobile.twitter.com");
 
+
+                                    let title_and_description = format!("{} - {}", url.title.clone(), url.description.clone());
+                            let is_english = true;  
+                            let is_climate_related = true;          
                             let (preview_image_thumbnail_url, preview_image_url) =
                                 parse_tweet_url_images(url.images);
 
@@ -132,6 +137,8 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet) {
                                 expanded_url_host,
                                 display_url: url.display_url,
                                 is_twitter_url,
+                                is_english,
+                                is_climate_related,
                                 title: url.title,
                                 description: url.description,
                                 preview_image_thumbnail_url,
@@ -223,6 +230,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
     all_news_referenced_tweets: Vec<NewsReferencedTweet>,
+    english_language_detector: &EnglishLanguageDetector
 ) {
     let tweet_ids: Vec<NumericId> = all_news_referenced_tweets
         .iter()
@@ -237,7 +245,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         let referenced_tweets: Option<Vec<Tweet>> = get_tweets(twitter_api, split_tweet_ids).await;
         if let Some(referenced_tweets) = referenced_tweets.clone() {
             for referenced_tweet in referenced_tweets {
-                parse_and_insert_tweet(db_pool, &referenced_tweet).await;
+                parse_and_insert_tweet(db_pool, &referenced_tweet, english_language_detector).await;
             }
         }
     }

@@ -6,6 +6,8 @@ CREATE TABLE news_tweet_url (
     expanded_url_host           TEXT        NOT NULL,
     display_url                 TEXT        NOT NULL,
     is_twitter_url              BOOLEAN     NOT NULL,
+    is_english                  BOOLEAN     NOT NULL,
+    is_climate_related          BOOLEAN     NOT NULL,
     title                       TEXT,
     description                 TEXT,
     preview_image_thumbnail_url TEXT,

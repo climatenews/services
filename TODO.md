@@ -12,8 +12,9 @@
 - [x] Add request timeout
 - [x] Import list of users
 - [x] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
-- [ ] Detect tweet language? https://github.com/pemistahl/lingua-rs
-- [ ] OpenAI fine tune model? https://beta.openai.com/playground/p/xPGDMRKLA3uNX8PbHV7MBPi1?model=text-davinci-002
+- [x] Create OpenAI fine tune model
+- [ ] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
+
 - [ ] Make openAI request manually? best prompt to use? - https://www.youtube.com/watch?v=sIS_OgplWN8
 - [ ] Prepare model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
 - [ ] Cache list users in db

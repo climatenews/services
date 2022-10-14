@@ -1,7 +1,6 @@
 pub static MAX_TWEET_RESULTS: usize = 100;
 pub static REQUEST_SLEEP_DURATION: u64 = 1500;
 
-
 pub static TWITTER_LISTS: [i64; 1] = [
     1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
 ];

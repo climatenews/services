@@ -44,7 +44,7 @@ async fn export_news_feed_urls() -> Result<()> {
         fs::remove_file(FILE_NAME)?;
     }
 
-    let english_language_detector = EnglishLanguageDetector::new();
+
 
     let mut file = OpenOptions::new()
         .write(true)

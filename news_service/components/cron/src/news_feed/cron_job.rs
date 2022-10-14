@@ -1,4 +1,5 @@
 use super::constants::TWITTER_LISTS;
+use crate::language::english_language_detector::EnglishLanguageDetector;
 use crate::news_feed::constants::TWITTER_USERNAMES;
 use crate::news_feed::user_score::calc_user_score;
 use crate::twitter::api::get_list_members;
@@ -37,6 +38,7 @@ pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<Bear
 }
 
 async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
+    let english_language_detector = EnglishLanguageDetector::new();
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
         .unwrap();
@@ -81,7 +83,7 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         if last_checked_minutes_diff > 30 || news_twitter_user.last_tweet_id.is_none() {
             let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
             let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await;
-            fetch_user_tweet_references(db_pool, twitter_api, &tweets).await;
+            fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector).await;
             update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
         }
         update_user_last_checked_at(db_pool, &news_twitter_user).await;
@@ -141,10 +143,11 @@ async fn fetch_user_tweet_references(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
     tweets: &Vec<Tweet>,
+    english_language_detector: &EnglishLanguageDetector
 ) {
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     for tweet in tweets.clone() {
-        parse_and_insert_tweet(db_pool, &tweet).await;
+        parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await;
         let news_referenced_tweets = parse_news_referenced_tweets(&tweet);
         all_news_referenced_tweets = [all_news_referenced_tweets, news_referenced_tweets].concat();
     }
@@ -153,6 +156,7 @@ async fn fetch_user_tweet_references(
             db_pool,
             twitter_api,
             all_news_referenced_tweets,
+            english_language_detector
         )
         .await;
     }

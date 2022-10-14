@@ -8,6 +8,7 @@ use log::info;
 use std::env;
 use tokio_schedule::{every, Job};
 
+pub mod language;
 pub mod news_feed;
 pub mod twitter;
 pub mod util;
@@ -39,7 +40,7 @@ async fn main() -> std::io::Result<()> {
 pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
     let db_pool = init_db().await;
-    
+
     // #[cfg(debug_assertions)]
     hourly_cron_job(&db_pool).await; // only run in debug mode
 
