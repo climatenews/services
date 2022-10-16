@@ -5,8 +5,8 @@ pub struct CompletionArgs {
     pub prompt: String,
     pub temperature: f32,
     pub max_tokens: u16,
-    pub stop: Vec<String>,
-    pub engine: String,
+    // pub stop: Vec<String>,
+    pub model: String,
 }
 
 #[derive(Deserialize)]
