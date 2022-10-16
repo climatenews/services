@@ -70,26 +70,3 @@ async fn export_news_feed_urls() -> Result<()> {
 fn remove_unicode(s: String) -> String {
     s.replace(|c: char| !c.is_ascii(), "").replace('"', "'")
 }
-
-// // TODO avoid using api library
-// async fn _gpt3_classification() {
-//     let api_token = std::env::var("OPENAI_API_KEY").unwrap();
-//     let client = Client::new(&api_token);
-//     let prompt = String::from("The following is a list of companies and the categories they fall into:\n\nApple, Facebook, Fedex\n\nApple\nCategory:",);
-//     println!(
-//         "{}{}",
-//         prompt,
-//         client.complete_prompt(prompt.as_str()).await.unwrap()
-//     );
-// }
-
-// response = openai.Completion.create(
-//   model="text-davinci-002",
-//   prompt="The following is a list of companies and the categories they fall into:\n\nApple, Facebook, Fedex\n\nApple\nCategory:",
-//   temperature=0,
-//   max_tokens=6,
-//   top_p=1,
-//   frequency_penalty=0,
-//   presence_penalty=0,
-//   stop=["\n"]
-// )

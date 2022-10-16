@@ -10,6 +10,7 @@ use tokio_schedule::{every, Job};
 
 pub mod language;
 pub mod news_feed;
+pub mod openai;
 pub mod twitter;
 pub mod util;
 
