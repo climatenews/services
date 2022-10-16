@@ -10,9 +10,8 @@ pub struct NewsFeedUrlQuery {
     pub num_references: i32,
     pub first_referenced_by_username: String,
     pub created_at: i64,
-    pub title: Option<String>,
-    // TODO make non-null
-    pub description: Option<String>,
+    pub title: String,
+    pub description: String,
     pub expanded_url_parsed: String,
     pub expanded_url_host: String,
     pub display_url: String,

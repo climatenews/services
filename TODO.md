@@ -11,18 +11,18 @@
 - [x] Add last checked at to user
 - [x] Add request timeout
 - [x] Import list of users
+- [x] Cache list users in db
 - [x] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
 - [x] Create OpenAI fine tune model
 - [ ] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
+- [ ] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
 
-- [ ] Make openAI request manually? best prompt to use? - https://www.youtube.com/watch?v=sIS_OgplWN8
-- [ ] Prepare model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
-- [ ] Cache list users in db
-- [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?
+- [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Dedup news_feed_url_references
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger

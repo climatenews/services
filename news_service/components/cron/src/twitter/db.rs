@@ -80,7 +80,11 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
     }
 }
 
-pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet, english_language_detector: &EnglishLanguageDetector) {
+pub async fn parse_and_insert_tweet(
+    db_pool: &PgPool,
+    tweet: &Tweet,
+    english_language_detector: &EnglishLanguageDetector,
+) {
     let tweet_id = numeric_id_to_i64(tweet.id);
     let news_tweet_db = find_news_tweet_by_tweet_id(db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
@@ -100,7 +104,11 @@ pub async fn parse_and_insert_tweet(db_pool: &PgPool, tweet: &Tweet, english_lan
     parse_tweet_urls(db_pool, tweet, english_language_detector).await;
 }
 
-pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet, english_language_detector: &EnglishLanguageDetector) {
+pub async fn parse_tweet_urls(
+    db_pool: &PgPool,
+    tweet: &Tweet,
+    english_language_detector: &EnglishLanguageDetector,
+) {
     let tweet_id = numeric_id_to_i64(tweet.id);
     if let Some(entities) = tweet.entities.clone() {
         if let Some(urls) = entities.urls {
@@ -124,38 +132,46 @@ pub async fn parse_tweet_urls(db_pool: &PgPool, tweet: &Tweet, english_language_
                                     || url.expanded_url.starts_with("https://mobile.twitter.com");
 
 
-                                    let title_and_description = format!("{} - {}", url.title.clone(), url.description.clone());
-                            let is_english = true;  
-                            let is_climate_related = true;          
-                            let (preview_image_thumbnail_url, preview_image_url) =
-                                parse_tweet_url_images(url.images);
+                            if let (Some(title), Some(description)) =
+                                (url.title.clone(), url.description.clone())
+                            {
+                                let title_and_description = format!("{} - {}", title, description);
+                                println!("title_and_description {}", title_and_description);
+                                let is_english = english_language_detector
+                                    .is_english_language(title_and_description);
+                                let is_climate_related = false;
 
-                            let news_tweet_url = NewsTweetUrl {
-                                url: url.url,
-                                expanded_url: url.expanded_url,
-                                expanded_url_parsed,
-                                expanded_url_host,
-                                display_url: url.display_url,
-                                is_twitter_url,
-                                is_english,
-                                is_climate_related,
-                                title: url.title,
-                                description: url.description,
-                                preview_image_thumbnail_url,
-                                preview_image_url,
-                                created_at: created_at.unix_timestamp(),
-                                created_at_str: datetime_to_str(created_at),
-                            };
+                                let (preview_image_thumbnail_url, preview_image_url) =
+                                    parse_tweet_url_images(url.images);
 
-                            let news_tweet_url_db = insert_news_tweet_url(db_pool, news_tweet_url)
-                                .await
-                                .unwrap();
-                            parse_and_insert_news_referenced_tweet_url(
-                                db_pool,
-                                tweet_id,
-                                news_tweet_url_db.id,
-                            )
-                            .await;
+                                let news_tweet_url = NewsTweetUrl {
+                                    url: url.url,
+                                    expanded_url: url.expanded_url,
+                                    expanded_url_parsed,
+                                    expanded_url_host,
+                                    display_url: url.display_url,
+                                    is_twitter_url,
+                                    is_english,
+                                    is_climate_related,
+                                    title,
+                                    description,
+                                    preview_image_thumbnail_url,
+                                    preview_image_url,
+                                    created_at: created_at.unix_timestamp(),
+                                    created_at_str: datetime_to_str(created_at),
+                                };
+
+                                let news_tweet_url_db =
+                                    insert_news_tweet_url(db_pool, news_tweet_url)
+                                        .await
+                                        .unwrap();
+                                parse_and_insert_news_referenced_tweet_url(
+                                    db_pool,
+                                    tweet_id,
+                                    news_tweet_url_db.id,
+                                )
+                                .await;
+                            }
                         }
                     }
                     Some(news_tweet_url_db) => {
@@ -230,7 +246,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
     all_news_referenced_tweets: Vec<NewsReferencedTweet>,
-    english_language_detector: &EnglishLanguageDetector
+    english_language_detector: &EnglishLanguageDetector,
 ) {
     let tweet_ids: Vec<NumericId> = all_news_referenced_tweets
         .iter()

@@ -31,9 +31,6 @@ sqlx migrate run
 sqlx migrate revert
 #test database
 export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action_test 
-sqlx database drop &&  
-sqlx database create &&  
-sqlx migrate run
 
 sqlx database drop -y && sqlx database create &&  sqlx migrate run
 

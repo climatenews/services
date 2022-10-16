@@ -4,14 +4,11 @@ use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use db::util::db::init_db;
 use db::util::time::past_days;
-use english_language_detector::EnglishLanguageDetector;
 use serde::Serialize;
 use std::collections::HashSet;
 use std::fs;
 use std::fs::OpenOptions;
 use std::path::Path;
-
-pub mod english_language_detector;
 
 pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
 pub const NEWS_FEED_URLS_LIMIT: i64 = 700;
@@ -44,8 +41,6 @@ async fn export_news_feed_urls() -> Result<()> {
         fs::remove_file(FILE_NAME)?;
     }
 
-
-
     let mut file = OpenOptions::new()
         .write(true)
         .create(true)
@@ -54,24 +49,19 @@ async fn export_news_feed_urls() -> Result<()> {
 
     let mut news_feed_url_hashset: HashSet<String> = HashSet::new();
     for news_feed_url in news_feed_urls {
-        if let (Some(title), Some(description)) = (news_feed_url.title, news_feed_url.description) {
-            let title_and_description = remove_unicode(format!("{} - {}", title, description));
-            let is_english_language =
-                english_language_detector.is_english_language(title_and_description.clone());
+        let title_and_description = remove_unicode(format!(
+            "{} - {}",
+            news_feed_url.title, news_feed_url.description
+        ));
+        let prompt = remove_unicode(format!("{}{}", title_and_description, OPENAI_PROMPT_END));
 
-            if is_english_language {
-                let prompt =
-                    remove_unicode(format!("{}{}", title_and_description, OPENAI_PROMPT_END));
-
-                if !news_feed_url_hashset.contains(&prompt.clone()) {
-                    let record = Record {
-                        completion: String::from(" 1\n"),
-                        prompt: prompt.clone(),
-                    };
-                    jsonl::write(&mut file, &record)?;
-                    news_feed_url_hashset.insert(prompt.clone());
-                }
-            }
+        if !news_feed_url_hashset.contains(&prompt.clone()) {
+            let record = Record {
+                completion: String::from(" 1\n"),
+                prompt: prompt.clone(),
+            };
+            jsonl::write(&mut file, &record)?;
+            news_feed_url_hashset.insert(prompt.clone());
         }
     }
     Ok(())

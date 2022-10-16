@@ -83,7 +83,8 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         if last_checked_minutes_diff > 30 || news_twitter_user.last_tweet_id.is_none() {
             let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
             let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await;
-            fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector).await;
+            fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector)
+                .await;
             update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
         }
         update_user_last_checked_at(db_pool, &news_twitter_user).await;
@@ -143,7 +144,7 @@ async fn fetch_user_tweet_references(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
     tweets: &Vec<Tweet>,
-    english_language_detector: &EnglishLanguageDetector
+    english_language_detector: &EnglishLanguageDetector,
 ) {
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     for tweet in tweets.clone() {
@@ -156,7 +157,7 @@ async fn fetch_user_tweet_references(
             db_pool,
             twitter_api,
             all_news_referenced_tweets,
-            english_language_detector
+            english_language_detector,
         )
         .await;
     }
