@@ -13,9 +13,9 @@ pub const NUM_DB_CONNECTIONS: u32 = 4;
 
 pub fn init_env() {
     dotenv::from_filename("../db/.env").ok();
-    // env_logger::builder()
-    //     .filter_level(log::LevelFilter::Info)
-    //     .init();
+    env_logger::builder()
+        .filter_level(log::LevelFilter::Info)
+        .init();
 }
 
 pub async fn init_db_pool() -> anyhow::Result<PgPool> {

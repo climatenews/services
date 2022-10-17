@@ -9,16 +9,12 @@ pub async fn fetch_climate_classification(text: &str) -> bool {
     let prompt = format!("{}{}", text, PROMPT_END);
     let completion = completion(prompt).await;
     return match completion.as_str() {
-        " 0" => {
-            false
-         },
-         " 1" => {
-            true
-         },
-         _ => {
-             panic!("Invalid completion string");
-         }
-    }
+        " 0" => false,
+        " 1" => true,
+        _ => {
+            panic!("Invalid completion string");
+        }
+    };
 }
 
 pub async fn completion(prompt: String) -> String {
@@ -58,8 +54,8 @@ pub async fn completion(prompt: String) -> String {
 #[cfg(test)]
 mod tests {
 
-    use db::init_env;
     use super::*;
+    use db::init_env;
 
     #[tokio::test]
     async fn fetch_climate_classification_test_1() {

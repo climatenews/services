@@ -5,10 +5,10 @@ pub static TWITTER_LISTS: [i64; 0] = [
     // 1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
 ];
 
-pub static TWITTER_USERNAMES: [&str; 1] = [
+pub static TWITTER_USERNAMES: [&str; 2] = [
     "GretaThunberg", // Climate and environmental activist
                      // "ayanaeliza",    // Marine biologist
-                     // "MichaelEMann",   // Scientist/Author
+                     "MichaelEMann",   // Scientist/Author
                      // "DrShepherd2013", // Atm Sci Prof, Fmr AMS Prez/NASA scientist
                      // "KHayhoe",        // Climate Scientist
                      // "ed_hawkins",     // Climate scientist, NCAS/University of Reading

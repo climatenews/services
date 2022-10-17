@@ -14,10 +14,10 @@
 - [x] Cache list users in db
 - [x] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
 - [x] Create OpenAI fine tune model
-- [ ] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
-- [ ] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
+- [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [ ] Remove links from is_english classification
 - [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
-
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
