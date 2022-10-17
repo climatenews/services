@@ -16,6 +16,7 @@
 - [x] Create OpenAI fine tune model
 - [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [ ] Deploy to AWS
 - [ ] Remove links from is_english classification
 - [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
 - [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
