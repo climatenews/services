@@ -16,6 +16,7 @@
 - [x] Create OpenAI fine tune model
 - [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [ ] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
 - [ ] Deploy to AWS
 - [ ] Remove links from is_english classification
 - [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data

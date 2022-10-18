@@ -17,8 +17,8 @@ pub fn datetime_hours_diff(date_timestamp: i64) -> i64 {
 }
 
 pub fn past_year() -> OffsetDateTime {
-    // now_utc_timestamp().checked_add((-365).days()).unwrap()
-    now_utc_timestamp().checked_add((-90).days()).unwrap()
+    now_utc_timestamp().checked_add((-365).days()).unwrap()
+    // now_utc_timestamp().checked_add((-90).days()).unwrap()
 }
 
 pub fn past_days(days: i64) -> OffsetDateTime {
