@@ -23,7 +23,6 @@
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Add referenced twitter users to db?
-- [ ] Deploy climateactioncollective.net to AWS. git clone & install docker & run docker compose up, point A record to IP
 - [ ] Dedup news_feed_url_references
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger
