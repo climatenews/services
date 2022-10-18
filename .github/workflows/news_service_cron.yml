@@ -21,7 +21,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: SQLX_OFFLINE=true cargo build --release --verbose --bin api
+      run: SQLX_OFFLINE=true cargo build --release --verbose --bin cron
     # - name: Run tests
     #   run: SQLX_OFFLINE=true cargo test --verbose
 # TODO add cargo clippy + git precommit hook?
+# Use postgres or in memory for unit tests
