@@ -1,2 +1,0 @@
-# sqlx bug fix - https://github.com/launchbadge/sqlx/issues/1494
-*.sql text eol=lf
