@@ -1,4 +1,4 @@
-name: news service api
+name: news_service api
 
 defaults:
   run:
@@ -20,9 +20,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build
-      run: SQLX_OFFLINE=true cargo build --release --verbose --bin cron
+    - name: Build api
+      run: SQLX_OFFLINE=true cargo build --release --verbose --bin api
+    - name: Build cron
+      run: SQLX_OFFLINE=true cargo build --release --verbose --bin cron      
     # - name: Run tests
     #   run: SQLX_OFFLINE=true cargo test --verbose
 # TODO add cargo clippy + git precommit hook?
-# Use postgres or in memory for unit tests
