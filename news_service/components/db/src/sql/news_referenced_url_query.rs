@@ -29,6 +29,7 @@ pub async fn get_news_referenced_urls(
             
         WHERE
             tu.is_twitter_url = False
+            AND tu.is_english = True
             AND tu.title IS NOT NULL
             AND u.username IS NOT NULL
             AND t.in_reply_to_user_id IS NULL

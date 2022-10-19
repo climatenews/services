@@ -6,6 +6,11 @@ interface NewsContentProps {
   newsFeedUrls: NewsFeedUrl[];
 }
 
+// get first 10 words of a string
+function getWordStr(str: string) {
+  return str != null ? str.split(/\s+/).slice(0, 20).join(" ") + " ...": "";
+}
+
 export default function NewsContent(props: NewsContentProps) {
   //{`${newsFeedUrl.urlScore}. `}
   return (
@@ -20,8 +25,11 @@ export default function NewsContent(props: NewsContentProps) {
               >
                 {/* Title */}
                 <div className="lg:col-start-3 col-span-5">
-                  <p className="text-lg lg:text-xl">
+                  <p className="text-lg">
                       <a href={newsFeedUrl.expandedUrlParsed} className="hover:underline">{newsFeedUrl?.title}</a>
+                  </p>
+                  <p className="text-sm">
+                      {getWordStr(newsFeedUrl?.description)}
                   </p>
                   <p className="text-xs text-sky-400">
                     <a
@@ -43,7 +51,7 @@ export default function NewsContent(props: NewsContentProps) {
                       <a className="hover:underline">
                         {`Shared by @${
                           newsFeedUrl.firstReferencedByUsername
-                        } and ${newsFeedUrl.numReferences - 1} others | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
+                        } ${newsFeedUrl.numReferences > 1 ? `and ${newsFeedUrl.numReferences - 1} others` :  ""} | ${timeSince(new Date(newsFeedUrl.createdAt * 1000))}`}
                       </a>
                     </Link>
                   </p>

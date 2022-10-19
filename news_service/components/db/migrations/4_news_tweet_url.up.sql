@@ -7,7 +7,7 @@ CREATE TABLE news_tweet_url (
     display_url                 TEXT        NOT NULL,
     is_twitter_url              BOOLEAN     NOT NULL,
     is_english                  BOOLEAN     NOT NULL,
-    is_climate_related          BOOLEAN     NOT NULL,
+    is_climate_related          BOOLEAN,
     title                       TEXT        NOT NULL,
     description                 TEXT        NOT NULL,
     preview_image_thumbnail_url TEXT,

@@ -8,8 +8,8 @@ type NewsFeedUrl {
 	numReferences: Int!
 	firstReferencedByUsername: String!
 	createdAt: Int!
-	title: String
-	description: String
+	title: String!
+	description: String!
 	expandedUrlParsed: String!
 	expandedUrlHost: String!
 	displayUrl: String!

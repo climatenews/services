@@ -5,7 +5,7 @@ pub static TWITTER_LISTS: [i64; 0] = [
     // 1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
 ];
 
-pub static TWITTER_USERNAMES: [&str; 7] = [
+pub static TWITTER_USERNAMES: [&str; 15] = [
     "GretaThunberg",  // Climate and environmental activist
     "ayanaeliza",     // Marine biologist
     "MichaelEMann",   // Scientist/Author
@@ -13,14 +13,14 @@ pub static TWITTER_USERNAMES: [&str; 7] = [
     "KHayhoe",        // Climate Scientist
     "ed_hawkins",     // Climate scientist, NCAS/University of Reading
     "climategeek",    // Climate Scientist
-                      // "ZLabe",          // Climate Scientist (Atmospheric) PhD
-                      // "ClimateOfGavin", // Climate scientist
-                      // "ClimateHuman",   // NASA climate scientist
-                      // "DrKWilkinson",   // Climate author
-                      // "DrKateMarvel",   // Climate scientist @NASAGISS
-                      // "AndrewDessler",  // Prof of Atmospheric Sciences & climate scientist @ Texas A&M
-                      // "KA_Nicholas",    // Sustainability & climate scientist @lunduniversity
-                      // "annajanejoyner", // Founder @goodenergystory
+    "ZLabe",          // Climate Scientist (Atmospheric) PhD
+    "ClimateOfGavin", // Climate scientist
+    "ClimateHuman",   // NASA climate scientist
+    "DrKWilkinson",   // Climate author
+    "DrKateMarvel",   // Climate scientist @NASAGISS
+    "AndrewDessler",  // Prof of Atmospheric Sciences & climate scientist @ Texas A&M
+    "KA_Nicholas",    // Sustainability & climate scientist @lunduniversity
+    "annajanejoyner", // Founder @goodenergystory
                       // "KevinClimate",   // Professor of energy and climate change
                       // "JustinHGillis",  // Author
                       // "CAugustenborg",  // Assistant Professor @UCDDublin @UCDEarth

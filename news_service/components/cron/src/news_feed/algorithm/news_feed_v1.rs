@@ -72,6 +72,10 @@ async fn populate_news_feed_urls_v1(
 
         let news_feed_url_db = find_news_feed_url_by_url_id(db_pool, *url_id).await;
         if news_feed_url_db.is_none() {
+            // Only call openai API when necessary to reduce API fees
+            // let is_climate_related = fetch_climate_classification(&title_and_description).await;
+            //update 
+
             let news_feed_url = NewsFeedUrl {
                 url_id: *url_id,
                 url_score: time_decayed_url_score,
@@ -83,6 +87,7 @@ async fn populate_news_feed_urls_v1(
                 )),
             };
             insert_news_feed_url(db_pool, news_feed_url).await;
+
         } else {
             update_news_feed_url_url_score_and_num_references(
                 db_pool,

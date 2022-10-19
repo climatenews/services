@@ -1,5 +1,4 @@
 use crate::openai::models::{Completion, CompletionArgs};
-use log::info;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 
 const BASE_URL: &str = "https://api.openai.com/v1";
@@ -42,9 +41,7 @@ pub async fn completion(prompt: String) -> String {
             panic!("error: {:?}", e);
         }
         Ok(response) => {
-            info!("status: {}", response.status());
             let mut result: Completion = response.json().await.unwrap();
-            // info!("Response: '{}'", result.choices[0].text);
             let choice = result.choices.remove(0);
             return choice.text;
         }

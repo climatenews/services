@@ -166,10 +166,7 @@ pub async fn parse_and_insert_tweet_url(
 
         if let (Some(title), Some(description)) = (url.title.clone(), url.description.clone()) {
             let title_and_description = format!("{} - {}", title, description);
-            info!("title_and_description {}", title_and_description);
-            let is_english = english_language_detector.is_english_language(&title_and_description);
-            let is_climate_related = fetch_climate_classification(&title_and_description).await;
-
+            let is_english = english_language_detector.is_english_language(&title_and_description);    
             let (preview_image_thumbnail_url, preview_image_url) =
                 parse_tweet_url_images(url.images);
 
@@ -181,7 +178,7 @@ pub async fn parse_and_insert_tweet_url(
                 display_url: url.display_url,
                 is_twitter_url,
                 is_english,
-                is_climate_related,
+                is_climate_related: None,
                 title,
                 description,
                 preview_image_thumbnail_url,

@@ -30,7 +30,7 @@ pub struct NewsTweetUrl {
     pub display_url: String,
     pub is_twitter_url: bool,
     pub is_english: bool,
-    pub is_climate_related: bool,
+    pub is_climate_related: Option<bool>,
     pub title: String,
     pub description: String,
     pub preview_image_thumbnail_url: Option<String>,
