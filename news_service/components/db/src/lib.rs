@@ -4,6 +4,7 @@ use std::env;
 use std::str::FromStr;
 use std::time::Duration;
 
+pub mod constants;
 pub mod models;
 pub mod queries;
 pub mod sql;

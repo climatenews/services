@@ -1,13 +1,16 @@
 use super::time_decay::time_decayed_url_score;
 use crate::news_feed::algorithm::helper::{populate_author_score_map, populate_url_to_tweet_map};
 use crate::news_feed::models::tweet_info::TweetInfo;
+use crate::openai::api::fetch_news_tweet_url_climate_classification;
 use chrono::Local;
+use db::constants::NEWS_FEED_URLS_NUM_DAYS;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::sql::news_feed_url::{
     find_news_feed_url_by_url_id, insert_news_feed_url, reset_news_feed_url_url_scores,
     update_news_feed_url_url_score_and_num_references,
 };
 use db::sql::news_referenced_url_query::get_news_referenced_urls;
+use db::sql::news_tweet_url::find_news_tweet_url_by_url_id;
 use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
@@ -19,7 +22,7 @@ use std::collections::HashMap;
 
 pub async fn populate_news_feed_v1(db_pool: &PgPool) {
     info!("populate_news_feed_v1 - {:?}", Local::now());
-    let last_week_timestamp = past_days(3).unix_timestamp();
+    let last_week_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
 
     // Direct & indirect references
     let news_referenced_urls = get_news_referenced_urls(db_pool, last_week_timestamp).await;
@@ -72,10 +75,12 @@ async fn populate_news_feed_urls_v1(
 
         let news_feed_url_db = find_news_feed_url_by_url_id(db_pool, *url_id).await;
         if news_feed_url_db.is_none() {
-            // Only call openai API when necessary to reduce API fees
-            // get news feed title_and_description
-            let is_climate_related = false;//fetch_climate_classification(&url_id).await;
-            //update 
+            // Only call OpenAI API for news feed links to reduce API fees
+            let news_tweet_url = find_news_tweet_url_by_url_id(db_pool, *url_id)
+                .await
+                .unwrap();
+            let is_climate_related =
+                fetch_news_tweet_url_climate_classification(news_tweet_url).await;
 
             let news_feed_url = NewsFeedUrl {
                 url_id: *url_id,
@@ -89,7 +94,6 @@ async fn populate_news_feed_urls_v1(
                 )),
             };
             insert_news_feed_url(db_pool, news_feed_url).await;
-
         } else {
             update_news_feed_url_url_score_and_num_references(
                 db_pool,

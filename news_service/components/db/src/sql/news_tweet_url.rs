@@ -39,7 +39,7 @@ pub async fn insert_news_tweet_url(
 }
 
 // TODO: Log sqlx errors + ignore RowNotFound errors
-pub async fn find_news_tweet_urls_by_expanded_url_parsed(
+pub async fn find_news_tweet_url_by_expanded_url_parsed(
     pool: &PgPool,
     expanded_url_parsed: String,
 ) -> Option<NewsTweetUrlWithId> {
@@ -52,6 +52,25 @@ pub async fn find_news_tweet_urls_by_expanded_url_parsed(
             WHERE expanded_url_parsed = $1         
             "#,
             expanded_url_parsed
+    )
+    .fetch_one(pool)
+    .await;
+    match news_tweet_url_result {
+        Ok(news_tweet_url) => Some(news_tweet_url),
+        Err(_) => None,
+    }
+}
+
+pub async fn find_news_tweet_url_by_url_id(pool: &PgPool, url_id: i32) -> Option<NewsTweetUrlWithId> {
+    let news_tweet_url_result = sqlx::query_as!(
+        NewsTweetUrlWithId,
+        r#"
+            SELECT 
+                id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_twitter_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str
+            FROM news_tweet_url   
+            WHERE id = $1         
+            "#,
+            url_id
     )
     .fetch_one(pool)
     .await;

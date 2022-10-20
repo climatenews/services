@@ -15,7 +15,7 @@ use db::sql::news_referenced_tweet_url::{
     find_news_referenced_tweet_url_by_tweet_id_and_url_id, insert_news_referenced_tweet_url,
 };
 use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet};
-use db::sql::news_tweet_url::{find_news_tweet_urls_by_expanded_url_parsed, insert_news_tweet_url};
+use db::sql::news_tweet_url::{find_news_tweet_url_by_expanded_url_parsed, insert_news_tweet_url};
 use db::sql::news_twitter_list::{find_news_twitter_list_by_list_id, insert_news_twitter_list};
 use db::sql::news_twitter_user::{find_news_twitter_user_by_user_id, insert_news_twitter_user};
 use db::util::convert::datetime_to_str;
@@ -115,7 +115,7 @@ pub async fn parse_tweet_urls(
             for url in urls {
                 let expanded_url = Url::parse(&url.expanded_url).unwrap();
                 let expanded_url_parsed = get_expanded_url_parsed(expanded_url.clone());
-                let news_tweet_url_db_result = find_news_tweet_urls_by_expanded_url_parsed(
+                let news_tweet_url_db_result = find_news_tweet_url_by_expanded_url_parsed(
                     db_pool,
                     expanded_url_parsed.clone(),
                 )
@@ -164,7 +164,7 @@ pub async fn parse_and_insert_tweet_url(
 
         if let (Some(title), Some(description)) = (url.title.clone(), url.description.clone()) {
             let title_and_description = format!("{} - {}", title, description);
-            let is_english = english_language_detector.is_english_language(&title_and_description);    
+            let is_english = english_language_detector.is_english_language(&title_and_description);
             let (preview_image_thumbnail_url, preview_image_url) =
                 parse_tweet_url_images(url.images);
 

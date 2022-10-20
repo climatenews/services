@@ -1,4 +1,5 @@
 use anyhow::Result;
+use db::constants::NEWS_FEED_URLS_NUM_DAYS;
 use db::init_env;
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
@@ -10,7 +11,6 @@ use std::fs;
 use std::fs::OpenOptions;
 use std::path::Path;
 
-pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
 pub const NEWS_FEED_URLS_LIMIT: i64 = 700;
 pub const FILE_NAME: &str = "news_feed_urls.jsonl";
 pub const OPENAI_PROMPT_END: &str = " \n\n###\n\n";
