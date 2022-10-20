@@ -31,7 +31,7 @@ pub async fn get_news_feed_urls(
             JOIN news_twitter_user as u ON u.user_id = nfu.first_referenced_by
         WHERE
             nfu.created_at > $1  
-            -- AND tu.is_climate_related = True  
+            AND nfu.is_climate_related = True  
         ORDER BY
             url_score DESC
             -- num_references DESC
