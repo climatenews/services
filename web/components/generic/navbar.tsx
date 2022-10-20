@@ -22,7 +22,7 @@ interface NavBarProps {
 
 export default function NavBar(props: NavBarProps) {
   return (
-    <nav id="header" className="fixed w-full z-10 top-0">
+    <nav id="header" className="fixed w-full z-10 top-0 ">
       <div className="w-full md:max-w-4xl mx-auto flex flex-wrap items-center justify-between my-6 lg:pl-4">
 
         <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">

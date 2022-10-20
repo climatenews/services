@@ -15,15 +15,13 @@ export default function NewsContent(props: NewsContentProps) {
   //{`${newsFeedUrl.urlScore}. `}
   return (
     <>
-          <div className="container w-full md:max-w-3xl mx-auto">
-      <div className="relative py-2 sm:py-6 lg:py-4">
-        <div className="mx-auto max-w-md pt-8 text-start sm:max-w-3xl  lg:max-w-7xl ">
-      <div className="font-sans">
-        <h1 className="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl">News</h1>
-        <p className="text-sm md:text-base font-normal text-gray-600">An aggregated list of climate related news</p>
-      </div>
-      </div>
-      </div>
+      <div className="container w-full md:max-w-3xl mx-auto">
+        <div className="relative py-2 sm:py-6 lg:py-4">
+          <div className="mx-auto max-w-md pt-8 text-start sm:max-w-3xl lg:max-w-7xl ">
+              <h1 className="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-xl md:text-2xl">News</h1>
+              <p className="text-sm md:text-base font-normal text-gray-600">A news feed of climate related articles recently shared by <a className="hover:underline">climate scientists and climate activists.</a></p>
+          </div>
+        </div>
 
 
         <ul>

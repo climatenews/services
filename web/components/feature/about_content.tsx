@@ -16,9 +16,12 @@ export default function AboutContent() {
           <p className="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             About Us
           </p>
-          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+          <p className="mx-auto mt-5 max-w-prose text-base text-gray-500">
             Climate Action Collective is a benefit company registered in BC,
-            Canada in 2022. We aim to improve climate related education and make
+            Canada in 2022.
+          </p>
+          <p className="mx-auto mt-1 max-w-prose text-base text-gray-500">
+            We aim to improve climate related education and make
             tools for individuals and corporations to take meaningful climate
             action.
           </p>
