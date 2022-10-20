@@ -1,6 +1,5 @@
 use super::api::{get_tweets, split_requests_into_max_amount};
 use crate::language::english_language_detector::EnglishLanguageDetector;
-use crate::openai::api::fetch_climate_classification;
 use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
     referenced_tweet_kind_to_string,
@@ -20,7 +19,6 @@ use db::sql::news_tweet_url::{find_news_tweet_urls_by_expanded_url_parsed, inser
 use db::sql::news_twitter_list::{find_news_twitter_list_by_list_id, insert_news_twitter_list};
 use db::sql::news_twitter_user::{find_news_twitter_user_by_user_id, insert_news_twitter_user};
 use db::util::convert::datetime_to_str;
-use log::info;
 use sqlx::PgPool;
 use std::collections::HashMap;
 use twitter_v2::authorization::BearerToken;
@@ -178,7 +176,6 @@ pub async fn parse_and_insert_tweet_url(
                 display_url: url.display_url,
                 is_twitter_url,
                 is_english,
-                is_climate_related: None,
                 title,
                 description,
                 preview_image_thumbnail_url,

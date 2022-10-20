@@ -9,16 +9,17 @@ pub async fn insert_news_feed_url(
         NewsFeedUrl,
         r#"
             INSERT INTO news_feed_url ( 
-                url_id, url_score, num_references, first_referenced_by, created_at, created_at_str
+                url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
              )
-            VALUES ( $1, $2, $3, $4, $5, $6)
+            VALUES ( $1, $2, $3, $4, $5, $6, $7)
             RETURNING 
-                url_id, url_score, num_references, first_referenced_by, created_at, created_at_str
+                url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
             "#,
         news_feed_url.url_id,
         news_feed_url.url_score,
         news_feed_url.num_references,
         news_feed_url.first_referenced_by,
+        news_feed_url.is_climate_related,
         news_feed_url.created_at,
         news_feed_url.created_at_str,
     )
@@ -34,7 +35,7 @@ pub async fn find_news_feed_url_by_url_id(pool: &PgPool, url_id: i32) -> Option<
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
-            SELECT url_id, url_score, num_references, first_referenced_by, created_at, created_at_str
+            SELECT url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
             FROM news_feed_url
             WHERE url_id = $1;
         "#,
@@ -91,7 +92,7 @@ pub async fn find_all_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrl>> 
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
-            SELECT url_id, url_score, num_references, first_referenced_by, created_at, created_at_str
+            SELECT url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
             FROM news_feed_url
         "#
     );
