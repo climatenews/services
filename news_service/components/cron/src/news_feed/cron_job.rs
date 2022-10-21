@@ -58,6 +58,7 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
                     users.push(list_user);
                 }
             }
+            // TODO ensure users are saved before updating list_last_checked_at
             update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
             .await
             .unwrap();

@@ -12,7 +12,7 @@ path = "src/main.rs"
 db = { path = "../db" }
 
 # Twitter API
-twitter-v2 = {version = "0.1.8", features = ["rustls-tls"], git = "https://github.com/patrick-fitzgerald/twitter-v2-rs"  }
+twitter-v2 = {version = "0.1.9", features = ["rustls-tls"], git = "https://github.com/patrick-fitzgerald/twitter-v2-rs"  }
 reqwest = "0.11.12"
 
 # URL parsing

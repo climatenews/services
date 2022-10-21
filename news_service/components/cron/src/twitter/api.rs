@@ -148,7 +148,9 @@ pub async fn get_user_tweets(
     if let Some(new_tweets) = tweets_api_response.clone().into_data() {
         tweets = [tweets, new_tweets].concat();
     }
+    // println!("{}", tweets_api_response.url());
     let mut next_page_response = tweets_api_response.next_page().await;
+    
     parse_error_response(&next_page_response).await;
     loop {
         match next_page_response {
@@ -164,6 +166,7 @@ pub async fn get_user_tweets(
                 if let Some(new_tweets) = new_tweets {
                     tweets = [tweets, new_tweets].concat();
                 }
+                // println!("{}", next_page_result.url());
                 let new_response = next_page_result.next_page().await;
                 parse_error_response(&new_response).await;
                 next_page_response = new_response;

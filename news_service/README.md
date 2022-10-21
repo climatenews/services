@@ -60,3 +60,7 @@ SQLX_OFFLINE=true cargo build --release --bin api
 ## docker compose
 sudo docker-compose up -d --build
 sudo docker-compose logs --tail="all" -f
+
+
+# Twitter
+curl "https://api.twitter.com/2/users/1136330689475993600/tweets?max_results=100&tweet.fields=author_id%2Ccreated_at%2Cin_reply_to_user_id%2Cconversation_id%2Centities%2Creferenced_tweets&start_time=2022-07-23T22%3A56%3A37Z&exclude=replies&pagination_token=7140dibdnow9c7btw4232twylvn0m00zo5526s4w27bcg" -H "Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAMo6ggEAAAAArLoP%2FRAXVHU1jsuvyrAvIKKUWyg%3DE5FPLBkAJOIy680R341JWFM1Ri1hM8ymZqQ6xjW7jDKTJ4Z4np"

@@ -17,6 +17,7 @@
 - [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
 - [x] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
+- [ ] (bug) save users before updating list updated_at column
 - [ ] Improve mobile design
 - [ ] Only make openAI requests for top 30 news feed articles after calculating score
 - [ ] Deploy to AWS
