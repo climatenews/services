@@ -49,9 +49,6 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         if last_checked_hours_diff > (24 * 7) {
             let list_users: Vec<User> =
                 get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
-            update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
-                .await
-                .unwrap();
             for list_user in list_users {
                 let followers_count = list_user
                     .public_metrics
@@ -61,6 +58,9 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
                     users.push(list_user);
                 }
             }
+            update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
+            .await
+            .unwrap();
         }
     }
     // Remove duplicate users
