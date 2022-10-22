@@ -34,6 +34,7 @@ pub async fn insert_news_tweet_url(
 
     match news_tweet_url_result {
         Ok(news_tweet_url) => Some(news_tweet_url),
+        // TODO print errors
         Err(_) => None,
     }
 }

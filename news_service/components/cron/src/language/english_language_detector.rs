@@ -19,7 +19,6 @@ impl EnglishLanguageDetector {
         if detected_language == Some(English) {
             return true;
         } else {
-            info!("not english: {}", text);
             return false;
         }
     }
