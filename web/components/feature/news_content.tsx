@@ -16,12 +16,10 @@ export default function NewsContent(props: NewsContentProps) {
   return (
     <>
       <div className="container w-full md:max-w-3xl mx-auto">
-        <div className="relative py-2 sm:py-6 lg:py-4">
-          <div className="mx-auto max-w-md pt-8 text-start sm:max-w-3xl lg:max-w-7xl ">
-              <h1 className="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-xl md:text-2xl">News</h1>
-              <p className="text-sm md:text-base font-normal text-gray-600">A news feed of climate related articles recently shared by <a className="hover:underline">climate scientists and climate activists.</a></p>
+          <div className="pt-6 pb-2">
+              <h1 className="font-bold font-sans break-normal text-gray-900  text-xl md:text-2xl">News</h1>
+              <p className="text-xs font-normal text-gray-600 mt-1">Top trending articles shared by <a className="hover:underline">climate scientists and activists.</a></p>
           </div>
-        </div>
 
 
         <ul>
