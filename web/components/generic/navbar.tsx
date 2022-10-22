@@ -1,10 +1,6 @@
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "News", href: "/" },
-  { name: "Jobs", href: "/jobs" },
   { name: "About", href: "/about" }
 ];
 
@@ -22,10 +18,9 @@ interface NavBarProps {
 
 export default function NavBar(props: NavBarProps) {
   return (
-    <nav id="header" className="fixed w-full z-10 top-0 ">
-      <div className="w-full md:max-w-4xl mx-auto flex flex-wrap items-center justify-between my-6 lg:pl-4">
-
-        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+    <nav id="header" className="container px-4 w-full md:max-w-3xl mx-auto ">
+      <div className="w-full mx-auto flex flex-wrap items-center justify-between py-6">
+        <div className="flex flex-1">
           <div className="flex flex-shrink-0 items-center">
             <img
               className="block h-8 w-auto"
@@ -34,29 +29,22 @@ export default function NavBar(props: NavBarProps) {
             />
           </div>
           <div className="flex flex-shrink-0 items-center">
-          <a
-            className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4"
-            href="#"
-          >
-            Climate Action Collective
-          </a>
+            <a
+              className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4"
+              href="#"
+            >
+              Climate Action Collective
+            </a>
           </div>
         </div>
 
-
-        <div className="block lg:hidden pr-4">
+        {/* Mobile button */}
+        <div className="block lg:hidden">
           <button
             id="nav-toggle"
-            className="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-gray-900 hover:border-green-500 appearance-none focus:outline-none"
+            className="flex items-center px-2 py-2 rounded text-gray-500  hover:text-gray-900 hover:border-green-500 appearance-none focus:outline-none"
           >
-            <svg
-              className="fill-current h-3 w-3"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-            </svg>
+            <svg width="36px" height="36px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><title>Hmaburger menu</title><path d="M41,14H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,14Z" fill="#000000" /><path d="M41,26H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,26Z" fill="#000000" /><path d="M41,38H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,38Z" fill="#000000" /></svg>
           </button>
         </div>
 
@@ -65,31 +53,27 @@ export default function NavBar(props: NavBarProps) {
           id="nav-content"
         >
           <ul className="list-reset lg:flex justify-end flex-1 items-center">
-            
-            
-          {navigation.map((item) => (
-            <li className="mr-3">
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            isCurrentRoute(props.pageRoute, item.href)
-                              ? "text-gray-900 font-bold"
-                              : "text-gray-600 hover:text-gray-900 hover:text-underline",
-                            "py-2 px-4 inline-block no-underline"
-                          )}
-                          aria-current={
-                            isCurrentRoute(props.pageRoute, item.href)
-                              ? "page"
-                              : undefined
-                          }
-                        >
-                          {item.name}
-                        </a>
-                        </li>
-                      ))}
-            
-            
+            {navigation.map((item) => (
+              <li className="mr-3" key={item.name}>
+                <a
+                  href={item.href}
+                  className={classNames(
+                    isCurrentRoute(props.pageRoute, item.href)
+                      ? "text-gray-900 font-bold"
+                      : "text-gray-600 hover:text-gray-900 hover:text-underline",
+                    "py-2 px-4 inline-block no-underline"
+                  )}
+                  aria-current={
+                    isCurrentRoute(props.pageRoute, item.href)
+                      ? "page"
+                      : undefined
+                  }
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))}
+
             {/* <li className="mr-3">
               <a
                 className=" "
