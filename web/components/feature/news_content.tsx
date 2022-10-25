@@ -7,6 +7,18 @@ interface NewsContentProps {
   newsFeedUrls: NewsFeedUrl[];
 }
 
+function sharedByText(newsFeedUrl: NewsFeedUrl): String {
+  var sharedByText = `Shared by @${newsFeedUrl.firstReferencedByUsername}`
+  var numReferencesText = ""
+  if(newsFeedUrl.numReferences > 2){
+    numReferencesText = `and ${newsFeedUrl.numReferences - 1} others`
+  }else if(newsFeedUrl.numReferences == 2){
+    numReferencesText = `and 1 other`
+  }
+  var dateText = timeSince(new Date(newsFeedUrl.createdAt * 1000))
+  return `${sharedByText}${numReferencesText} | ${dateText}`
+}
+
 export default function NewsContent(props: NewsContentProps) {
   //{`${newsFeedUrl.urlScore}. `}
   
@@ -44,7 +56,7 @@ export default function NewsContent(props: NewsContentProps) {
                       {/* Host */}
 
                       {/* Subtitle */}
-                      <p className="text-sm text-gray-400 mt-1">
+                      <p className="text-base text-gray-400 mt-1">
                         <Link
                           href={{
                             pathname: "/news_item/[item_id]",
@@ -52,13 +64,7 @@ export default function NewsContent(props: NewsContentProps) {
                           }}
                         >
                           <a className="hover:underline">
-                            {`Shared by @${newsFeedUrl.firstReferencedByUsername
-                              } ${newsFeedUrl.numReferences > 1
-                                ? `and ${newsFeedUrl.numReferences - 1} others`
-                                : ""
-                              } | ${timeSince(
-                                new Date(newsFeedUrl.createdAt * 1000)
-                              )}`}
+                            {sharedByText(newsFeedUrl)}
                           </a>
                         </Link>
                       </p>

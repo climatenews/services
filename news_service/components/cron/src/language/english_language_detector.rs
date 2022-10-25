@@ -1,6 +1,5 @@
 use lingua::Language::{English, French, German, Spanish, Swedish};
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
-use log::info;
 
 pub struct EnglishLanguageDetector {
     detector: LanguageDetector,

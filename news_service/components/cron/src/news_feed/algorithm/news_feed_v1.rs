@@ -66,7 +66,7 @@ async fn populate_news_feed_urls_v1(
         // Calculate url score factoring in time decay
         // A gravity of 0.4 is used in the ranking algorithm
         // Set it to 0.5 for newer results or 0.2 to older results
-        let gravity = dec!(0.3);
+        let gravity = dec!(0.4);
         let time_decayed_url_score =
             time_decayed_url_score(gravity, url_score, hours_since_first_created);
 
