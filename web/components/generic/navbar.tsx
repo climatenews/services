@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 const navigation = [
   { name: "News", href: "/" },
@@ -29,12 +30,13 @@ export default function NavBar(props: NavBarProps) {
             />
           </div>
           <div className="flex flex-shrink-0 items-center">
+          <Link href="/">
             <a
               className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4"
-              href="#"
             >
               Climate Action Collective
             </a>
+            </Link>
           </div>
         </div>
 
