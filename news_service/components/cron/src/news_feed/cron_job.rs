@@ -52,13 +52,8 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
             let list_users: Vec<User> =
                 get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
             for list_user in list_users {
-                let followers_count = list_user
-                    .public_metrics
-                    .clone()
-                    .map_or_else(|| 0i32, |pm| pm.followers_count as i32);
-                if followers_count > 1000 {
-                    users.push(list_user);
-                }
+                users.push(list_user);
+                
             }
             // TODO ensure users are saved before updating list_last_checked_at
             update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())

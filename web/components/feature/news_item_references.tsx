@@ -3,6 +3,18 @@ import { NewsFeedUrlReference } from "graphql/generated/graphql";
 interface NewsItemReferencesProps {
   newsFeedUrlReferences: NewsFeedUrlReference[];
 }
+const unescapeHTML = (str :string) =>
+  str.replace(
+    /&amp;|&lt;|&gt;|&#39;|&quot;/g,
+    tag =>
+      ({
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&#39;': "'",
+        '&quot;': '"'
+      }[tag] || tag)
+  );
 
 export default function NewsItemDirectReferences(
   props: NewsItemReferencesProps
@@ -23,10 +35,10 @@ export default function NewsItemDirectReferences(
                     href={`https://twitter.com/${newsFeedUrlReference.authorUsername}`}
                     className="hover:underline"
                   >
-                    {newsFeedUrlReference.authorUsername}
+                    @{newsFeedUrlReference.authorUsername}
                   </a>
                 </p>
-                <p className="text-m">{newsFeedUrlReference.tweetText}</p>
+                <p className="text-m">{unescapeHTML(newsFeedUrlReference.tweetText)}</p>
                 {/* <p className="text-m font-bold">
                   Retweeted by{" "}
                   {newsFeedUrlReference.retweetedByUsernames.join(", ")}

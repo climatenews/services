@@ -1,4 +1,5 @@
 import NewsHeader from "components/generic/news_header";
+import Link from "next/link";
 
 export default function AboutContent() {
   return (
@@ -12,33 +13,43 @@ export default function AboutContent() {
             Mission
           </p>
           <p className="mx-auto mt-5 text-xl text-gray-500">
-              Our aim is to help tackle climate change by creating open source tools to improve climate related education. 
+            We aim tackle climate change by creating tools to improve climate related education. 
           </p> 
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-              We plan to make tools for individuals and corporations to take meaningful climate action.
-          </p>
-          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-            Our source code is hosted on GitHub and everyone is free to review and contribute to the codebase.
+            Our source code is on{" "}
+            <Link href="https://github.com/climate-action">
+            <a className="font-medium hover:underline">GitHub</a>
+            </Link> 
+            {" "}and everyone is free to review and contribute to the code base.
           </p>
           
           <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
             Climate News
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-          Our first feature, Climate News, shows trending articles shared by climate scientists and activists on Twitter.
+          The news feed algorithm is score driven and based on many factors.
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-          We use an news feed algorithm to give each person a score based on follwer count, the number of lists they apper in and how many times they have been referenced by other climate scientists and activists.
+          It uses follower count, number of lists appeared in and number of references by peers.      
           </p>
-
+          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+          We trained an AI model using the{" "}
+          <Link href="https://openai.com">
+            <a className="font-medium hover:underline">OpenAI API</a>
+          </Link> 
+          {" "}to classify each article. To ensure only climate related articles are shown.
+          </p>
           <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
             About Us
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-            Climate Action Collective is a project by Patrick Fitzgerald.
+            Climate Action Collective is a project by{" "}
+            <Link href="https://twitter.com/patrickf_ca">
+            <a className="font-medium hover:underline">Patrick Fitzgerald</a>
+            </Link>.
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-            Made with love in Nanaimo, BC, Canada
+            Made with 💚 in Nanaimo, BC, Canada.
           </p>
           </div>
         </div>
