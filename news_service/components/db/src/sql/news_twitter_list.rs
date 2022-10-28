@@ -1,11 +1,12 @@
 use crate::models::news_twitter_list::NewsTwitterList;
 use sqlx::PgPool;
+use anyhow::Result;
 
 pub async fn insert_news_twitter_list(
     pool: &PgPool,
     news_twitter_list: NewsTwitterList,
-) -> Option<NewsTwitterList> {
-    let news_twitter_list_result = sqlx::query_as!(
+) -> Result<NewsTwitterList, sqlx::Error> {
+    sqlx::query_as!(
         NewsTwitterList,
         r#"
             INSERT INTO news_twitter_list ( 
@@ -19,18 +20,14 @@ pub async fn insert_news_twitter_list(
         news_twitter_list.last_checked_at,
     )
     .fetch_one(pool)
-    .await;
-    match news_twitter_list_result {
-        Ok(news_twitter_list) => Some(news_twitter_list),
-        Err(_) => None,
-    }
+    .await
 }
 
 pub async fn find_news_twitter_list_by_list_id(
     pool: &PgPool,
     list_id: i64,
-) -> Option<NewsTwitterList> {
-    let query = sqlx::query_as!(
+) -> Result<NewsTwitterList, sqlx::Error>  {
+    sqlx::query_as!(
         NewsTwitterList,
         r#"
             SELECT list_id, last_checked_at
@@ -38,13 +35,7 @@ pub async fn find_news_twitter_list_by_list_id(
             WHERE list_id = $1;
         "#,
         list_id
-    );
-
-    let news_twitter_list_result = query.fetch_one(pool).await;
-    match news_twitter_list_result {
-        Ok(news_twitter_list) => Some(news_twitter_list),
-        Err(_) => None,
-    }
+    ).fetch_one(pool).await
 }
 
 pub async fn update_news_twitter_list_last_checked_at(

@@ -12,6 +12,7 @@ use crate::twitter::db::{
 };
 use crate::util::convert::i64_to_numeric_id;
 use crate::util::convert::{numeric_id_to_i64, opt_i64_to_opt_numeric_id};
+use anyhow::Result;
 use chrono::Local;
 use db::models::news_referenced_tweet::NewsReferencedTweet;
 use db::models::news_twitter_user::NewsTwitterUser;
@@ -29,23 +30,26 @@ use log::info;
 use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::{Tweet, TwitterApi, User};
-use anyhow::Result;
 
-pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()>{
+pub async fn get_all_user_tweets(
+    db_pool: &PgPool,
+    twitter_api: &TwitterApi<BearerToken>,
+) -> Result<()> {
     info!("get_all_user_tweets - {:?}", Local::now());
     fetch_user_tweets(db_pool, twitter_api).await?;
-    update_news_twitter_users_scores(db_pool).await;
+    update_news_twitter_users_scores(db_pool).await?;
     info!("get_all_user_tweets complete - {:?}", Local::now());
     Ok(())
 }
 
-async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()>{
+async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()> {
     let english_language_detector = EnglishLanguageDetector::new();
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
         .unwrap();
     for list_id in TWITTER_LISTS {
-        let news_twitter_list = parse_twitter_list(db_pool, list_id).await.unwrap();
+        let news_twitter_list = parse_twitter_list(db_pool, list_id).await?;
+
         let last_checked_hours_diff = datetime_hours_diff(news_twitter_list.last_checked_at);
         // Check if last_checked is over 7 days
         if last_checked_hours_diff > (24 * 7) {
@@ -53,12 +57,11 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
                 get_list_members(twitter_api, i64_to_numeric_id(list_id)).await;
             for list_user in list_users {
                 users.push(list_user);
-                
             }
             // TODO ensure users are saved before updating list_last_checked_at
             update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
-            .await
-            .unwrap();
+                .await
+                .unwrap();
         }
     }
     // Remove duplicate users
@@ -83,48 +86,56 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
             let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await?;
             fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector)
                 .await?;
-            update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
+            update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await?;
         }
-        update_user_last_checked_at(db_pool, &news_twitter_user).await;
+        update_user_last_checked_at(db_pool, &news_twitter_user).await?;
     }
     Ok(())
 }
 
-async fn update_news_twitter_users_scores(db_pool: &PgPool) {
-    let news_twitter_users = find_all_news_twitter_users(db_pool).await.unwrap();
+async fn update_news_twitter_users_scores(db_pool: &PgPool) -> Result<()> {
+    let news_twitter_users = find_all_news_twitter_users(db_pool).await?;
 
     for news_twitter_user in news_twitter_users {
-        let news_user_referenced_tweets =
-            get_news_user_referenced_tweet_query(db_pool, news_twitter_user.user_id)
-                .await
-                .unwrap();
-        let user_referenced_tweets_count = news_user_referenced_tweets.len() as i32;
+        let news_user_referenced_tweets_result =
+            get_news_user_referenced_tweet_query(db_pool, news_twitter_user.user_id).await;
+
+        let mut user_referenced_tweets_count = 0;
+        match news_user_referenced_tweets_result {
+            Ok(news_user_referenced_tweets) => {
+                user_referenced_tweets_count = news_user_referenced_tweets.len() as i32;
+            }
+            Err(_err) => {}
+        }
         let user_score = calc_user_score(&news_twitter_user, user_referenced_tweets_count);
 
-        // save user score
+        // save user score & referenced_tweets_count
         update_news_twitter_user_stats(
             db_pool,
             news_twitter_user.user_id,
             user_referenced_tweets_count,
             user_score,
         )
-        .await
-        .unwrap();
+        .await?;
     }
+    Ok(())
 }
 
-async fn update_user_last_checked_at(db_pool: &PgPool, news_twitter_user: &NewsTwitterUser) {
+async fn update_user_last_checked_at(
+    db_pool: &PgPool,
+    news_twitter_user: &NewsTwitterUser,
+) -> Result<()> {
     let last_checked_at = now_utc_timestamp();
     update_news_twitter_user_last_checked_at(db_pool, news_twitter_user.user_id, last_checked_at)
-        .await
-        .unwrap();
+        .await?;
+    Ok(())
 }
 
 async fn update_user_last_updated_at(
     db_pool: &PgPool,
     news_twitter_user: &NewsTwitterUser,
     tweets: &Vec<Tweet>,
-) {
+) -> Result<()> {
     if let Some(last_tweet) = tweets.clone().first() {
         let last_tweet_id = numeric_id_to_i64(last_tweet.id);
         let last_updated_at = now_utc_timestamp();
@@ -134,9 +145,9 @@ async fn update_user_last_updated_at(
             last_tweet_id,
             last_updated_at,
         )
-        .await
-        .unwrap();
+        .await?;
     }
+    Ok(())
 }
 
 async fn fetch_user_tweet_references(
@@ -144,7 +155,7 @@ async fn fetch_user_tweet_references(
     twitter_api: &TwitterApi<BearerToken>,
     tweets: &Vec<Tweet>,
     english_language_detector: &EnglishLanguageDetector,
-) -> Result<()>{
+) -> Result<()> {
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     for tweet in tweets.clone() {
         parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await;

@@ -4,6 +4,7 @@ use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
     referenced_tweet_kind_to_string,
 };
+use anyhow::Result;
 use db::models::news_referenced_tweet::NewsReferencedTweet;
 use db::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
 use db::models::news_tweet::NewsTweet;
@@ -26,22 +27,22 @@ use twitter_v2::data::{UrlEntity, UrlImage};
 use twitter_v2::id::NumericId;
 use twitter_v2::{Tweet, TwitterApi, User};
 use url::Url;
-use anyhow::Result;
 
-pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Option<NewsTwitterList> {
+pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Result<NewsTwitterList> {
     let news_twitter_list_db = find_news_twitter_list_by_list_id(db_pool, list_id).await;
-    if news_twitter_list_db.is_none() {
-        let news_twitter_list = NewsTwitterList {
-            list_id,
-            last_checked_at: 0,
-        };
-        insert_news_twitter_list(db_pool, news_twitter_list).await
-    } else {
-        news_twitter_list_db
+    match news_twitter_list_db {
+        Ok(news_twitter_list_db) => Ok(news_twitter_list_db),
+        Err(_err) => {
+            let news_twitter_list = NewsTwitterList {
+                list_id,
+                last_checked_at: 0,
+            };
+            Ok(insert_news_twitter_list(db_pool, news_twitter_list).await?)
+        }
     }
 }
 
-pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwitterUser> {
+pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Result<NewsTwitterUser> {
     // TODO parse verified status
     let user_id = numeric_id_to_i64(user.id);
     let followers_count = user
@@ -60,24 +61,25 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Option<NewsTwi
         .map_or_else(|| None, |url| Some(url.to_string()));
 
     let news_twitter_user_db = find_news_twitter_user_by_user_id(db_pool, user_id).await;
-    if news_twitter_user_db.is_none() {
-        let news_twitter_user = NewsTwitterUser {
-            user_id,
-            username: user.username.clone(),
-            profile_image_url,
-            description: user.description.clone(),
-            verified: user.verified,
-            followers_count,
-            listed_count,
-            user_referenced_tweets_count: None,
-            user_score: None,
-            last_tweet_id: None,
-            last_updated_at: 0,
-            last_checked_at: 0,
-        };
-        insert_news_twitter_user(db_pool, news_twitter_user).await
-    } else {
-        news_twitter_user_db
+    match news_twitter_user_db {
+        Ok(news_twitter_user) => Ok(news_twitter_user),
+        Err(_err) => {
+            let news_twitter_user = NewsTwitterUser {
+                user_id,
+                username: user.username.clone(),
+                profile_image_url,
+                description: user.description.clone(),
+                verified: user.verified,
+                followers_count,
+                listed_count,
+                user_referenced_tweets_count: None,
+                user_score: None,
+                last_tweet_id: None,
+                last_updated_at: 0,
+                last_checked_at: 0,
+            };
+            Ok(insert_news_twitter_user(db_pool, news_twitter_user).await?)
+        }
     }
 }
 
@@ -264,7 +266,8 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     let split_tweet_ids_vec = split_requests_into_max_amount(tweet_ids);
 
     for split_tweet_ids in split_tweet_ids_vec {
-        let referenced_tweets: Result<Option<Vec<Tweet>>> = get_tweets(twitter_api, split_tweet_ids).await;
+        let referenced_tweets: Result<Option<Vec<Tweet>>> =
+            get_tweets(twitter_api, split_tweet_ids).await;
         if let Some(referenced_tweets) = referenced_tweets?.clone() {
             for referenced_tweet in referenced_tweets {
                 parse_and_insert_tweet(db_pool, &referenced_tweet, english_language_detector).await;

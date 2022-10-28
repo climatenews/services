@@ -38,13 +38,14 @@ pub fn populate_url_to_tweet_map(
             };
             // check if url exists in the map
             if url_to_tweet_map.contains_key(&url_id) {
-                let tweet_info_vec = url_to_tweet_map.get(&url_id).unwrap();
-                let mut tweet_info_vec = tweet_info_vec.clone();
-                // Ensures URL is not already added by same author
-                if !tweet_info_vec.iter().any(|ti| ti.author_id == author_id) {
-                    tweet_info_vec.push(tweet_info);
+                if let Some(tweet_info_vec) = url_to_tweet_map.get(&url_id) {
+                    let mut tweet_info_vec = tweet_info_vec.clone();
+                    // Ensures URL is not already added by same author
+                    if !tweet_info_vec.iter().any(|ti| ti.author_id == author_id) {
+                        tweet_info_vec.push(tweet_info);
+                    }
+                    url_to_tweet_map.insert(url_id, tweet_info_vec);
                 }
-                url_to_tweet_map.insert(url_id, tweet_info_vec);
             } else {
                 url_to_tweet_map.insert(url_id, vec![tweet_info]);
             }

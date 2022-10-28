@@ -1,5 +1,6 @@
 use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
+use anyhow::Result;
 use db::util::time::past_year;
 use log::{info, warn};
 use tokio::time::{sleep, Duration};
@@ -8,7 +9,6 @@ use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
 use twitter_v2::query::{Exclude, TweetField, UserField};
 use twitter_v2::{Error, Tweet, TwitterApi, User};
-use anyhow::Result;
 
 static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::AuthorId,
@@ -85,7 +85,7 @@ pub async fn get_users_by_username(
         .send()
         .await;
     parse_error_response(&users_response).await;
-
+    //TODO use match instead of unwrap
     users_response.unwrap().into_data()
 }
 
@@ -151,7 +151,7 @@ pub async fn get_user_tweets(
     }
     // println!("{}", tweets_api_response.url());
     let mut next_page_response = tweets_api_response.next_page().await;
-    
+
     parse_error_response(&next_page_response).await;
     loop {
         match next_page_response {

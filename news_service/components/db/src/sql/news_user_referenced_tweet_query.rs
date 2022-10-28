@@ -1,5 +1,6 @@
 use crate::queries::news_user_referenced_tweet_query::NewsUserReferencedTweetQuery;
 use sqlx::PgPool;
+use anyhow::Result;
 
 // Used for user score calculation
 // Find all user tweets that have been quoted or retweeted by others users
@@ -9,8 +10,8 @@ use sqlx::PgPool;
 pub async fn get_news_user_referenced_tweet_query(
     pool: &PgPool,
     user_id: i64,
-) -> Option<Vec<NewsUserReferencedTweetQuery>> {
-    let news_user_referenced_tweet_query_result = sqlx::query_as!(
+) -> Result<Vec<NewsUserReferencedTweetQuery>, sqlx::Error> {
+    sqlx::query_as!(
         NewsUserReferencedTweetQuery,
         r#"
         SELECT
@@ -32,17 +33,13 @@ pub async fn get_news_user_referenced_tweet_query(
         user_id
     )
     .fetch_all(pool)
-    .await;
-    match news_user_referenced_tweet_query_result {
-        Ok(news_user_referenced_tweets) => Some(news_user_referenced_tweets),
-        Err(_) => None,
-    }
+    .await
 }
 
 pub async fn get_all_news_user_referenced_tweet_query(
     pool: &PgPool,
-) -> Option<Vec<NewsUserReferencedTweetQuery>> {
-    let news_user_referenced_tweet_query_result = sqlx::query_as!(
+) -> Result<Vec<NewsUserReferencedTweetQuery>, sqlx::Error> {
+    sqlx::query_as!(
         NewsUserReferencedTweetQuery,
         r#"
         SELECT
@@ -62,9 +59,5 @@ pub async fn get_all_news_user_referenced_tweet_query(
             "#
     )
     .fetch_all(pool)
-    .await;
-    match news_user_referenced_tweet_query_result {
-        Ok(news_user_referenced_tweets) => Some(news_user_referenced_tweets),
-        Err(_) => None,
-    }
+    .await
 }
