@@ -13,7 +13,7 @@ export default function AboutContent() {
             Mission
           </p>
           <p className="mx-auto mt-5 text-xl text-gray-500">
-            We aim tackle climate change by creating tools to improve climate related education. 
+            We aim to help tackle climate change by creating tools to improve climate related education. 
           </p> 
           <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
             Our source code is on{" "}
@@ -37,7 +37,7 @@ export default function AboutContent() {
           <Link href="https://openai.com">
             <a className="font-medium hover:underline">OpenAI API</a>
           </Link> 
-          {" "}to classify each article. To ensure only climate related articles are shown.
+          {" "}to classify each article. To show only climate related articles on the news feed.
           </p>
           <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
             About Us

@@ -1,8 +1,9 @@
 pub static MAX_TWEET_RESULTS: usize = 100;
 pub static REQUEST_SLEEP_DURATION: u64 = 1500;
 
-pub static TWITTER_LISTS: [i64; 1] = [
+pub static TWITTER_LISTS: [i64; 2] = [
     1053067173961326594, // scientists who do climate - @KHayhoe - https://twitter.com/i/lists/1053067173961326594
+    1308140854524162059 // Tweets about climate change from journalists, policy specialists, and institutions. https://twitter.com/i/lists/1308140854524162059
 ];
 
 pub static TWITTER_USERNAMES: [&str; 63] = [
