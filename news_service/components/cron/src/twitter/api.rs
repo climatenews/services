@@ -8,6 +8,7 @@ use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
 use twitter_v2::query::{Exclude, TweetField, UserField};
 use twitter_v2::{Error, Tweet, TwitterApi, User};
+use anyhow::Result;
 
 static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::AuthorId,
@@ -115,7 +116,7 @@ pub async fn get_user_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     user_id: NumericId,
     last_tweet_id: Option<NumericId>,
-) -> Vec<Tweet> {
+) -> Result<Vec<Tweet>> {
     let start_time = past_year();
 
     info!("API - get_user_tweets: {}", user_id);
@@ -143,7 +144,7 @@ pub async fn get_user_tweets(
     };
     parse_error_response(&tweets_api_response).await;
 
-    let tweets_api_response = tweets_api_response.unwrap();
+    let tweets_api_response = tweets_api_response?;
 
     if let Some(new_tweets) = tweets_api_response.clone().into_data() {
         tweets = [tweets, new_tweets].concat();
@@ -173,13 +174,13 @@ pub async fn get_user_tweets(
             }
         }
     }
-    tweets
+    Ok(tweets)
 }
 
 pub async fn get_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     tweet_ids: Vec<NumericId>,
-) -> Option<Vec<Tweet>> {
+) -> Result<Option<Vec<Tweet>>> {
     info!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
     let tweets_response = twitter_api
         .get_tweets(tweet_ids)
@@ -188,7 +189,7 @@ pub async fn get_tweets(
         .await;
     parse_error_response(&tweets_response).await;
 
-    tweets_response.unwrap().into_data()
+    Ok(tweets_response?.into_data())
 }
 
 //split items into max 100 elements

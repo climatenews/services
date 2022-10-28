@@ -18,6 +18,7 @@
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
 - [x] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
 - [ ] (bug) save users before updating list updated_at column
+- [ ] Save cron runs in db
 - [ ] print db errors
 - [ ] handle openAI api errors
 - [ ] setup slack for errors

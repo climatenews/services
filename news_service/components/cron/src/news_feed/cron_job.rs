@@ -29,15 +29,17 @@ use log::info;
 use sqlx::PgPool;
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::{Tweet, TwitterApi, User};
+use anyhow::Result;
 
-pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
+pub async fn get_all_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()>{
     info!("get_all_user_tweets - {:?}", Local::now());
-    fetch_user_tweets(db_pool, twitter_api).await;
+    fetch_user_tweets(db_pool, twitter_api).await?;
     update_news_twitter_users_scores(db_pool).await;
     info!("get_all_user_tweets complete - {:?}", Local::now());
+    Ok(())
 }
 
-async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) {
+async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()>{
     let english_language_detector = EnglishLanguageDetector::new();
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
@@ -83,13 +85,14 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         // Check if last_checked is over 30 mins or has no recent tweets
         if last_checked_minutes_diff > 30 || news_twitter_user.last_tweet_id.is_none() {
             let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
-            let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await;
+            let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await?;
             fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector)
-                .await;
+                .await?;
             update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await;
         }
         update_user_last_checked_at(db_pool, &news_twitter_user).await;
     }
+    Ok(())
 }
 
 async fn update_news_twitter_users_scores(db_pool: &PgPool) {
@@ -146,7 +149,7 @@ async fn fetch_user_tweet_references(
     twitter_api: &TwitterApi<BearerToken>,
     tweets: &Vec<Tweet>,
     english_language_detector: &EnglishLanguageDetector,
-) {
+) -> Result<()>{
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     for tweet in tweets.clone() {
         parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await;
@@ -160,6 +163,7 @@ async fn fetch_user_tweet_references(
             all_news_referenced_tweets,
             english_language_detector,
         )
-        .await;
+        .await?;
     }
+    Ok(())
 }

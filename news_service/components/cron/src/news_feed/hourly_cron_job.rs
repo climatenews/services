@@ -5,11 +5,13 @@ use crate::twitter::init_twitter_api;
 use chrono::Local;
 use log::info;
 use sqlx::PgPool;
+use anyhow::Result;
 
-pub async fn hourly_cron_job(db_pool: &PgPool) {
+pub async fn hourly_cron_job(db_pool: &PgPool) -> Result<()> {
     info!("schedule_task event - {:?}", Local::now());
     let twitter_api = init_twitter_api();
-    get_all_user_tweets(db_pool, &twitter_api).await;
+    get_all_user_tweets(db_pool, &twitter_api).await?;
     populate_news_feed_v1(db_pool).await;
     // get_referenced_twitter_users(&db_pool, &twitter_api).await;
+    Ok(())
 }

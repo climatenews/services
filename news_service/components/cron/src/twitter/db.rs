@@ -26,6 +26,7 @@ use twitter_v2::data::{UrlEntity, UrlImage};
 use twitter_v2::id::NumericId;
 use twitter_v2::{Tweet, TwitterApi, User};
 use url::Url;
+use anyhow::Result;
 
 pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Option<NewsTwitterList> {
     let news_twitter_list_db = find_news_twitter_list_by_list_id(db_pool, list_id).await;
@@ -252,7 +253,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     all_news_referenced_tweets: Vec<NewsReferencedTweet>,
     english_language_detector: &EnglishLanguageDetector,
-) {
+) -> Result<()> {
     let tweet_ids: Vec<NumericId> = all_news_referenced_tweets
         .iter()
         .map(|rt| i64_to_numeric_id(rt.referenced_tweet_id))
@@ -263,8 +264,8 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     let split_tweet_ids_vec = split_requests_into_max_amount(tweet_ids);
 
     for split_tweet_ids in split_tweet_ids_vec {
-        let referenced_tweets: Option<Vec<Tweet>> = get_tweets(twitter_api, split_tweet_ids).await;
-        if let Some(referenced_tweets) = referenced_tweets.clone() {
+        let referenced_tweets: Result<Option<Vec<Tweet>>> = get_tweets(twitter_api, split_tweet_ids).await;
+        if let Some(referenced_tweets) = referenced_tweets?.clone() {
             for referenced_tweet in referenced_tweets {
                 parse_and_insert_tweet(db_pool, &referenced_tweet, english_language_detector).await;
             }
@@ -276,6 +277,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
             .await
             .unwrap();
     }
+    Ok(())
 }
 
 // Remove all the query parameters from non-whitelisted urls
