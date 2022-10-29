@@ -1,31 +1,30 @@
 use crate::graphql::errors::GqlError;
 use async_graphql::{ErrorExtensions, FieldResult};
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
-use db::sql::news_feed_url_query::get_news_feed_urls;
-use db::util::time::past_days;
+use db::sql::news_feed_url_query::get_news_feed_url;
 use sqlx::postgres::PgPool;
 
-pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
-pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
 
-
-pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
-    let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
-    match get_news_feed_urls(db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT).await {
-        Ok(news_feed_urls) => Ok(news_feed_urls),
+pub async fn news_feed_url_query<'a>(db_pool: &PgPool, url_id: i32,) -> FieldResult<NewsFeedUrlQuery> {
+    match get_news_feed_url(db_pool, url_id).await {
+        Ok(news_feed_url) => Ok(news_feed_url),
         Err(_) => Err(GqlError::NotFound.extend()),
     }
 }
 
+
+
 #[cfg(test)]
 mod tests {
 
-    use crate::graphql::test_util::create_fake_schema;
     use async_graphql::value;
     use db::{init_env, init_test_db_pool, util::{test::test_util::{create_fake_news_tweet_url, create_fake_news_feed_url, create_fake_news_twitter_user}, convert::now_utc_timestamp}};
 
+    use crate::graphql::test_util::create_fake_schema;
+
+
     #[tokio::test]
-    async fn get_news_feed_urls_test() {
+    async fn get_news_feed_url_test() {
 
         init_env();
         let db_pool = init_test_db_pool().await.unwrap();
@@ -39,7 +38,7 @@ mod tests {
             .execute(
                 r#"
                 query {
-                    newsFeedUrls {
+                    newsFeedUrl(urlId: 1) {
                         urlId
                         urlScore
                         numReferences
@@ -60,7 +59,7 @@ mod tests {
         assert_eq!(
             resp.data,
             value!({
-                "newsFeedUrls": [
+                "newsFeedUrl": 
                     {
                         "urlId": 1,
                         "urlScore": 90,
@@ -76,12 +75,9 @@ mod tests {
                         "displayUrl": String::from("display_url"),
 
                     }
-                ],
+                ,
             })
         );
     }
 
-
-
-    
 }

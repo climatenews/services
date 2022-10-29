@@ -32,7 +32,7 @@ pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Result<NewsTw
     let news_twitter_list_db = find_news_twitter_list_by_list_id(db_pool, list_id).await;
     match news_twitter_list_db {
         Ok(news_twitter_list_db) => Ok(news_twitter_list_db),
-        Err(_err) => {
+        Err(_) => {
             let news_twitter_list = NewsTwitterList {
                 list_id,
                 last_checked_at: 0,
@@ -63,7 +63,7 @@ pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Result<NewsTwi
     let news_twitter_user_db = find_news_twitter_user_by_user_id(db_pool, user_id).await;
     match news_twitter_user_db {
         Ok(news_twitter_user) => Ok(news_twitter_user),
-        Err(_err) => {
+        Err(_) => {
             let news_twitter_user = NewsTwitterUser {
                 user_id,
                 username: user.username.clone(),

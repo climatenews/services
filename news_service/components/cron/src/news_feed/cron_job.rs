@@ -105,7 +105,7 @@ async fn update_news_twitter_users_scores(db_pool: &PgPool) -> Result<()> {
             Ok(news_user_referenced_tweets) => {
                 user_referenced_tweets_count = news_user_referenced_tweets.len() as i32;
             }
-            Err(_err) => {}
+            Err(_) => {}
         }
         let user_score = calc_user_score(&news_twitter_user, user_referenced_tweets_count);
 
