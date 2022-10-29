@@ -22,10 +22,10 @@ const NewsItemPage: NextPage<NewsItemPageProps> = ({
 };
 
 export async function getServerSideProps(context: any) {
-  const { item_id } = context.query;
+  const { url_id } = context.query;
   const sdk = getSdk(graphQLClient);
   const response = await sdk.GetNewsFeedUrlReferences({
-    urlId: Number(item_id)
+    urlId: Number(url_id)
   });
   return {
     props: {
