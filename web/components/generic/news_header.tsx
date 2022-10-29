@@ -20,4 +20,3 @@ export default function NewsHeader(props: NewsHeaderProps) {
         </>
     )
 }
-{/* Top trending articles shared by{" "}<a className="hover:underline">climate scientists and activists</a> */ }

@@ -11,9 +11,9 @@ function sharedByText(newsFeedUrl: NewsFeedUrl): String {
   var sharedByText = `Shared by @${newsFeedUrl.firstReferencedByUsername}`
   var numReferencesText = ""
   if(newsFeedUrl.numReferences > 2){
-    numReferencesText = `and ${newsFeedUrl.numReferences - 1} others`
+    numReferencesText = ` and ${newsFeedUrl.numReferences - 1} others`
   }else if(newsFeedUrl.numReferences == 2){
-    numReferencesText = `and 1 other`
+    numReferencesText = ` and 1 other`
   }
   var dateText = timeSince(new Date(newsFeedUrl.createdAt * 1000))
   return `${sharedByText}${numReferencesText} | ${dateText}`
@@ -59,8 +59,8 @@ export default function NewsContent(props: NewsContentProps) {
                       <p className="text-base text-gray-400 mt-1">
                         <Link
                           href={{
-                            pathname: "/news_item/[item_id]",
-                            query: { item_id: newsFeedUrl.urlId }
+                            pathname: "/news_item/[url_id]",
+                            query: { url_id: newsFeedUrl.urlId }
                           }}
                         >
                           <a className="hover:underline">
@@ -73,8 +73,8 @@ export default function NewsContent(props: NewsContentProps) {
                     <div className="col-span-2">
                   <Link
                     href={{
-                      pathname: "/news_item/[item_id]",
-                      query: { item_id: newsFeedUrl.urlId }
+                      pathname: "/news_item/[url_id]",
+                      query: { url_id: newsFeedUrl.urlId }
                     }}
                   >
                     <a className=" hover:underline">
