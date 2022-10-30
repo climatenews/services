@@ -28,14 +28,14 @@ export default function AboutContent() {
               Climate News
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-              The news feed algorithm is score driven and based on many factors. We use Twitter to follow users.
+              The news feed algorithm is score driven and based on many factors. We use Twitter to keep track of articles shared by climate scientists and climate activists.
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
               A users score is based on the number of followers they have, the number of lists they appear in and the number of
               tweets that have been referenced by other users.
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-              The article score is the sum of the users scores that shared the article. It is reduced over time by a time decay function.
+              The article score is the sum of the users scores that shared the article. It is reduced over time using a time decay function.
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
               We trained an AI model using the{" "}
