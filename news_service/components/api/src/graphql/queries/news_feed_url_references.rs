@@ -40,7 +40,5 @@ pub async fn news_feed_url_references_query<'a>(
     }
 }
 
-
-
 // #[tokio::test]
 // async fn get_news_feed_urls_test() {}

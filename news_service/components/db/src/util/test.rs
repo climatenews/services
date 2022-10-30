@@ -6,10 +6,9 @@ pub mod test_util {
     use crate::sql::news_twitter_user::{insert_news_twitter_user, truncate_news_twitter_user};
     use crate::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
     use crate::sql::news_tweet_url::{insert_news_tweet_url, truncate_news_tweet_url};
-    use crate::util::convert::now_utc_timestamp;
     use sqlx::PgPool;
 
-    pub async fn create_fake_news_tweet_url(db_pool: &PgPool){
+    pub async fn create_fake_news_tweet_url(db_pool: &PgPool, created_at_timestamp: i64){
         truncate_news_tweet_url(&db_pool).await.unwrap();
         let news_tweet_url = NewsTweetUrl {
             url: String::from("https://t.co/4HPNrqOnZj"),
@@ -23,7 +22,7 @@ pub mod test_util {
             preview_image_thumbnail_url: Some(String::from("preview_image_thumbnail_url")),
             title: String::from("title"),
             description: String::from("description"),
-            created_at: now_utc_timestamp(),
+            created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
         insert_news_tweet_url(&db_pool, news_tweet_url)
@@ -32,8 +31,7 @@ pub mod test_util {
 
     }
 
-    pub async fn create_fake_news_feed_url(db_pool: &PgPool){
-        let created_at_timestamp  = now_utc_timestamp() - 100; // to ensure news_feed_url is recent
+    pub async fn create_fake_news_feed_url(db_pool: &PgPool, created_at_timestamp: i64){
         truncate_news_feed_url(&db_pool).await.unwrap();
         let news_feed_url = NewsFeedUrl {
             url_id: 1,

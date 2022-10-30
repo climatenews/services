@@ -8,7 +8,6 @@ use sqlx::postgres::PgPool;
 pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
 pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
 
-
 pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
     match get_news_feed_urls(db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT).await {
@@ -22,15 +21,24 @@ mod tests {
 
     use crate::graphql::test_util::create_fake_schema;
     use async_graphql::value;
-    use db::{init_env, init_test_db_pool, util::{test::test_util::{create_fake_news_tweet_url, create_fake_news_feed_url, create_fake_news_twitter_user}, convert::now_utc_timestamp}};
+    use db::{
+        init_env, init_test_db_pool,
+        util::{
+            convert::now_utc_timestamp,
+            test::test_util::{
+                create_fake_news_feed_url, create_fake_news_tweet_url,
+                create_fake_news_twitter_user,
+            },
+        },
+    };
 
     #[tokio::test]
     async fn get_news_feed_urls_test() {
-
         init_env();
         let db_pool = init_test_db_pool().await.unwrap();
-        create_fake_news_tweet_url(&db_pool).await;
-        create_fake_news_feed_url(&db_pool).await;
+        let created_at_timestamp = now_utc_timestamp();
+        create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
+        create_fake_news_feed_url(&db_pool, created_at_timestamp).await;
         create_fake_news_twitter_user(&db_pool).await;
 
         let schema = create_fake_schema(db_pool);
@@ -80,8 +88,4 @@ mod tests {
             })
         );
     }
-
-
-
-    
 }

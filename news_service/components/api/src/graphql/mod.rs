@@ -26,11 +26,11 @@ pub fn init_graphql_schema(db_pool: PgPool) -> Schema<Query, EmptyMutation, Empt
 pub mod test_util {
     use super::*;
 
-    pub fn create_fake_schema(db_pool: PgPool) -> async_graphql::Schema<Query, EmptyMutation, EmptySubscription>{
+    pub fn create_fake_schema(
+        db_pool: PgPool,
+    ) -> async_graphql::Schema<Query, EmptyMutation, EmptySubscription> {
         ClimateActionSchema::build(Query, EmptyMutation, EmptySubscription)
-        .data(db_pool)
-        .finish()
+            .data(db_pool)
+            .finish()
     }
-        
-
 }
