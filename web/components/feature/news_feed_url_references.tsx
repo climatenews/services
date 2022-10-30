@@ -1,27 +1,15 @@
+import { unescapeHTML } from "app/util";
 import { NewsFeedUrlReference } from "graphql/generated/graphql";
 
-interface NewsItemReferencesProps {
+interface NewsFeedUrlReferencesProps {
   newsFeedUrlReferences: NewsFeedUrlReference[];
 }
-const unescapeHTML = (str :string) =>
-  str.replace(
-    /&amp;|&lt;|&gt;|&#39;|&quot;/g,
-    tag =>
-      ({
-        '&amp;': '&',
-        '&lt;': '<',
-        '&gt;': '>',
-        '&#39;': "'",
-        '&quot;': '"'
-      }[tag] || tag)
-  );
 
-export default function NewsItemDirectReferences(
-  props: NewsItemReferencesProps
+export default function NewsFeedUrlDirectReferences(
+  props: NewsFeedUrlReferencesProps
 ) {
   return (
     <>
-      {/* <p className="text-m font-bold">Shares</p> */}
       <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4">
         {props.newsFeedUrlReferences.map(
           (newsFeedUrlReference: NewsFeedUrlReference) => {
@@ -38,7 +26,9 @@ export default function NewsItemDirectReferences(
                     @{newsFeedUrlReference.authorUsername}
                   </a>
                 </p>
-                <p className="text-m">{unescapeHTML(newsFeedUrlReference.tweetText)}</p>
+                <p className="text-m">
+                  {unescapeHTML(newsFeedUrlReference.tweetText)}
+                </p>
                 {/* <p className="text-m font-bold">
                   Retweeted by{" "}
                   {newsFeedUrlReference.retweetedByUsernames.join(", ")}

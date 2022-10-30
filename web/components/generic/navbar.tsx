@@ -30,12 +30,10 @@ export default function NavBar(props: NavBarProps) {
             />
           </div>
           <div className="flex flex-shrink-0 items-center">
-          <Link href="/">
-            <a
-              className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4"
-            >
-              Climate Action Collective
-            </a>
+            <Link href="/">
+              <a className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4">
+                Climate Action Collective
+              </a>
             </Link>
           </div>
         </div>
@@ -46,7 +44,26 @@ export default function NavBar(props: NavBarProps) {
             id="nav-toggle"
             className="flex items-center px-2 py-2 rounded text-gray-500  hover:text-gray-900 hover:border-green-500 appearance-none focus:outline-none"
           >
-            <svg width="36px" height="36px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><title>Hmaburger menu</title><path d="M41,14H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,14Z" fill="#000000" /><path d="M41,26H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,26Z" fill="#000000" /><path d="M41,38H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,38Z" fill="#000000" /></svg>
+            <svg
+              width="36px"
+              height="36px"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>Hmaburger menu</title>
+              <path
+                d="M41,14H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,14Z"
+                fill="#000000"
+              />
+              <path
+                d="M41,26H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,26Z"
+                fill="#000000"
+              />
+              <path
+                d="M41,38H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,38Z"
+                fill="#000000"
+              />
+            </svg>
           </button>
         </div>
 

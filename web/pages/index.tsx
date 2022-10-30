@@ -15,7 +15,6 @@ const NewsPage: NextPage<NewsPageProps> = ({ newsFeedUrls }) => {
       <Meta />
       <NavBar pageRoute="/" />
       <NewsContent newsFeedUrls={newsFeedUrls} />
-      {/* <Header title="Climate News" /> */}
     </>
   );
 };

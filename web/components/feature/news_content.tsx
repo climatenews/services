@@ -8,23 +8,26 @@ interface NewsContentProps {
 }
 
 function sharedByText(newsFeedUrl: NewsFeedUrl): String {
-  var sharedByText = `Shared by @${newsFeedUrl.firstReferencedByUsername}`
-  var numReferencesText = ""
-  if(newsFeedUrl.numReferences > 2){
-    numReferencesText = ` and ${newsFeedUrl.numReferences - 1} others`
-  }else if(newsFeedUrl.numReferences == 2){
-    numReferencesText = ` and 1 other`
+  var sharedByText = `Shared by @${newsFeedUrl.firstReferencedByUsername}`;
+  var numReferencesText = "";
+  if (newsFeedUrl.numReferences > 2) {
+    numReferencesText = ` and ${newsFeedUrl.numReferences - 1} others`;
+  } else if (newsFeedUrl.numReferences == 2) {
+    numReferencesText = ` and 1 other`;
   }
-  var dateText = timeSince(new Date(newsFeedUrl.createdAt * 1000))
-  return `${sharedByText}${numReferencesText} | ${dateText}`
+  var dateText = timeSince(new Date(newsFeedUrl.createdAt * 1000));
+  return `${sharedByText}${numReferencesText} | ${dateText}`;
 }
 
 export default function NewsContent(props: NewsContentProps) {
   //{`${newsFeedUrl.urlScore}. `}
-  
+
   return (
     <>
-      <NewsHeader title="News" subtitle="Trending articles shared by climate scientists and activists"/>
+      <NewsHeader
+        title="News"
+        subtitle="Trending articles shared by climate scientists and activists"
+      />
       <div className="container px-4 w-full md:max-w-3xl mx-auto">
         <ul>
           {props.newsFeedUrls &&
@@ -37,14 +40,14 @@ export default function NewsContent(props: NewsContentProps) {
                   >
                     {/* Title */}
                     <div className="col-span-10">
-
                       <a
                         href={newsFeedUrl.expandedUrlParsed}
                         className="hover:underline"
                       >
                         <div className="flex flex-row">
                           <p className="text-base">
-                            <b>{newsFeedUrl?.title}</b> ({newsFeedUrl?.expandedUrlHost})
+                            <b>{newsFeedUrl?.title}</b> (
+                            {newsFeedUrl?.expandedUrlHost})
                           </p>
                           {/* <p className="ml-4 text-sm text-gray-500">
                             
@@ -52,14 +55,13 @@ export default function NewsContent(props: NewsContentProps) {
                         </div>
                       </a>
 
-
                       {/* Host */}
 
                       {/* Subtitle */}
                       <p className="text-base text-gray-400 mt-1">
                         <Link
                           href={{
-                            pathname: "/news_item/[url_id]",
+                            pathname: "/news_feed/[url_id]",
                             query: { url_id: newsFeedUrl.urlId }
                           }}
                         >
@@ -71,25 +73,25 @@ export default function NewsContent(props: NewsContentProps) {
                     </div>
                     {/* Image preview */}
                     <div className="col-span-2">
-                  <Link
-                    href={{
-                      pathname: "/news_item/[url_id]",
-                      query: { url_id: newsFeedUrl.urlId }
-                    }}
-                  >
-                    <a className=" hover:underline">
-                      <img
-                        className="mx-auto h-15 w-15 rounded lg:h-20 lg:w-20 lg:rounded-md"
-                        src={
-                          newsFeedUrl.previewImageThumbnailUrl
-                            ? newsFeedUrl.previewImageThumbnailUrl
-                            : "https://via.placeholder.com/150/FFFFFF"
-                        }
-                        alt="TODO"
-                      />
-                    </a>
-                  </Link>
-                </div>
+                      <Link
+                        href={{
+                          pathname: "/news_feed/[url_id]",
+                          query: { url_id: newsFeedUrl.urlId }
+                        }}
+                      >
+                        <a className=" hover:underline">
+                          <img
+                            className="mx-auto h-15 w-15 rounded lg:h-20 lg:w-20 lg:rounded-md"
+                            src={
+                              newsFeedUrl.previewImageThumbnailUrl
+                                ? newsFeedUrl.previewImageThumbnailUrl
+                                : "https://via.placeholder.com/150/FFFFFF"
+                            }
+                            alt="TODO"
+                          />
+                        </a>
+                      </Link>
+                    </div>
                   </li>
                 );
               }
@@ -99,4 +101,3 @@ export default function NewsContent(props: NewsContentProps) {
     </>
   );
 }
-
