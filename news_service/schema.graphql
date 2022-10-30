@@ -28,6 +28,7 @@ type NewsFeedUrlReference {
 
 type Query {
 	newsFeedUrls: [NewsFeedUrl!]!
+	newsFeedUrl(urlId: Int!): NewsFeedUrl!
 	newsFeedUrlReferences(urlId: Int!): [NewsFeedUrlReference!]!
 }
 

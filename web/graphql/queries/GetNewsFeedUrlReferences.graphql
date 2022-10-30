@@ -1,9 +1,0 @@
-query GetNewsFeedUrlReferences($urlId: Int!) {
-  newsFeedUrlReferences(urlId: $urlId) {
-    tweetId
-    tweetText
-    tweetCreatedAtStr
-    authorUsername
-    retweetedByUsernames
-  }
-}
