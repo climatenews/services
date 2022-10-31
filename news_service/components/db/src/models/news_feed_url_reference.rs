@@ -2,7 +2,7 @@
 #[derive(Debug, Clone, async_graphql::SimpleObject)]
 pub struct NewsFeedUrlReference {
     pub url_id: i32,
-    pub tweet_id: i64,
+    pub tweet_id: String,
     pub tweet_text: String,
     pub tweet_created_at_str: String,
     pub author_username: String,

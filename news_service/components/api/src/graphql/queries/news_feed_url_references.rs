@@ -26,7 +26,7 @@ pub async fn news_feed_url_references_query<'a>(
 
             let news_feed_url_reference = NewsFeedUrlReference {
                 url_id: news_feed_url_reference_query.url_id,
-                tweet_id: news_feed_url_reference_query.tweet_id,
+                tweet_id: news_feed_url_reference_query.tweet_id.to_string(),
                 tweet_text: news_feed_url_reference_query.text,
                 tweet_created_at_str: news_feed_url_reference_query.created_at_str,
                 author_username,

@@ -112,6 +112,21 @@ pub async fn get_users_by_author_id(
     user_vec
 }
 
+pub async fn get_user_by_author_id(
+    twitter_api: &TwitterApi<BearerToken>,
+    author_id: i64,
+) -> Result<Option<User>> {
+    info!("API - get_user_by_author_id: {}", author_id);
+    let user_response = twitter_api
+    .get_user(i64_to_numeric_id(author_id))
+    .user_fields(USER_FIELDS)
+    .send()
+    .await;
+
+    parse_error_response(&user_response).await;
+    Ok(user_response?.into_data())
+}
+
 pub async fn get_user_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     user_id: NumericId,

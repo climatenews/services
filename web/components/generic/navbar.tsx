@@ -21,22 +21,24 @@ export default function NavBar(props: NavBarProps) {
   return (
     <nav id="header" className="container px-4 w-full md:max-w-3xl mx-auto ">
       <div className="w-full mx-auto flex flex-wrap items-center justify-between py-6">
-        <div className="flex flex-1">
-          <div className="flex flex-shrink-0 items-center">
-            <img
-              className="block h-8 w-auto"
-              src="/cac_logo.svg"
-              alt="Your Company"
-            />
-          </div>
-          <div className="flex flex-shrink-0 items-center">
-            <Link href="/">
-              <a className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4">
-                Climate Action Collective
-              </a>
-            </Link>
-          </div>
-        </div>
+        <Link href="/">
+          <a>
+            <div className="flex flex-1">
+              <div className="flex flex-shrink-0 items-center">
+                <img
+                  className="block h-8 w-auto"
+                  src="/cac_logo.svg"
+                  alt="Your Company"
+                />
+              </div>
+              <div className="flex flex-shrink-0 items-center">
+                <p className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4">
+                  Climate Action Collective
+                </p>
+              </div>
+            </div>
+          </a>
+        </Link>
 
         {/* Mobile button */}
         <div className="block lg:hidden">

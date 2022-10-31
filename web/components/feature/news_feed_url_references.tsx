@@ -18,14 +18,27 @@ export default function NewsFeedUrlDirectReferences(
                 key={newsFeedUrlReference.tweetId}
                 className="border-solid border-2 border-gray-400 rounded-md p-4"
               >
-                <p className="text-m font-medium">
+                <div className="flex flex-row">
                   <a
                     href={`https://twitter.com/${newsFeedUrlReference.authorUsername}`}
-                    className="hover:underline"
+                    className="underline"
                   >
-                    @{newsFeedUrlReference.authorUsername}
+                    <p className="text-m font-medium">
+                      @{newsFeedUrlReference.authorUsername}
+                    </p>
+                  </a>{" "}
+                  <a
+                    href={`https://twitter.com/${newsFeedUrlReference.authorUsername}/status/${newsFeedUrlReference.tweetId}`}
+                    className="ml-2 hover:underline"
+                  >
+                    <img
+                      className="mx-auto h-5 w-5 rounded lg:h-5 lg:w-5"
+                      src={"/twitter_icon.svg"}
+                      alt="twitter_icon"
+                    />
                   </a>
-                </p>
+                </div>
+
                 <p className="text-m">
                   {unescapeHTML(newsFeedUrlReference.tweetText)}
                 </p>

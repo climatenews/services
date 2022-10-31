@@ -19,7 +19,7 @@ type NewsFeedUrl {
 
 type NewsFeedUrlReference {
 	urlId: Int!
-	tweetId: Int!
+	tweetId: String!
 	tweetText: String!
 	tweetCreatedAtStr: String!
 	authorUsername: String!
