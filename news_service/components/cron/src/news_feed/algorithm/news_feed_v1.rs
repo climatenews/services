@@ -19,8 +19,10 @@ use log::info;
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
 use std::collections::HashMap;
+use anyhow::Result;
 
-pub async fn populate_news_feed_v1(db_pool: &PgPool) {
+// TODO remove unwraps
+pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()>{
     info!("populate_news_feed_v1 - {:?}", Local::now());
     let last_week_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
 
@@ -35,6 +37,7 @@ pub async fn populate_news_feed_v1(db_pool: &PgPool) {
     // Insert News feed urls
     populate_news_feed_urls_v1(db_pool, author_score_map, url_to_tweet_map).await;
     info!("populate_news_feed_v1 complete - {:?}", Local::now());
+    Ok(())
 }
 
 async fn populate_news_feed_urls_v1(
