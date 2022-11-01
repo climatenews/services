@@ -70,7 +70,7 @@ export default function NewsContent(props: NewsContentProps) {
                               ? newsFeedUrl.previewImageThumbnailUrl
                               : "https://via.placeholder.com/150/FFFFFF"
                           }
-                          alt="TODO"
+                          alt=""
                         />
                       </a>
                     </Link>

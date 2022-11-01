@@ -71,19 +71,19 @@ const Meta: NextPage<Props> = ({
 export default Meta;
 
 Meta.defaultProps = {
-  title: "Climate Action Collective",
-  keywords: "web development, programming, next.js",
+  title: "Climate Action Collective - Climate News",
+  keywords: "climate change, climate news",
   description:
-    "Next.js starter template featuring TypeScript, Tailwind CSS, Preact and much more!",
+    "Climate Action Collective - Trending climate news articles shared by climate scientists, organizations and activists.",
   imageSource: "https://thankyounext.vercel.app/seo.png",
   imageType: "image/png",
   imageAltText:
-    "ThankYouNext - A highly performant and accessible Next.js starter template",
+    "Climate Action Collective",
   imageWidth: "1600",
   imageHeight: "882",
   type: "website",
-  websiteUrl: "https://thankyounext.vercel.app/",
-  siteName: "Next.js Starter",
+  websiteUrl: "https://climateactioncollective.net",
+  siteName: "Climate Action Collective",
   twitterCard: "summary_large_image",
-  twitterName: "@stvfrnzl"
+  twitterName: "@climate_act_col"
 };

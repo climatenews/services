@@ -16,12 +16,12 @@ export default function NewsFeedUrlDirectReferences(
             return (
               <div
                 key={newsFeedUrlReference.tweetId}
-                className="border-solid border-2 border-gray-400 rounded-md p-4"
+                className="border-solid border-2 border-gray-300 rounded-md p-4"
               >
                 <div className="flex flex-row">
                   <a
                     href={`https://twitter.com/${newsFeedUrlReference.authorUsername}`}
-                    className="underline"
+                    
                   >
                     <p className="text-m font-medium">
                       @{newsFeedUrlReference.authorUsername}
@@ -39,7 +39,7 @@ export default function NewsFeedUrlDirectReferences(
                   </a>
                 </div>
 
-                <p className="text-m">
+                <p className="text-m mt-1">
                   {unescapeHTML(newsFeedUrlReference.tweetText)}
                 </p>
                 {/* <p className="text-m font-bold">

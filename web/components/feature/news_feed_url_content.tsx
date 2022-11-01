@@ -65,8 +65,8 @@ export default function NewsFeedUrlContent(props: NewsFeedUrlContentProps) {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold text-gray-600 text-left mt-6 mb-2">
-          Tweets
+        <h3 className="text-lg font-bold text-gray-900 text-left mt-6 mb-2">
+          Tweets:
         </h3>
 
         {props.newsFeedUrlReferences.length > 0 && (
