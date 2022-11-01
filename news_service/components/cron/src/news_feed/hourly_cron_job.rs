@@ -11,6 +11,6 @@ pub async fn hourly_cron_job(db_pool: &PgPool) -> Result<()> {
     info!("schedule_task event - {:?}", Local::now());
     let twitter_api = init_twitter_api();
     get_all_user_tweets(db_pool, &twitter_api).await?;
-    populate_news_feed_v1(db_pool).await;
+    populate_news_feed_v1(db_pool).await?;
     Ok(())
 }
