@@ -18,7 +18,7 @@ pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsF
 
 #[cfg(test)]
 mod tests {
-
+    
     use crate::graphql::test_util::create_fake_schema;
     use async_graphql::value;
     use db::{

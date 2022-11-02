@@ -1,13 +1,13 @@
 use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
-use anyhow::Result;
+use anyhow::{bail, Result};
 use db::util::time::lookup_period;
 use log::{info, warn};
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::id::NumericId;
 use twitter_v2::prelude::PaginableApiResponse;
-use twitter_v2::query::{Exclude, TweetField, UserField};
+use twitter_v2::query::{Exclude, TweetExpansion, TweetField, UserField};
 use twitter_v2::{Error, Tweet, TwitterApi, User};
 
 static TWEET_FIELDS: [TweetField; 6] = [
@@ -18,6 +18,10 @@ static TWEET_FIELDS: [TweetField; 6] = [
     TweetField::Entities,
     TweetField::ReferencedTweets,
 ];
+
+static TWEET_EXPANSIONS: [TweetExpansion; 1] = [TweetExpansion::AuthorId];
+
+static TWEET_USER_FIELDS: [UserField; 1] = [UserField::Username];
 
 static USER_FIELDS: [UserField; 5] = [
     UserField::PublicMetrics,
@@ -192,19 +196,34 @@ pub async fn get_user_tweets(
     Ok(tweets)
 }
 
+// TODO use struct instead of Tuple
+#[derive(Debug)]
+struct TweetsWithUsers(Vec<Tweet>, Vec<User>);
+
 pub async fn get_tweets(
     twitter_api: &TwitterApi<BearerToken>,
     tweet_ids: Vec<NumericId>,
-) -> Result<Option<Vec<Tweet>>> {
+) -> Result<TweetsWithUsers> {
     info!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
     let tweets_response = twitter_api
         .get_tweets(tweet_ids)
         .tweet_fields(TWEET_FIELDS)
+        .expansions(TWEET_EXPANSIONS)
+        .user_fields(TWEET_USER_FIELDS)
         .send()
         .await;
     parse_error_response(&tweets_response).await;
+    let tweets_response = tweets_response?;
 
-    Ok(tweets_response?.into_data())
+    let includes = tweets_response.includes();
+    let tweets = tweets_response.clone().into_data();
+
+    if let (Some(tweets), Some(includes)) = (tweets, includes) {
+        if let Some(users) = includes.users.clone() {
+            return Ok(TweetsWithUsers(tweets, users));
+        }
+    }
+    bail!("get_tweets - unable to parse TweetsWithUsers from response")
 }
 
 //split items into max 100 elements
@@ -255,5 +274,29 @@ pub async fn parse_error_response<T>(response: &Result<T, Error>) {
             warn!("generic error unhandled {}", e);
         }
         Ok(_) => {}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::twitter::init_twitter_api;
+    use crate::util::convert::i64_to_numeric_id;
+    use db::init_env;
+
+    #[tokio::test]
+    async fn get_tweets_test() {
+        init_env();
+        let twitter_api = init_twitter_api();
+        let tweet_ids = vec![
+            i64_to_numeric_id(1587558325050560513),
+            i64_to_numeric_id(1587605401037512705),
+        ];
+        let tweets_with_users: TweetsWithUsers = get_tweets(&twitter_api, tweet_ids).await.unwrap();
+        assert_eq!(tweets_with_users.0.len(), 2);
+        assert_eq!(
+            tweets_with_users.1.first().unwrap().username,
+            "natmaslowski"
+        );
     }
 }
