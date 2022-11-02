@@ -1,12 +1,12 @@
 use crate::graphql::errors::GqlError;
 use async_graphql::{ErrorExtensions, FieldResult};
+use db::constants::{NEWS_FEED_URLS_LIMIT, NEWS_FEED_URLS_NUM_DAYS};
 use db::queries::news_feed_url_query::NewsFeedUrlQuery;
 use db::sql::news_feed_url_query::get_news_feed_urls;
 use db::util::time::past_days;
 use sqlx::postgres::PgPool;
 
-pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
-pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
+
 
 pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();

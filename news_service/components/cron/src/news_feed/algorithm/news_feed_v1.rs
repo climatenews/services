@@ -2,6 +2,7 @@ use super::time_decay::time_decayed_url_score;
 use crate::news_feed::algorithm::helper::{populate_author_score_map, populate_url_to_tweet_map};
 use crate::news_feed::models::tweet_info::TweetInfo;
 use crate::openai::api::fetch_news_tweet_url_climate_classification;
+use anyhow::Result;
 use chrono::Local;
 use db::constants::NEWS_FEED_URLS_NUM_DAYS;
 use db::models::news_feed_url::NewsFeedUrl;
@@ -19,10 +20,9 @@ use log::info;
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
 use std::collections::HashMap;
-use anyhow::Result;
 
 // TODO remove unwraps
-pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()>{
+pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()> {
     info!("populate_news_feed_v1 - {:?}", Local::now());
     let last_week_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
 

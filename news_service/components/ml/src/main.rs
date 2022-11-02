@@ -11,7 +11,7 @@ use std::fs;
 use std::fs::OpenOptions;
 use std::path::Path;
 
-pub const NEWS_FEED_URLS_LIMIT: i64 = 700;
+pub const NEWS_FEED_URLS_LIMIT_ML: i64 = 700;
 pub const FILE_NAME: &str = "news_feed_urls.jsonl";
 pub const OPENAI_PROMPT_END: &str = " \n\n###\n\n";
 
@@ -33,7 +33,7 @@ async fn export_news_feed_urls() -> Result<()> {
     let db_pool = init_db().await;
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
     let news_feed_urls: Vec<NewsFeedUrlQuery> =
-        get_news_feed_urls(&db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT)
+        get_news_feed_urls(&db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT_ML)
             .await
             .unwrap();
 

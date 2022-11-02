@@ -11,9 +11,6 @@ pub mod news_feed_url;
 pub mod news_feed_url_references;
 pub mod news_feed_urls;
 
-pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
-pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
-
 #[Object(extends)]
 impl Query {
     async fn news_feed_urls<'a>(&self, ctx: &'a Context<'_>) -> FieldResult<Vec<NewsFeedUrlQuery>> {

@@ -1,7 +1,7 @@
 use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
 use anyhow::Result;
-use db::util::time::past_year;
+use db::util::time::lookup_period;
 use log::{info, warn};
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
@@ -118,10 +118,10 @@ pub async fn get_user_by_author_id(
 ) -> Result<Option<User>> {
     info!("API - get_user_by_author_id: {}", author_id);
     let user_response = twitter_api
-    .get_user(i64_to_numeric_id(author_id))
-    .user_fields(USER_FIELDS)
-    .send()
-    .await;
+        .get_user(i64_to_numeric_id(author_id))
+        .user_fields(USER_FIELDS)
+        .send()
+        .await;
 
     parse_error_response(&user_response).await;
     Ok(user_response?.into_data())
@@ -132,7 +132,7 @@ pub async fn get_user_tweets(
     user_id: NumericId,
     last_tweet_id: Option<NumericId>,
 ) -> Result<Vec<Tweet>> {
-    let start_time = past_year();
+    let start_time = lookup_period();
 
     info!("API - get_user_tweets: {}", user_id);
     let mut tweets: Vec<Tweet> = vec![];

@@ -122,6 +122,7 @@ export default function NavBar(props: NavBarProps) {
           <ul className="flex flex-col items-center justify-around min-h-[150px]">
             {navigation.map((item) => (
               <li
+                key={item.href}
                 className={classNames(
                   isCurrentRoute(props.pageRoute, item.href)
                     ? "border-b border-gray-400"

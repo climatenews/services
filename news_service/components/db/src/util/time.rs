@@ -16,9 +16,13 @@ pub fn datetime_hours_diff(date_timestamp: i64) -> i64 {
     diff.whole_hours()
 }
 
-pub fn past_year() -> OffsetDateTime {
-    // now_utc_timestamp().checked_add((-365).days()).unwrap()
-    now_utc_timestamp().checked_add((-90).days()).unwrap()
+pub fn lookup_period() -> OffsetDateTime {
+    // 90 days in release mode and 5 days in debug mode
+    if cfg!(debug_assertions) {
+        now_utc_timestamp().checked_add((-5).days()).unwrap()
+    }else{
+        now_utc_timestamp().checked_add((-90).days()).unwrap()
+    }
 }
 
 pub fn past_days(days: i64) -> OffsetDateTime {
