@@ -1,4 +1,4 @@
-use super::api::{get_tweets, split_requests_into_max_amount};
+use super::api::{get_tweets_with_users, split_requests_into_max_amount, TweetsWithUsers};
 use crate::language::english_language_detector::EnglishLanguageDetector;
 use crate::util::convert::{
     i64_to_numeric_id, numeric_id_to_i64, opt_numeric_id_to_opt_i64,
@@ -261,16 +261,17 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         .map(|rt| i64_to_numeric_id(rt.referenced_tweet_id))
         .collect();
 
-    // TODO move to api.rs
     //split tweet_ids into max 100 elements
     let split_tweet_ids_vec = split_requests_into_max_amount(tweet_ids);
 
     for split_tweet_ids in split_tweet_ids_vec {
-        let referenced_tweets: Result<Option<Vec<Tweet>>> =
-            get_tweets(twitter_api, split_tweet_ids).await;
-        if let Some(referenced_tweets) = referenced_tweets?.clone() {
-            for referenced_tweet in referenced_tweets {
-                parse_and_insert_tweet(db_pool, &referenced_tweet, english_language_detector).await;
+        let referenced_tweets_with_users: TweetsWithUsers =
+            get_tweets_with_users(twitter_api, split_tweet_ids).await?;
+        for (i, referenced_tweet) in referenced_tweets_with_users.0.iter().enumerate() {
+            parse_and_insert_tweet(db_pool, referenced_tweet, english_language_detector).await;
+            if let Some(referenced_user) = referenced_tweets_with_users.1.get(i) {
+                // TODO insert referenced_user
+                println!("referenced_user username: {}", referenced_user.username)
             }
         }
     }

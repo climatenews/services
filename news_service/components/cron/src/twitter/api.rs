@@ -198,13 +198,16 @@ pub async fn get_user_tweets(
 
 // TODO use struct instead of Tuple
 #[derive(Debug)]
-struct TweetsWithUsers(Vec<Tweet>, Vec<User>);
+pub struct TweetsWithUsers(pub Vec<Tweet>, pub Vec<User>);
 
-pub async fn get_tweets(
+pub async fn get_tweets_with_users(
     twitter_api: &TwitterApi<BearerToken>,
     tweet_ids: Vec<NumericId>,
 ) -> Result<TweetsWithUsers> {
-    info!("API - get_tweets - num_tweet_ids: {:?} ", tweet_ids.len());
+    info!(
+        "API - get_tweets_with_users - num_tweet_ids: {:?} ",
+        tweet_ids.len()
+    );
     let tweets_response = twitter_api
         .get_tweets(tweet_ids)
         .tweet_fields(TWEET_FIELDS)
@@ -292,7 +295,9 @@ mod tests {
             i64_to_numeric_id(1587558325050560513),
             i64_to_numeric_id(1587605401037512705),
         ];
-        let tweets_with_users: TweetsWithUsers = get_tweets(&twitter_api, tweet_ids).await.unwrap();
+        let tweets_with_users: TweetsWithUsers = get_tweets_with_users(&twitter_api, tweet_ids)
+            .await
+            .unwrap();
         assert_eq!(tweets_with_users.0.len(), 2);
         assert_eq!(
             tweets_with_users.1.first().unwrap().username,
