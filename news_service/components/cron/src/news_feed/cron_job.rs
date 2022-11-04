@@ -159,7 +159,7 @@ async fn fetch_user_tweet_references(
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     // TODO keep track of referenced author_ids and create author_id to username hashmap
     for tweet in tweets.clone() {
-        parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await;
+        parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await?;
         let news_referenced_tweets = parse_news_referenced_tweets(&tweet);
         all_news_referenced_tweets = [all_news_referenced_tweets, news_referenced_tweets].concat();
     }

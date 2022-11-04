@@ -89,7 +89,7 @@ pub async fn parse_and_insert_tweet(
     db_pool: &PgPool,
     tweet: &Tweet,
     english_language_detector: &EnglishLanguageDetector,
-) {
+) -> Result <()> {
     let tweet_id = numeric_id_to_i64(tweet.id);
     let news_tweet_db = find_news_tweet_by_tweet_id(db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
@@ -103,16 +103,17 @@ pub async fn parse_and_insert_tweet(
                 created_at: created_at.unix_timestamp(),
                 created_at_str: datetime_to_str(created_at),
             };
-            insert_news_tweet(db_pool, news_tweet).await.unwrap();
+            insert_news_tweet(db_pool, news_tweet).await?;
         }
     }
     parse_tweet_urls(db_pool, tweet, english_language_detector).await;
+    Ok(())
 }
 
 pub async fn parse_and_insert_referenced_user(
     db_pool: &PgPool,
     user: &User
-) {
+) -> Result<()>{
     let user_id = numeric_id_to_i64(user.id);
     // TODO ensure error is a RecordNotFoundError
     if let Err(_) = find_news_twitter_referenced_user_by_user_id(db_pool, user_id).await {
@@ -120,9 +121,9 @@ pub async fn parse_and_insert_referenced_user(
             user_id,
             username: user.username.clone()
         };
-        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user).await.unwrap();
+        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user).await?;
     }
-
+    Ok(())
 }
 
 
@@ -287,10 +288,10 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         let referenced_tweets_with_users: TweetsWithUsers =
             get_tweets_with_users(twitter_api, split_tweet_ids).await?;
         for (i, referenced_tweet) in referenced_tweets_with_users.0.iter().enumerate() {
-            parse_and_insert_tweet(db_pool, referenced_tweet, english_language_detector).await;
+            parse_and_insert_tweet(db_pool, referenced_tweet, english_language_detector).await?;
             if let Some(referenced_user) = referenced_tweets_with_users.1.get(i) {
                 // TODO insert referenced_user
-                println!("referenced_user username: {}", referenced_user.username)
+                parse_and_insert_referenced_user(db_pool, referenced_user).await?;
             }
         }
     }
