@@ -19,7 +19,9 @@ use db::sql::news_referenced_tweet_url::{
 use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet};
 use db::sql::news_tweet_url::{find_news_tweet_url_by_expanded_url_parsed, insert_news_tweet_url};
 use db::sql::news_twitter_list::{find_news_twitter_list_by_list_id, insert_news_twitter_list};
-use db::sql::news_twitter_referenced_user::{find_news_twitter_referenced_user_by_user_id, insert_news_twitter_referenced_user};
+use db::sql::news_twitter_referenced_user::{
+    find_news_twitter_referenced_user_by_user_id, insert_news_twitter_referenced_user,
+};
 use db::sql::news_twitter_user::{find_news_twitter_user_by_user_id, insert_news_twitter_user};
 use db::util::convert::datetime_to_str;
 use sqlx::PgPool;
@@ -89,7 +91,7 @@ pub async fn parse_and_insert_tweet(
     db_pool: &PgPool,
     tweet: &Tweet,
     english_language_detector: &EnglishLanguageDetector,
-) -> Result <()> {
+) -> Result<()> {
     let tweet_id = numeric_id_to_i64(tweet.id);
     let news_tweet_db = find_news_tweet_by_tweet_id(db_pool, tweet_id).await;
     if news_tweet_db.is_none() {
@@ -110,22 +112,18 @@ pub async fn parse_and_insert_tweet(
     Ok(())
 }
 
-pub async fn parse_and_insert_referenced_user(
-    db_pool: &PgPool,
-    user: &User
-) -> Result<()>{
+pub async fn parse_and_insert_referenced_user(db_pool: &PgPool, user: &User) -> Result<()> {
     let user_id = numeric_id_to_i64(user.id);
     // TODO ensure error is a RecordNotFoundError
     if let Err(_) = find_news_twitter_referenced_user_by_user_id(db_pool, user_id).await {
         let news_twitter_referenced_user = NewsTwitterReferencedUser {
             user_id,
-            username: user.username.clone()
+            username: user.username.clone(),
         };
         insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user).await?;
     }
     Ok(())
 }
-
 
 pub async fn parse_tweet_urls(
     db_pool: &PgPool,
