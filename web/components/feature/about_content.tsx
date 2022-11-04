@@ -75,21 +75,20 @@ export default function AboutContent() {
               multiple factors.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              Users are given a score based on the number of followers they
+              Users is score based on the number of followers they
               have, the number of lists they appear in and the number of their
               tweets that have been referenced by other users.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              An article is given a score based on the score of the users that
-              shared the article and the time since it was first shared. The
-              score for an article will gradually decrease over time.
+              An articles score is based on the total score of all the users that
+              shared the article. The score for an article will gradually decrease over time.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
               The{" "}
               <Link href="https://developer.twitter.com/en/docs/twitter-api">
                 <a className="font-medium hover:underline">Twitter API</a>
               </Link>{" "}
-              to keep track of articles shared by users. The{" "}
+              is used to keep track of articles shared by users. The{" "}
               <Link href="https://openai.com">
                 <a className="font-medium hover:underline">OpenAI API</a>
               </Link>{" "}

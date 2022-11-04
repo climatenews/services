@@ -64,8 +64,9 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
                 .unwrap();
         }
     }
+    // TODO add unit test
     // Remove duplicate users
-    users.dedup_by(|a, b| a.username == b.username);
+    users.dedup_by(|a, b| a.id.as_u64() == b.id.as_u64());
     info!("num users: {} ", users.len());
 
     for user in users {
