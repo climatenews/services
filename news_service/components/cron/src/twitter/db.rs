@@ -10,6 +10,7 @@ use db::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
 use db::models::news_tweet::NewsTweet;
 use db::models::news_tweet_url::NewsTweetUrl;
 use db::models::news_twitter_list::NewsTwitterList;
+use db::models::news_twitter_referenced_user::NewsTwitterReferencedUser;
 use db::models::news_twitter_user::NewsTwitterUser;
 use db::sql::news_referenced_tweet::insert_news_referenced_tweet;
 use db::sql::news_referenced_tweet_url::{
@@ -18,6 +19,7 @@ use db::sql::news_referenced_tweet_url::{
 use db::sql::news_tweet::{find_news_tweet_by_tweet_id, insert_news_tweet};
 use db::sql::news_tweet_url::{find_news_tweet_url_by_expanded_url_parsed, insert_news_tweet_url};
 use db::sql::news_twitter_list::{find_news_twitter_list_by_list_id, insert_news_twitter_list};
+use db::sql::news_twitter_referenced_user::{find_news_twitter_referenced_user_by_user_id, insert_news_twitter_referenced_user};
 use db::sql::news_twitter_user::{find_news_twitter_user_by_user_id, insert_news_twitter_user};
 use db::util::convert::datetime_to_str;
 use sqlx::PgPool;
@@ -106,6 +108,23 @@ pub async fn parse_and_insert_tweet(
     }
     parse_tweet_urls(db_pool, tweet, english_language_detector).await;
 }
+
+pub async fn parse_and_insert_referenced_user(
+    db_pool: &PgPool,
+    user: &User
+) {
+    let user_id = numeric_id_to_i64(user.id);
+    // TODO ensure error is a RecordNotFoundError
+    if let Err(_) = find_news_twitter_referenced_user_by_user_id(db_pool, user_id).await {
+        let news_twitter_referenced_user = NewsTwitterReferencedUser {
+            user_id,
+            username: user.username.clone()
+        };
+        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user).await.unwrap();
+    }
+
+}
+
 
 pub async fn parse_tweet_urls(
     db_pool: &PgPool,
@@ -261,7 +280,7 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
         .map(|rt| i64_to_numeric_id(rt.referenced_tweet_id))
         .collect();
 
-    //split tweet_ids into max 100 elements
+    // split tweet_ids into max 100 elements
     let split_tweet_ids_vec = split_requests_into_max_amount(tweet_ids);
 
     for split_tweet_ids in split_tweet_ids_vec {
