@@ -42,10 +42,8 @@ pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
     let db_pool = init_db().await;
 
-    // #[cfg(debug_assertions)]
-    // only run in debug mode
     if let Err(err) = hourly_cron_job(&db_pool).await {
-        println!("hourly_cron_job failed: {:?}", err);
+        println!("initial job failed: {:?}", err);
     }
 
     let every_second = every(1).hours().in_timezone(&Utc).perform(|| async {

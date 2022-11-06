@@ -35,7 +35,7 @@ pub async fn get_list_members(
     twitter_api: &TwitterApi<BearerToken>,
     list_id: NumericId,
 ) -> Vec<User> {
-    info!("API - get_list_members: {}", list_id);
+    info!("Twitter API - get_list_members: {}", list_id);
     let mut list_users: Vec<User> = vec![];
     let list_users_response = twitter_api
         .get_list_members(list_id)
@@ -82,7 +82,7 @@ pub async fn get_users_by_username(
     usernames: Vec<&str>,
 ) -> Option<Vec<User>> {
     //TODO split in to max 100 users per request
-    info!("API - get_users_by_username: {}", usernames.len());
+    info!("Twitter API - get_users_by_username: {}", usernames.len());
     let users_response = twitter_api
         .get_users_by_usernames(usernames)
         .user_fields(USER_FIELDS)
@@ -97,7 +97,7 @@ pub async fn get_users_by_author_id(
     twitter_api: &TwitterApi<BearerToken>,
     author_ids: Vec<i64>,
 ) -> Vec<User> {
-    info!("API - get_users_by_author_id: {}", author_ids.len());
+    info!("Twitter API - get_users_by_author_id: {}", author_ids.len());
     let mut user_vec: Vec<User> = vec![];
     let split_author_ids_vec =
         split_requests_into_max_amount(author_ids.iter().map(|i| i64_to_numeric_id(*i)).collect());
@@ -120,7 +120,7 @@ pub async fn get_user_by_author_id(
     twitter_api: &TwitterApi<BearerToken>,
     author_id: i64,
 ) -> Result<Option<User>> {
-    info!("API - get_user_by_author_id: {}", author_id);
+    info!("Twitter API - get_user_by_author_id: {}", author_id);
     let user_response = twitter_api
         .get_user(i64_to_numeric_id(author_id))
         .user_fields(USER_FIELDS)
@@ -138,7 +138,7 @@ pub async fn get_user_tweets(
 ) -> Result<Vec<Tweet>> {
     let start_time = lookup_period();
 
-    info!("API - get_user_tweets: {}", user_id);
+    info!("Twitter API - get_user_tweets: {}", user_id);
     let mut tweets: Vec<Tweet> = vec![];
     let tweets_api_response = if let Some(last_tweet_id) = last_tweet_id {
         // Use last_tweet_id
@@ -205,7 +205,7 @@ pub async fn get_tweets_with_users(
     tweet_ids: Vec<NumericId>,
 ) -> Result<TweetsWithUsers> {
     info!(
-        "API - get_tweets_with_users - num_tweet_ids: {:?} ",
+        "Twitter API - get_tweets_with_users - num_tweet_ids: {:?} ",
         tweet_ids.len()
     );
     let tweets_response = twitter_api

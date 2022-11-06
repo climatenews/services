@@ -24,10 +24,10 @@ use std::collections::HashMap;
 // TODO remove unwraps
 pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()> {
     info!("populate_news_feed_v1 - {:?}", Local::now());
-    let last_week_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
+    let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
 
     // Direct & indirect references
-    let news_referenced_urls = get_news_referenced_urls(db_pool, last_week_timestamp).await;
+    let news_referenced_urls = get_news_referenced_urls(db_pool, recent_timestamp).await;
 
     let author_score_map: HashMap<i64, i32> = populate_author_score_map(&news_referenced_urls);
 

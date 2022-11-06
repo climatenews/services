@@ -1,4 +1,6 @@
 pub static MAX_TWEET_RESULTS: usize = 100;
+
+//- User Tweet timeline - 1500/per 15m
 pub static REQUEST_SLEEP_DURATION: u64 = 1500;
 
 pub static TWITTER_LISTS: [i64; 2] = [
