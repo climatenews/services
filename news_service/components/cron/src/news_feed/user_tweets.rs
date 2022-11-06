@@ -34,15 +34,20 @@ use twitter_v2::{Tweet, TwitterApi, User};
 pub async fn get_all_user_tweets(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
+    is_initilizing: bool,
 ) -> Result<()> {
     info!("get_all_user_tweets - {:?}", Local::now());
-    fetch_user_tweets(db_pool, twitter_api).await?;
+    fetch_user_tweets(db_pool, twitter_api, is_initilizing).await?;
     update_news_twitter_users_scores(db_pool).await?;
     info!("get_all_user_tweets complete - {:?}", Local::now());
     Ok(())
 }
 
-async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()> {
+async fn fetch_user_tweets(
+    db_pool: &PgPool,
+    twitter_api: &TwitterApi<BearerToken>,
+    is_initilizing: bool,
+) -> Result<()> {
     let english_language_detector = EnglishLanguageDetector::new();
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
@@ -58,14 +63,10 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
             for list_user in list_users {
                 users.push(list_user);
             }
-            // TODO ensure users are saved before updating list_last_checked_at
-            update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
-                .await
-                .unwrap();
         }
     }
     // TODO add unit test
-    // Remove duplicate users
+    // Remove duplicate users, sort by username to see progress, query for all users
     users.dedup_by(|a, b| a.id.as_u64() == b.id.as_u64());
     info!("num users: {} ", users.len());
 
@@ -81,16 +82,52 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         } else {
             info!("Adding username: {}", user.username);
         }
-        // Check if last_checked is over 30 mins or has no recent tweets
-        if last_checked_minutes_diff > 30 || news_twitter_user.last_tweet_id.is_none() {
-            let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
-            let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await?;
-            fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector)
-                .await?;
-            update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await?;
+
+        if is_initilizing && news_twitter_user.last_tweet_id.is_none() {
+            // Check if a user has no recent tweets when initilizing
+            get_user_tweets_and_references(
+                db_pool,
+                twitter_api,
+                &english_language_detector,
+                user,
+                &news_twitter_user,
+            )
+            .await;
+        } else if last_checked_minutes_diff > 30 {
+            // Check if user last_checked is over 30 mins or has no recent tweets
+            get_user_tweets_and_references(
+                db_pool,
+                twitter_api,
+                &english_language_detector,
+                user,
+                &news_twitter_user,
+            )
+            .await;
         }
+
         update_user_last_checked_at(db_pool, &news_twitter_user).await?;
     }
+
+    for list_id in TWITTER_LISTS {
+        // ensure users are saved before updating list_last_checked_at
+        update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
+            .await
+            .unwrap();
+    }
+    Ok(())
+}
+
+async fn get_user_tweets_and_references(
+    db_pool: &PgPool,
+    twitter_api: &TwitterApi<BearerToken>,
+    english_language_detector: &EnglishLanguageDetector,
+    user: User,
+    news_twitter_user: &NewsTwitterUser,
+) -> Result<()> {
+    let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
+    let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user.id, last_tweet_id).await?;
+    fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector).await?;
+    update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await?;
     Ok(())
 }
 

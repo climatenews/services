@@ -42,12 +42,12 @@ pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
     let db_pool = init_db().await;
 
-    if let Err(err) = hourly_cron_job(&db_pool).await {
+    if let Err(err) = hourly_cron_job(&db_pool, true).await {
         println!("initial job failed: {:?}", err);
     }
 
     let every_second = every(1).hours().in_timezone(&Utc).perform(|| async {
-        if let Err(err) = hourly_cron_job(&db_pool).await {
+        if let Err(err) = hourly_cron_job(&db_pool, false).await {
             println!("hourly_cron_job failed: {:?}", err);
         }
     });
