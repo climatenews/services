@@ -1,6 +1,7 @@
 use crate::openai::models::{Completion, CompletionArgs};
 use db::models::news_tweet_url::NewsTweetUrlWithId;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
+use log::info;
 
 const BASE_URL: &str = "https://api.openai.com/v1";
 const PROMPT_END: &str = " \n\n###\n\n";
@@ -8,10 +9,7 @@ const PROMPT_END: &str = " \n\n###\n\n";
 pub async fn fetch_news_tweet_url_climate_classification(
     news_tweet_url: NewsTweetUrlWithId,
 ) -> bool {
-    info!(
-        "OpenAI API - fetch_news_tweet_url_climate_classification",
-        tweet_ids.len()
-    );
+    info!("OpenAI API - fetch_news_tweet_url_climate_classification {}", news_tweet_url.title);
     let title_and_description =
         format!("{} - {}", news_tweet_url.title, news_tweet_url.description);
     fetch_text_climate_classification(title_and_description).await

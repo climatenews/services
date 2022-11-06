@@ -11,5 +11,6 @@ pub struct NewsFeedUrlReferencesQuery {
     pub author_id: i64,
     pub created_at_str: String,
     pub username: Option<String>,
+    pub referenced_username: Option<String>,
     pub referenced_tweet_kind: Option<String>, // should be optional?
 }
