@@ -38,6 +38,7 @@ pub async fn find_all_news_twitter_users(pool: &PgPool) -> Result<Vec<NewsTwitte
         r#"
             SELECT user_id, username, profile_image_url, description, verified, followers_count, listed_count, user_referenced_tweets_count, user_score, last_tweet_id, last_updated_at, last_checked_at
             FROM news_twitter_user
+            ORDER BY username ASC
         "#
     ).fetch_all(pool).await
 }
