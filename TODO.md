@@ -17,6 +17,7 @@
 - [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
 - [x] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
+- [ ] Request timeout?
 - [ ] Save list users first and then parse tweets, to avoid multiple lookups
 - [ ] Recalculate user scores every 1 hour
 - [ ] First run, just check if they have been updated at all

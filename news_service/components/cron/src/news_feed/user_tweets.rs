@@ -44,10 +44,7 @@ pub async fn get_all_user_tweets(
     Ok(())
 }
 
-async fn fetch_users(
-    db_pool: &PgPool,
-    twitter_api: &TwitterApi<BearerToken>,
-) -> Result<()> {
+async fn fetch_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()> {
     // TODO move users to a list
     let mut users: Vec<User> = get_users_by_username(twitter_api, TWITTER_USERNAMES.to_vec())
         .await
@@ -65,8 +62,14 @@ async fn fetch_users(
             }
         }
     }
+
     for user in users {
         parse_twitter_user(db_pool, &user).await.unwrap();
+    }
+    for list_id in TWITTER_LISTS {
+        update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
+            .await
+            .unwrap();
     }
 
     Ok(())
@@ -81,21 +84,20 @@ async fn fetch_user_tweets(
 
     let news_twitter_users = find_all_news_twitter_users(db_pool).await?;
     for (i, news_twitter_user) in news_twitter_users.iter().enumerate() {
-
         let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
         let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
-
-        if is_initilizing && news_twitter_user.last_tweet_id.is_none() {
-            info!("{} Adding tweets for: {}", i, news_twitter_user.username);
-            // Check if a user has no recent tweets when initilizing
-            get_user_tweets_and_references(
-                db_pool,
-                twitter_api,
-                &english_language_detector,
-
-                &news_twitter_user,
-            )
-            .await?;
+        if is_initilizing {
+            if news_twitter_user.last_tweet_id.is_none() {
+                info!("{} Adding tweets for: {}", i, news_twitter_user.username);
+                // Check if a user has no recent tweets when initilizing
+                get_user_tweets_and_references(
+                    db_pool,
+                    twitter_api,
+                    &english_language_detector,
+                    &news_twitter_user,
+                )
+                .await?;
+            }
         } else if last_checked_minutes_diff > 30 {
             info!(
                 "{} Updating tweets for:{} last_checked {} mins ago, last_updated: {} mins ago",
@@ -114,12 +116,6 @@ async fn fetch_user_tweets(
         update_user_last_checked_at(db_pool, &news_twitter_user).await?;
     }
 
-    for list_id in TWITTER_LISTS {
-        // ensure users are saved before updating list_last_checked_at
-        update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
-            .await
-            .unwrap();
-    }
     Ok(())
 }
 
