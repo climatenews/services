@@ -9,31 +9,29 @@ export default function AboutContent() {
         {/* Content */}
         <div className="relative py-4">
           <div className="mx-auto max-w-md px-4 sm:max-w-3xl">
-            <p className="mt-4 text-2xl font-extrabold tracking-tight text-gray-900">
+            {/* <p className="mt-4 text-2xl font-extrabold tracking-tight text-gray-900">
               Mission
             </p>
             <p className="mx-auto mt-5 text-lg text-gray-600">
               Climate Action Collective is an open source project aiming to improve climate
               related education and amplify the voices of by climate scientists,
               organizations and activists.
-            </p>
-            <p className="mx-auto mt-5 text-lg text-gray-600">
-              Our source code is on{" "}
-              <Link href="https://github.com/climate-action">
-                <a className="font-medium hover:underline">GitHub</a>
-              </Link>{" "}
-              and everyone is free to review and contribute to our code base.
-            </p>
+            </p> */}
 
             <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
               Climate News
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              The news feed shows trending articles shared by climate
+              The climate news feed shows trending articles shared by climate
               scientists, organizations and activists.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              Users are imported from the following 3 Twitter lists:
+              The news feed uses a ranking algorithm and is based on
+              multiple factors.
+            </p>
+
+            <p className="mx-auto mt-5  text-lg text-gray-600">
+              We use Twitter accounts from the following 3 lists to generate the user list:
             </p>
             <ul className="mx-auto ml-5 mt-5 max-w-prose list-disc">
               <li className="mx-auto mt-2 text-lg text-gray-600">
@@ -70,18 +68,13 @@ export default function AboutContent() {
             </ul>
 
 
+
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              The news feed uses a score driven algorithm and is based on
-              multiple factors.
+              Users are scored based on their follower count, the number of lists they appear in, and the amount of tweets have been referenced by other users.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              Users is score based on the number of followers they
-              have, the number of lists they appear in and the number of their
-              tweets that have been referenced by other users.
-            </p>
-            <p className="mx-auto mt-5  text-lg text-gray-600">
-              An articles score is based on the total score of all the users that
-              shared the article. The score for an article will gradually decrease over time.
+              An article score is based on the users that
+              shared it and it will gradually decrease over time.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
               The{" "}
@@ -94,6 +87,12 @@ export default function AboutContent() {
               </Link>{" "}
               is used to classify each article, to ensure only climate related
               articles appear in the news feed.
+            </p>
+            <p className="mx-auto mt-5 text-lg text-gray-600">
+              Our source code is available on {" "}
+              <Link href="https://github.com/climate-action">
+                <a className="font-medium hover:underline">GitHub</a>
+              </Link>{"."}
             </p>
             <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
               About Us
