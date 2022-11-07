@@ -67,6 +67,7 @@ async fn fetch_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) ->
         parse_twitter_user(db_pool, &user).await.unwrap();
     }
     for list_id in TWITTER_LISTS {
+        // Update last_checked_at field once users are saved
         update_news_twitter_list_last_checked_at(db_pool, list_id, now_utc_timestamp())
             .await
             .unwrap();
