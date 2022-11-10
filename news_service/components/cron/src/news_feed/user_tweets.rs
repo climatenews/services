@@ -87,31 +87,39 @@ async fn fetch_user_tweets(
     for (i, news_twitter_user) in news_twitter_users.iter().enumerate() {
         let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
         let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
-        if is_initilizing {
-            if news_twitter_user.last_tweet_id.is_none() {
-                info!("{} Adding tweets for: {}", i, news_twitter_user.username);
-                // Check if a user has no recent tweets when initilizing
-                get_user_tweets_and_references(
-                    db_pool,
-                    twitter_api,
-                    &english_language_detector,
-                    &news_twitter_user,
-                )
-                .await?;
-            }
-        } else if last_checked_minutes_diff > 30 {
+
+        // TODO update logic
+        // if is_initilizing {
+        //     if news_twitter_user.last_tweet_id.is_none() {
+        //         info!("{} is_initilizing Adding tweets for: {}", i, news_twitter_user.username);
+        //         // Check if a user has no recent tweets when initilizing
+        //         get_user_tweets_and_references(
+        //             db_pool,
+        //             twitter_api,
+        //             &english_language_detector,
+        //             &news_twitter_user,
+        //         )
+        //         .await?;
+        //     }
+        // } else 
+        if last_checked_minutes_diff > 30 {
             info!(
                 "{} Updating tweets for:{} last_checked {} mins ago, last_updated: {} mins ago",
                 i, news_twitter_user.username, last_checked_minutes_diff, last_updated_minutes_diff
             );
+
             // Check if user last_checked is over 30 mins or has no recent tweets
-            get_user_tweets_and_references(
+            if let Err(err) = get_user_tweets_and_references(
                 db_pool,
                 twitter_api,
                 &english_language_detector,
                 &news_twitter_user,
             )
-            .await?;
+            .await {
+                println!("get_user_tweets_and_references failed: {:?}", err);
+            }
+
+
         }
 
         update_user_last_checked_at(db_pool, &news_twitter_user).await?;

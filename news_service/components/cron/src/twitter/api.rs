@@ -2,7 +2,7 @@ use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
 use anyhow::{bail, Result};
 use db::util::time::lookup_period;
-use log::{info, warn};
+use log::{info};
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::id::NumericId;
@@ -257,24 +257,24 @@ pub async fn parse_error_response<T>(response: &Result<T, Error>) {
     match response {
         Err(twitter_v2::Error::Request(ref e)) => {
             if e.is_timeout() {
-                warn!("Request error timeout: {}", e);
+                panic!("Request error timeout: {}", e);
             } else if e.is_connect() {
-                warn!("Request error connect: {}", e);
+                panic!("Request error connect: {}", e);
             } else if e.status() == Some(reqwest::StatusCode::TOO_MANY_REQUESTS) {
-                warn!("Request error too many requests: {}", e);
+                panic!("Request error too many requests: {}", e);
             } else {
-                warn!("Request error unhandled: {}", e);
+                panic!("Request error unhandled: {}", e);
             }
         }
         Err(twitter_v2::Error::Api(ref e)) => {
             if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS {
-                warn!("Api error due to 429 response {}", e);
+                panic!("Api error due to 429 response {}", e);
             } else {
-                warn!("Api error unhandled: {}", e);
+                panic!("Api error unhandled: {}", e);
             }
         }
         Err(e) => {
-            warn!("generic error unhandled {}", e);
+            panic!("generic error unhandled {}", e);
         }
         Ok(_) => {}
     }
