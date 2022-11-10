@@ -12,12 +12,13 @@ export default function NewsHeader(props: NewsHeaderProps) {
             {props.title}
           </h1>
           {props.subtitle ? (
-            <p className="text-sm font-light text-gray-600 mt-1">
+            <p className="text-sm font-normal text-gray-700 mt-1">
               {props.subtitle}
             </p>
           ) : (
             ""
           )}
+          <p className="text-sm font-light italic text-gray-600 mt-1 ">Last Updated: 30 mins ago</p>
         </div>
       </div>
     </>
