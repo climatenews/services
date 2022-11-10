@@ -17,36 +17,31 @@
 - [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
 - [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
 - [x] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
+- [x] Save list users first and then parse tweets, to avoid multiple lookups
+- [x] First run, just check if they have been updated at all
+- [x] handle 100+ requests of usernames
+- [x] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
+- [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
+- [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
+- [ ] Deploy to AWS
+- [ ] Allow links without a description
+- [ ] Save cron runs in db + errors
 - [ ] Request timeout? just hangs...
-- [ ] Save list users first and then parse tweets, to avoid multiple lookups
-- [ ] Recalculate user scores every 1 hour
-- [ ] First run, just check if they have been updated at all
-- [ ] Cron keep track of referenced users and lookup usernames
 - [ ] Handle cron errors and retry 3 times
 - [ ] (bug) save users before updating list updated_at column
-- [ ] handle 100+ requests of usernames
-- [ ] Save cron runs in db
-- [ ] Generate missing images using Dalle
-- [ ] print db errors
+- [ ] print db errors, ensure we only get RecordNotFound errors
+- [ ] remove all unwraps
 - [ ] handle openAI api errors
 - [ ] setup slack for errors
 - [ ] Improve mobile design
 - [ ] Only make openAI requests for top 30 news feed articles after calculating score
-- [ ] Deploy to AWS
 - [ ] Remove links from is_english classification?
-- [ ] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
-- [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
-- [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
-- [ ] Add referenced twitter users to db?
 - [ ] Dedup news_feed_url_references
 - [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
 - [ ] use env logger
 - [ ] use anyhow for errors, remove unwraps
-- [ ] Send errors to Slack 
-- [ ] Fix API tests?
-- [ ] set updated_at when not checked?
-- [ ] use verified status in score
+- [ ] Fix API tests
 - [ ] Use decimal for url score or *100 
 - [ ] retry failed API requests 2 times - https://github.com/jpopesculian/twitter-v2-rs/issues/8
 - [ ] terraform git action - https://learn.hashicorp.com/tutorials/terraform/github-actions
