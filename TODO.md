@@ -21,20 +21,21 @@
 - [x] First run, just check if they have been updated at all
 - [x] handle 100+ requests of usernames
 - [x] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
+- [x] (bug) save users before updating list updated_at column
+- [x] Only make openAI requests for top 100 news feed articles after calculating score
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
+- [ ] Fix is_init logig
 - [ ] Deploy to AWS
 - [ ] Allow links without a description
 - [ ] Save cron runs in db + errors
 - [ ] Request timeout? just hangs...
 - [ ] Handle cron errors and retry 3 times
-- [ ] (bug) save users before updating list updated_at column
 - [ ] print db errors, ensure we only get RecordNotFound errors
 - [ ] remove all unwraps
 - [ ] handle openAI api errors
 - [ ] setup slack for errors
 - [ ] Improve mobile design
-- [ ] Only make openAI requests for top 30 news feed articles after calculating score
 - [ ] Remove links from is_english classification?
 - [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
 - [ ] Dedup news_feed_url_references
@@ -48,7 +49,6 @@
 - [ ] update terraform admin user 
 - [ ] use k8s? https://kompose.io/cd or docker swarm?
 - [ ] github action to lint web and services
-- [ ] start cron job if database empty
 
 # Web
 - [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
