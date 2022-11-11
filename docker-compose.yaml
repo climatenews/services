@@ -18,13 +18,11 @@ services:
       context: news_service
       args:
         SERVICE_NAME: api 
-      #target: development
     environment:
       - API_HOST=0.0.0.0
       - API_PORT=8000
       - RUST_LOG=info,actix=info
-      - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
-     
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - 8000:8000
     networks:
@@ -40,13 +38,13 @@ services:
       context: news_service
       args:
         SERVICE_NAME: cron 
-      #target: development
     environment:
       - CRON_HOST=0.0.0.0
       - CRON_PORT=8001
       - RUST_LOG=info,actix=info
-      - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/climate_action
-      - TWITTER_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAAAMo6ggEAAAAArLoP%2FRAXVHU1jsuvyrAvIKKUWyg%3DE5FPLBkAJOIy680R341JWFM1Ri1hM8ymZqQ6xjW7jDKTJ4Z4np
+      - DATABASE_URL=${DATABASE_URL}
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
  
     networks:
       - server-side
@@ -60,15 +58,15 @@ services:
     image: postgres:12-alpine
     restart: always
     environment:
-      - POSTGRES_PASSWORD=mysecretpassword
-      - POSTGRES_DB=climate_action
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - server-side
     ports:
       - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
-# Pass secrets from github Action?: https://github.com/orgs/community/discussions/25269
+
 networks:
   client-side: {}
   server-side: {}

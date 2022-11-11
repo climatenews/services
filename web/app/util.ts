@@ -22,7 +22,7 @@ export function sharedByText(newsFeedUrl: NewsFeedUrl): String {
   } else if (newsFeedUrl.numReferences == 2) {
     numReferencesText = ` and 1 other`;
   }
-  return `${sharedByText}${numReferencesText} | ${dateText(newsFeedUrl)}`;
+  return `${dateText(newsFeedUrl)} | ${sharedByText}${numReferencesText}`;
 }
 
 export function dateText(newsFeedUrl: NewsFeedUrl): String {

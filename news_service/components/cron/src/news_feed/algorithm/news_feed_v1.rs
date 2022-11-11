@@ -22,7 +22,6 @@ use rust_decimal_macros::dec;
 use sqlx::PgPool;
 use std::collections::HashMap;
 
-// TODO remove unwraps
 pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()> {
     info!("populate_news_feed_v1 - {:?}", Local::now());
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
@@ -63,7 +62,6 @@ async fn populate_news_feed_urls_v1(
             .min_by_key(|tweet_info| tweet_info.created_at)
             .unwrap();
 
-        // TODO move logic into helper function
         let hours_since_first_created =
             (now_utc_timestamp() - first_tweet.created_at) / seconds_in_hour();
 

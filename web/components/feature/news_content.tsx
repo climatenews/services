@@ -40,7 +40,7 @@ export default function NewsContent(props: NewsContentProps) {
                     </a>
 
                     {/* Shares */}
-                    <p className="text-base text-gray-400 mt-1">
+                    <p className="text-base text-gray-500 mt-1">
                       <Link
                         href={{
                           pathname: "/news_feed/[url_id]",
@@ -68,7 +68,7 @@ export default function NewsContent(props: NewsContentProps) {
                           src={
                             newsFeedUrl.previewImageThumbnailUrl
                               ? newsFeedUrl.previewImageThumbnailUrl
-                              : "https://via.placeholder.com/150/FFFFFF"
+                              : "news_article_placeholder.png"
                           }
                           alt=""
                         />

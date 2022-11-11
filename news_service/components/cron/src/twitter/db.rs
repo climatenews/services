@@ -47,7 +47,7 @@ pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Result<NewsTw
 }
 
 pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Result<NewsTwitterUser> {
-    // TODO parse verified status
+
     let user_id = numeric_id_to_i64(user.id);
     let followers_count = user
         .public_metrics
@@ -310,7 +310,7 @@ pub fn get_expanded_url_parsed(expanded_url: Url) -> String {
     expanded_url_parsed.set_query(None);
 
     // Handle Youtube URL params
-    // TODO convert mobile links to desktop
+    // TODO convert Youtube mobile links to desktop
     if expanded_url.host_str().unwrap().contains("youtube.com") {
         let hash_query: HashMap<String, String> =
             expanded_url.query_pairs().into_owned().collect();

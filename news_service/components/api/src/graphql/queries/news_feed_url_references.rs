@@ -21,7 +21,10 @@ pub async fn news_feed_url_references_query<'a>(
 
             let author_username = match news_feed_url_reference_query.username {
                 Some(author_username) => author_username,
-                None => "TODO lookup".to_string(),
+                None => match news_feed_url_reference_query.referenced_username{
+                    Some(referenced_username) => referenced_username,
+                    None => "".to_string()
+                },
             };
 
             let news_feed_url_reference = NewsFeedUrlReference {

@@ -27,7 +27,7 @@ export default function AboutContent() {
             </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              We use Twitter accounts from the following 3 lists to generate the
+              About ~3500 Twitter accounts are imported from the lists below to generate the
               user list:
             </p>
             <ul className="mx-auto ml-5 mt-5 max-w-prose list-disc">
@@ -66,13 +66,13 @@ export default function AboutContent() {
             </ul>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              The news feed uses a ranking algorithm and is based on multiple
+              The news feed uses a ranking algorithm to find trending articles and is based on multiple
               factors.
             </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
               Users are scored based on their follower count, the number of
-              lists they appear in, and the amount of tweets have been
+              lists they appear in, and the amount of tweets that have been
               referenced by other users.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
