@@ -21,7 +21,6 @@ export default function NewsFeedUrlDirectReferences(
                 <div className="flex flex-row">
                   <a
                     href={`https://twitter.com/${newsFeedUrlReference.authorUsername}`}
-                    
                   >
                     <p className="text-m font-medium">
                       @{newsFeedUrlReference.authorUsername}

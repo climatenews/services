@@ -77,8 +77,7 @@ Meta.defaultProps = {
     "Climate Action Collective - Trending climate news articles shared by climate scientists, organizations and activists.",
   imageSource: "https://thankyounext.vercel.app/seo.png",
   imageType: "image/png",
-  imageAltText:
-    "Climate Action Collective",
+  imageAltText: "Climate Action Collective",
   imageWidth: "1600",
   imageHeight: "882",
   type: "website",

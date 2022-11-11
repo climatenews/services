@@ -48,7 +48,7 @@ const navigation = {
 export default function Footer() {
   return (
     <footer>
-      <div className="bg-gray-50 mx-auto py-12 overflow-hidden">
+      <div className="mx-auto py-12 overflow-hidden">
         <div className="mt-8 flex justify-center space-x-6">
           {navigation.social.map((item) => (
             <a

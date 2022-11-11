@@ -23,15 +23,12 @@ export default function AboutContent() {
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
               The climate news feed shows trending articles shared by climate
-              scientists, organizations and activists.
-            </p>
-            <p className="mx-auto mt-5  text-lg text-gray-600">
-              The news feed uses a ranking algorithm and is based on
-              multiple factors.
+              scientists, organizations and activists on Twitter.
             </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              We use Twitter accounts from the following 3 lists to generate the user list:
+              We use Twitter accounts from the following 3 lists to generate the
+              user list:
             </p>
             <ul className="mx-auto ml-5 mt-5 max-w-prose list-disc">
               <li className="mx-auto mt-2 text-lg text-gray-600">
@@ -40,41 +37,47 @@ export default function AboutContent() {
                 </Link>
                 {" - "}
                 <Link href="https://twitter.com/climate_act_col">
-                  <a className="font-medium hover:underline">@climate_act_col</a>
+                  <a className="font-medium hover:underline">
+                    @climate_act_col
+                  </a>
                 </Link>
               </li>
               <li className="mx-auto mt-1  text-lg text-gray-600">
-              <Link href="https://twitter.com/i/lists/1053067173961326594">
-                <a className="font-medium hover:underline">
-                  scientists who do climate
-                </a>
-              </Link>
-              {" - "}
-              <Link href="https://twitter.com/KHayhoe">
-                <a className="font-medium hover:underline">@KHayhoe</a>
-              </Link>
-            </li>
-            <li className="mx-auto mt-1  text-lg text-gray-600">
-              <Link href="https://twitter.com/i/lists/1308140854524162059">
-                <a className="font-medium hover:underline">Climate change</a>
-              </Link>
-              {" - "}
-              <Link href="https://twitter.com/TwitterMoments">
-                <a className="font-medium hover:underline">@TwitterMoments</a>
-              </Link>
-              .
-            </li>
-
+                <Link href="https://twitter.com/i/lists/1053067173961326594">
+                  <a className="font-medium hover:underline">
+                    scientists who do climate
+                  </a>
+                </Link>
+                {" - "}
+                <Link href="https://twitter.com/KHayhoe">
+                  <a className="font-medium hover:underline">@KHayhoe</a>
+                </Link>
+              </li>
+              <li className="mx-auto mt-1  text-lg text-gray-600">
+                <Link href="https://twitter.com/i/lists/1308140854524162059">
+                  <a className="font-medium hover:underline">Climate change</a>
+                </Link>
+                {" - "}
+                <Link href="https://twitter.com/TwitterMoments">
+                  <a className="font-medium hover:underline">@TwitterMoments</a>
+                </Link>
+                .
+              </li>
             </ul>
 
-
+            <p className="mx-auto mt-5  text-lg text-gray-600">
+              The news feed uses a ranking algorithm and is based on multiple
+              factors.
+            </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              Users are scored based on their follower count, the number of lists they appear in, and the amount of tweets have been referenced by other users.
+              Users are scored based on their follower count, the number of
+              lists they appear in, and the amount of tweets have been
+              referenced by other users.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              An article score is based on the users that
-              shared it and it will gradually decrease over time.
+              An article score is based on the users that shared it and it will
+              gradually decrease over time.
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-600">
               The{" "}
@@ -89,10 +92,11 @@ export default function AboutContent() {
               articles appear in the news feed.
             </p>
             <p className="mx-auto mt-5 text-lg text-gray-600">
-              Our source code is available on {" "}
+              Our source code is available on{" "}
               <Link href="https://github.com/climate-action">
                 <a className="font-medium hover:underline">GitHub</a>
-              </Link>{"."}
+              </Link>
+              {"."}
             </p>
             <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
               About Us
