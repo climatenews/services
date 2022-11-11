@@ -36,7 +36,7 @@ pub async fn populate_news_feed_v1(db_pool: &PgPool) -> Result<()> {
         populate_url_to_tweet_map(&news_referenced_urls);
 
     // Insert News feed urls
-    populate_news_feed_urls_v1(db_pool, author_score_map, url_to_tweet_map).await;
+    populate_news_feed_urls_v1(db_pool, author_score_map, url_to_tweet_map).await?;
     info!("populate_news_feed_v1 complete - {:?}", Local::now());
     Ok(())
 }

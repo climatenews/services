@@ -33,8 +33,9 @@ pub async fn init_db_pool() -> anyhow::Result<PgPool> {
         .connect_with(connection_options)
         .await?;
 
+    //TODO re-enable
     //Auto-migrate db
-    sqlx::migrate!("./migrations").run(&db_pool).await?;
+    // sqlx::migrate!("./migrations").run(&db_pool).await?;
     Ok(db_pool)
 }
 

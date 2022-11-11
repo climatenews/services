@@ -108,14 +108,18 @@ pub async fn update_news_feed_url_url_is_climate_related(
 }
 
 pub async fn find_top_news_feed_urls_without_is_climate_related_set(pool: &PgPool) -> Result<Vec<NewsFeedUrl>, sqlx::Error> {
+
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
             SELECT url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
             FROM news_feed_url
-            WHERE is_climate_related IS NULL
+            WHERE 
+                is_climate_related IS NULL 
+                AND url_score > 10
             ORDER BY url_score DESC
             LIMIT 100
+            
         "#
     );
 
