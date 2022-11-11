@@ -2,7 +2,7 @@ use crate::news_feed::constants::{MAX_TWEET_RESULTS, REQUEST_SLEEP_DURATION};
 use crate::util::convert::i64_to_numeric_id;
 use anyhow::{bail, Result};
 use db::util::time::lookup_period;
-use log::{info};
+use log::info;
 use tokio::time::{sleep, Duration};
 use twitter_v2::authorization::BearerToken;
 use twitter_v2::id::NumericId;

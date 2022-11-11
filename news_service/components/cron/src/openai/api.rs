@@ -1,7 +1,11 @@
-use crate::openai::models::{Completion, CompletionArgs};
+use crate::{
+    news_feed::constants::REQUEST_SLEEP_DURATION,
+    openai::models::{Completion, CompletionArgs},
+};
 use db::models::news_tweet_url::NewsTweetUrlWithId;
 use log::info;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
+use tokio::time::{sleep, Duration};
 
 const BASE_URL: &str = "https://api.openai.com/v1";
 const PROMPT_END: &str = " \n\n###\n\n";
@@ -49,7 +53,7 @@ pub async fn completion(prompt: String) -> String {
         .header(CONTENT_TYPE, "application/json")
         .send()
         .await;
-
+    sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     match response {
         Err(e) => {
             panic!("error: {:?}", e);

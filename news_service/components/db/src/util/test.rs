@@ -38,7 +38,7 @@ pub mod test_util {
             url_score: 90,
             num_references: 2,
             first_referenced_by: 1,
-            is_climate_related: true,
+            is_climate_related: Some(true),
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };

@@ -1,5 +1,5 @@
 use crate::models::news_feed_url::NewsFeedUrl;
-use sqlx::PgPool;
+use sqlx::{PgPool, postgres::PgQueryResult};
 
 pub async fn insert_news_feed_url(
     pool: &PgPool,
@@ -88,20 +88,38 @@ pub async fn update_news_feed_url_url_score_and_num_references(
     Ok(rows_affected > 0)
 }
 
-pub async fn find_all_news_feed_urls(pool: &PgPool) -> Option<Vec<NewsFeedUrl>> {
+pub async fn update_news_feed_url_url_is_climate_related(
+    pool: &PgPool,
+    url_id: i32,
+    is_climate_related: bool,
+) -> Result<PgQueryResult, sqlx::Error> {
+    sqlx::query!(
+        r#"
+        UPDATE news_feed_url 
+        SET is_climate_related = $1
+        WHERE url_id = $2
+        "#,
+        is_climate_related,
+        url_id
+    )
+    .execute(pool)
+    .await
+
+}
+
+pub async fn find_top_news_feed_urls_without_is_climate_related_set(pool: &PgPool) -> Result<Vec<NewsFeedUrl>, sqlx::Error> {
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
             SELECT url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str
             FROM news_feed_url
+            WHERE is_climate_related IS NULL
+            ORDER BY url_score DESC
+            LIMIT 100
         "#
     );
 
-    let news_feed_urls_result = query.fetch_all(pool).await;
-    match news_feed_urls_result {
-        Ok(news_feed_urls) => Some(news_feed_urls),
-        Err(_) => None,
-    }
+    query.fetch_all(pool).await
 }
 
 pub async fn truncate_news_feed_url(pool: &PgPool) -> anyhow::Result<()> {

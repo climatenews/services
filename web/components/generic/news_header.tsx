@@ -18,7 +18,7 @@ export default function NewsHeader(props: NewsHeaderProps) {
           ) : (
             ""
           )}
-          <p className="text-sm font-light italic text-gray-600 mt-1 ">Last Updated: 30 mins ago</p>
+          <p className="text-sm font-light italic text-gray-600 mt-1 ">Last Updated: x mins ago</p>
         </div>
       </div>
     </>

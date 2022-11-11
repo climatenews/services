@@ -46,7 +46,7 @@ pub async fn start_scheduler() {
         println!("initial job failed: {:?}", err);
     }
 
-    let every_second = every(1).hours().in_timezone(&Utc).perform(|| async {
+    let every_second = every(2).hours().in_timezone(&Utc).perform(|| async {
         if let Err(err) = hourly_cron_job(&db_pool, false).await {
             println!("hourly_cron_job failed: {:?}", err);
         }

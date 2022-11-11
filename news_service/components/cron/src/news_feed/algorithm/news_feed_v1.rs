@@ -7,8 +7,9 @@ use chrono::Local;
 use db::constants::NEWS_FEED_URLS_NUM_DAYS;
 use db::models::news_feed_url::NewsFeedUrl;
 use db::sql::news_feed_url::{
-    find_news_feed_url_by_url_id, insert_news_feed_url, reset_news_feed_url_url_scores,
-    update_news_feed_url_url_score_and_num_references,
+    find_news_feed_url_by_url_id, find_top_news_feed_urls_without_is_climate_related_set,
+    insert_news_feed_url, reset_news_feed_url_url_scores,
+    update_news_feed_url_url_is_climate_related, update_news_feed_url_url_score_and_num_references,
 };
 use db::sql::news_referenced_url_query::get_news_referenced_urls;
 use db::sql::news_tweet_url::find_news_tweet_url_by_url_id;
@@ -44,7 +45,7 @@ async fn populate_news_feed_urls_v1(
     db_pool: &PgPool,
     author_score_map: HashMap<i64, i32>,
     url_to_tweet_map: HashMap<i32, Vec<TweetInfo>>,
-) {
+) -> Result<()> {
     // Reset news feed URL scores
     reset_news_feed_url_url_scores(db_pool).await.unwrap();
     // URLS with shared by author count + score
@@ -63,8 +64,8 @@ async fn populate_news_feed_urls_v1(
             .unwrap();
 
         // TODO move logic into helper function
-        let time_since_first_created = now_utc_timestamp() - first_tweet.created_at;
-        let hours_since_first_created = time_since_first_created / seconds_in_hour();
+        let hours_since_first_created =
+            (now_utc_timestamp() - first_tweet.created_at) / seconds_in_hour();
 
         // Calculate url score factoring in time decay
         // A gravity of 0.4 is used in the ranking algorithm
@@ -78,19 +79,12 @@ async fn populate_news_feed_urls_v1(
 
         let news_feed_url_db = find_news_feed_url_by_url_id(db_pool, *url_id).await;
         if news_feed_url_db.is_none() {
-            // Only call OpenAI API for news feed links to reduce API fees
-            let news_tweet_url = find_news_tweet_url_by_url_id(db_pool, *url_id)
-                .await
-                .unwrap();
-            let is_climate_related =
-                fetch_news_tweet_url_climate_classification(news_tweet_url).await;
-
             let news_feed_url = NewsFeedUrl {
                 url_id: *url_id,
                 url_score: time_decayed_url_score,
                 num_references,
                 first_referenced_by: first_tweet.author_id,
-                is_climate_related,
+                is_climate_related: None,
                 created_at: first_tweet.created_at,
                 created_at_str: datetime_to_str(datetime_from_unix_timestamp(
                     first_tweet.created_at,
@@ -104,10 +98,36 @@ async fn populate_news_feed_urls_v1(
                 url_score,
                 num_references,
             )
-            .await
-            .unwrap();
+            .await?;
         }
         // create query to export NewsFeedUrl to csv as training_data every day
         // add human_classification, gpt3_classification columns
     }
+    update_is_climate_related_fields(db_pool).await?;
+    Ok(())
+}
+
+// Set the is_climate_related field for the top scoring news_feed_urls
+// that have not had the classification field set yet
+// Only call OpenAI API for 100 top news feed links to reduce API fees
+async fn update_is_climate_related_fields(db_pool: &PgPool) -> Result<()> {
+    if let Ok(news_feed_urls) =
+        find_top_news_feed_urls_without_is_climate_related_set(db_pool).await
+    {
+        for news_feed_url in news_feed_urls {
+            let news_tweet_url = find_news_tweet_url_by_url_id(db_pool, news_feed_url.url_id)
+                .await
+                .unwrap();
+            let is_climate_related =
+                fetch_news_tweet_url_climate_classification(news_tweet_url).await;
+            update_news_feed_url_url_is_climate_related(
+                db_pool,
+                news_feed_url.url_id,
+                is_climate_related,
+            )
+            .await?;
+        }
+    }
+
+    Ok(())
 }

@@ -101,7 +101,7 @@ async fn fetch_user_tweets(
         //         )
         //         .await?;
         //     }
-        // } else 
+        // } else
         if last_checked_minutes_diff > 30 {
             info!(
                 "{} Updating tweets for:{} last_checked {} mins ago, last_updated: {} mins ago",
@@ -115,11 +115,10 @@ async fn fetch_user_tweets(
                 &english_language_detector,
                 &news_twitter_user,
             )
-            .await {
+            .await
+            {
                 println!("get_user_tweets_and_references failed: {:?}", err);
             }
-
-
         }
 
         update_user_last_checked_at(db_pool, &news_twitter_user).await?;
