@@ -79,7 +79,7 @@ async fn fetch_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) ->
 async fn fetch_user_tweets(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
-    is_initilizing: bool,
+    _is_initilizing: bool,
 ) -> Result<()> {
     let english_language_detector = EnglishLanguageDetector::new();
 
@@ -113,7 +113,7 @@ async fn fetch_user_tweets(
                 db_pool,
                 twitter_api,
                 &english_language_detector,
-                &news_twitter_user,
+                news_twitter_user,
             )
             .await
             {
@@ -121,7 +121,7 @@ async fn fetch_user_tweets(
             }
         }
 
-        update_user_last_checked_at(db_pool, &news_twitter_user).await?;
+        update_user_last_checked_at(db_pool, news_twitter_user).await?;
     }
 
     Ok(())
@@ -136,8 +136,8 @@ async fn get_user_tweets_and_references(
     let last_tweet_id = opt_i64_to_opt_numeric_id(news_twitter_user.last_tweet_id);
     let user_id = i64_to_numeric_id(news_twitter_user.user_id);
     let tweets: Vec<Tweet> = get_user_tweets(twitter_api, user_id, last_tweet_id).await?;
-    fetch_user_tweet_references(db_pool, twitter_api, &tweets, &english_language_detector).await?;
-    update_user_last_updated_at(db_pool, &news_twitter_user, &tweets).await?;
+    fetch_user_tweet_references(db_pool, twitter_api, &tweets, english_language_detector).await?;
+    update_user_last_updated_at(db_pool, news_twitter_user, &tweets).await?;
     Ok(())
 }
 

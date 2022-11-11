@@ -61,7 +61,7 @@ pub async fn completion(prompt: String) -> String {
         Ok(response) => {
             let mut result: Completion = response.json().await.unwrap();
             let choice = result.choices.remove(0);
-            return choice.text;
+            choice.text
         }
     }
 }

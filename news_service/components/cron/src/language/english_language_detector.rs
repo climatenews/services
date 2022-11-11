@@ -15,10 +15,6 @@ impl EnglishLanguageDetector {
 
     pub fn is_english_language(&self, text: &str) -> bool {
         let detected_language: Option<Language> = self.detector.detect_language_of(text);
-        if detected_language == Some(English) {
-            return true;
-        } else {
-            return false;
-        }
+        detected_language == Some(English)
     }
 }
