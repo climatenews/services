@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const navigation = [
-  { name: "News", href: "/" },
+  { name: "Climate News", href: "/" },
   { name: "About", href: "/about" }
 ];
 
