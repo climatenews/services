@@ -34,7 +34,7 @@ static USER_FIELDS: [UserField; 5] = [
 pub async fn get_list_members(
     twitter_api: &TwitterApi<BearerToken>,
     list_id: NumericId,
-) -> Vec<User> {
+) -> Result<Vec<User>> {
     info!("Twitter API - get_list_members: {}", list_id);
     let mut list_users: Vec<User> = vec![];
     let list_users_response = twitter_api
@@ -43,7 +43,7 @@ pub async fn get_list_members(
         .send()
         .await;
 
-    parse_error_response(&list_users_response).await;
+    parse_error_response(&list_users_response).await?;
 
     let list_users_response = list_users_response.unwrap();
 
@@ -52,11 +52,11 @@ pub async fn get_list_members(
     }
     // TODO make pagination generic
     let mut next_page_response = list_users_response.next_page().await;
-    parse_error_response(&next_page_response).await;
+    parse_error_response(&next_page_response).await?;
     loop {
         match next_page_response {
             Err(e) => {
-                panic!("get_list_members - next_page_response error: {}", e);
+                bail!("get_list_members - next_page_response error: {}", e);
             } //return Err(anyhow!(e)),
             Ok(None) => {
                 break;
@@ -68,19 +68,19 @@ pub async fn get_list_members(
                     list_users = [list_users, new_list_users].concat();
                 }
                 let new_response = next_page_result.next_page().await;
-                parse_error_response(&new_response).await;
+                parse_error_response(&new_response).await?;
                 next_page_response = new_response;
             }
         }
     }
 
-    list_users
+    Ok(list_users)
 }
 
 pub async fn get_users_by_username(
     twitter_api: &TwitterApi<BearerToken>,
     usernames: Vec<&str>,
-) -> Option<Vec<User>> {
+) -> Result<Option<Vec<User>>> {
     //TODO split in to max 100 users per request
     info!("Twitter API - get_users_by_username: {}", usernames.len());
     let users_response = twitter_api
@@ -88,15 +88,15 @@ pub async fn get_users_by_username(
         .user_fields(USER_FIELDS)
         .send()
         .await;
-    parse_error_response(&users_response).await;
+    parse_error_response(&users_response).await?;
     //TODO use match instead of unwrap
-    users_response.unwrap().into_data()
+    Ok(users_response?.into_data())
 }
 
 pub async fn get_users_by_author_id(
     twitter_api: &TwitterApi<BearerToken>,
     author_ids: Vec<i64>,
-) -> Vec<User> {
+) -> Result<Vec<User>> {
     info!("Twitter API - get_users_by_author_id: {}", author_ids.len());
     let mut user_vec: Vec<User> = vec![];
     let split_author_ids_vec =
@@ -108,12 +108,12 @@ pub async fn get_users_by_author_id(
             .send()
             .await;
 
-        parse_error_response(&users_response).await;
+        parse_error_response(&users_response).await?;
         let users = users_response.unwrap().into_data().unwrap();
         user_vec = [user_vec, users].concat();
     }
 
-    user_vec
+    Ok(user_vec)
 }
 
 pub async fn get_user_by_author_id(
@@ -127,7 +127,7 @@ pub async fn get_user_by_author_id(
         .send()
         .await;
 
-    parse_error_response(&user_response).await;
+    parse_error_response(&user_response).await?;
     Ok(user_response?.into_data())
 }
 
@@ -161,34 +161,32 @@ pub async fn get_user_tweets(
             .send()
             .await
     };
-    parse_error_response(&tweets_api_response).await;
+    parse_error_response(&tweets_api_response).await?;
 
     let tweets_api_response = tweets_api_response?;
 
     if let Some(new_tweets) = tweets_api_response.clone().into_data() {
         tweets = [tweets, new_tweets].concat();
     }
-    // println!("{}", tweets_api_response.url());
+
     let mut next_page_response = tweets_api_response.next_page().await;
 
-    parse_error_response(&next_page_response).await;
+    parse_error_response(&next_page_response).await?;
     loop {
         match next_page_response {
             Err(e) => {
-                panic!("next_page_response error: {}", e);
+                bail!("next_page_response error: {}", e);
             }
             Ok(None) => {
                 break;
             }
             Ok(Some(ref next_page_result)) => {
-                // info!("next_page_response Some");
                 let new_tweets: Option<Vec<Tweet>> = next_page_result.clone().into_data();
                 if let Some(new_tweets) = new_tweets {
                     tweets = [tweets, new_tweets].concat();
                 }
-                // println!("{}", next_page_result.url());
                 let new_response = next_page_result.next_page().await;
-                parse_error_response(&new_response).await;
+                parse_error_response(&new_response).await?;
                 next_page_response = new_response;
             }
         }
@@ -196,9 +194,10 @@ pub async fn get_user_tweets(
     Ok(tweets)
 }
 
-// TODO use struct instead of Tuple
 #[derive(Debug)]
-pub struct TweetsWithUsers(pub Vec<Tweet>, pub Vec<User>);
+pub struct TweetsWithUsers{
+    pub tweets: Vec<Tweet>, pub users: Vec<User>
+}
 
 pub async fn get_tweets_with_users(
     twitter_api: &TwitterApi<BearerToken>,
@@ -215,7 +214,7 @@ pub async fn get_tweets_with_users(
         .user_fields(TWEET_USER_FIELDS)
         .send()
         .await;
-    parse_error_response(&tweets_response).await;
+    parse_error_response(&tweets_response).await?;
     let tweets_response = tweets_response?;
 
     let includes = tweets_response.includes();
@@ -223,7 +222,7 @@ pub async fn get_tweets_with_users(
 
     if let (Some(tweets), Some(includes)) = (tweets, includes) {
         if let Some(users) = includes.users.clone() {
-            return Ok(TweetsWithUsers(tweets, users));
+            return Ok(TweetsWithUsers{tweets, users});
         }
     }
     bail!("get_tweets - unable to parse TweetsWithUsers from response")
@@ -252,31 +251,31 @@ where
 
 // Retry logic:
 
-pub async fn parse_error_response<T>(response: &Result<T, Error>) {
+pub async fn parse_error_response<T>(response: &Result<T, Error>) -> Result<&T, anyhow::Error> {
     sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     match response {
         Err(twitter_v2::Error::Request(ref e)) => {
             if e.is_timeout() {
-                panic!("Request error timeout: {}", e);
+                bail!("Request error timeout: {}", e);
             } else if e.is_connect() {
-                panic!("Request error connect: {}", e);
+                bail!("Request error connect: {}", e);
             } else if e.status() == Some(reqwest::StatusCode::TOO_MANY_REQUESTS) {
-                panic!("Request error too many requests: {}", e);
+                bail!("Request error too many requests: {}", e);
             } else {
-                panic!("Request error unhandled: {}", e);
+                bail!("Request error unhandled: {}", e);
             }
         }
         Err(twitter_v2::Error::Api(ref e)) => {
             if e.status == reqwest::StatusCode::TOO_MANY_REQUESTS {
-                panic!("Api error due to 429 response {}", e);
+                bail!("Api error due to 429 response {}", e);
             } else {
-                panic!("Api error unhandled: {}", e);
+                bail!("Api error unhandled: {}", e);
             }
         }
         Err(e) => {
-            panic!("generic error unhandled {}", e);
+            bail!("generic error unhandled {}", e);
         }
-        Ok(_) => {}
+        Ok(response) => Ok(response),
     }
 }
 
@@ -298,9 +297,9 @@ mod tests {
         let tweets_with_users: TweetsWithUsers = get_tweets_with_users(&twitter_api, tweet_ids)
             .await
             .unwrap();
-        assert_eq!(tweets_with_users.0.len(), 2);
+        assert_eq!(tweets_with_users.tweets.len(), 2);
         assert_eq!(
-            tweets_with_users.1.first().unwrap().username,
+            tweets_with_users.users.first().unwrap().username,
             "natmaslowski"
         );
     }

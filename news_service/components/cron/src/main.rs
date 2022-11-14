@@ -4,6 +4,7 @@ use chrono::Local;
 use chrono::Utc;
 use db::init_env;
 use db::util::db::init_db;
+use log::error;
 use log::info;
 use std::env;
 use tokio_schedule::{every, Job};
@@ -42,13 +43,13 @@ pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
     let db_pool = init_db().await;
 
-    if let Err(err) = hourly_cron_job(&db_pool, true).await {
-        println!("initial job failed: {:?}", err);
+    if let Err(err) = hourly_cron_job(&db_pool).await {
+        error!("initial job failed: {:?}", err);
     }
 
     let every_second = every(2).hours().in_timezone(&Utc).perform(|| async {
-        if let Err(err) = hourly_cron_job(&db_pool, false).await {
-            println!("hourly_cron_job failed: {:?}", err);
+        if let Err(err) = hourly_cron_job(&db_pool).await {
+            error!("hourly_cron_job failed: {:?}", err);
         }
     });
     every_second.await;

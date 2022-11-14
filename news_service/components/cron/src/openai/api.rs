@@ -2,17 +2,19 @@ use crate::{
     news_feed::constants::REQUEST_SLEEP_DURATION,
     openai::models::{Completion, CompletionArgs},
 };
+use anyhow::{Error, Result};
 use db::models::news_tweet_url::NewsTweetUrlWithId;
 use log::info;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use tokio::time::{sleep, Duration};
 
 const BASE_URL: &str = "https://api.openai.com/v1";
+const MODEL_NAME: &str = "curie:ft-personal-2022-10-14-18-16-36";
 const PROMPT_END: &str = " \n\n###\n\n";
 
 pub async fn fetch_news_tweet_url_climate_classification(
     news_tweet_url: NewsTweetUrlWithId,
-) -> bool {
+) -> Result<bool> {
     info!(
         "OpenAI API - fetch_news_tweet_url_climate_classification {}",
         news_tweet_url.title
@@ -22,30 +24,30 @@ pub async fn fetch_news_tweet_url_climate_classification(
     fetch_text_climate_classification(title_and_description).await
 }
 
-async fn fetch_text_climate_classification(text: String) -> bool {
+async fn fetch_text_climate_classification(text: String) -> Result<bool> {
     let prompt = format!("{}{}", text, PROMPT_END);
     let completion = completion(prompt).await;
-    return match completion.as_str() {
-        " 0" => false,
-        " 1" => true,
+    return match completion?.as_str() {
+        " 0" => Ok(false),
+        " 1" => Ok(true),
         _ => {
-            panic!("Invalid completion string");
+            Err(Error::msg("OpenAI completion - invalid response error"))
         }
     };
 }
 
-pub async fn completion(prompt: String) -> String {
+pub async fn completion(prompt: String) -> Result<String> {
     let args = CompletionArgs {
         prompt,
         temperature: 1.0,
         max_tokens: 1,
         // stop: vec![String::from("\n")],
-        model: String::from("curie:ft-personal-2022-10-14-18-16-36"),
+        model: String::from(MODEL_NAME),
     };
     let url = format!("{}/completions", BASE_URL);
     let client = reqwest::Client::new();
-    let body = serde_json::to_string(&args).unwrap();
-    let api_token = std::env::var("OPENAI_API_KEY").unwrap();
+    let body = serde_json::to_string(&args)?;
+    let api_token = std::env::var("OPENAI_API_KEY")?;
     let response = client
         .post(url)
         .body(body.clone())
@@ -55,13 +57,11 @@ pub async fn completion(prompt: String) -> String {
         .await;
     sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     match response {
-        Err(e) => {
-            panic!("error: {:?}", e);
-        }
+        Err(e) => Err(Error::new(e).context(format!("OpenAI completion API error"))),
         Ok(response) => {
-            let mut result: Completion = response.json().await.unwrap();
+            let mut result: Completion = response.json().await?;
             let choice = result.choices.remove(0);
-            choice.text
+            Ok(choice.text)
         }
     }
 }
@@ -76,7 +76,9 @@ mod tests {
     async fn fetch_climate_classification_test_1() {
         init_env();
         let text = "Italy: Floods and rain kill at least 10 overnight - officials - Rescuers are searching for four others missing after torrential rainfall hit the Marche region overnight.";
-        let is_climate_related = fetch_text_climate_classification(text.to_string()).await;
+        let is_climate_related = fetch_text_climate_classification(text.to_string())
+            .await
+            .unwrap();
         assert_eq!(is_climate_related, true);
     }
 
@@ -84,7 +86,9 @@ mod tests {
     async fn fetch_climate_classification_test_2() {
         init_env();
         let text = "Former President Donald Trump invoked his Fifth Amendment right more than 440 times on Wednesday during a deposition by lawyers from New York Attorney General Letitia James’ office, according to multiple sources. - Former President Donald Trump invoked his Fifth Amendment right more than 440 times on Wednesday during a deposition by lawyers from New York Attorney General Letitia James’ office, according to multiple sources.";
-        let is_climate_related = fetch_text_climate_classification(text.to_string()).await;
+        let is_climate_related = fetch_text_climate_classification(text.to_string())
+            .await
+            .unwrap();
         assert_eq!(is_climate_related, false);
     }
 }

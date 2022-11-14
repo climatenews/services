@@ -47,7 +47,6 @@ pub async fn parse_twitter_list(db_pool: &PgPool, list_id: i64) -> Result<NewsTw
 }
 
 pub async fn parse_twitter_user(db_pool: &PgPool, user: &User) -> Result<NewsTwitterUser> {
-
     let user_id = numeric_id_to_i64(user.id);
     let followers_count = user
         .public_metrics
@@ -285,10 +284,9 @@ pub async fn parse_and_insert_all_news_referenced_tweets(
     for split_tweet_ids in split_tweet_ids_vec {
         let referenced_tweets_with_users: TweetsWithUsers =
             get_tweets_with_users(twitter_api, split_tweet_ids).await?;
-        for (i, referenced_tweet) in referenced_tweets_with_users.0.iter().enumerate() {
+        for (i, referenced_tweet) in referenced_tweets_with_users.tweets.iter().enumerate() {
             parse_and_insert_tweet(db_pool, referenced_tweet, english_language_detector).await?;
-            if let Some(referenced_user) = referenced_tweets_with_users.1.get(i) {
-                // TODO insert referenced_user
+            if let Some(referenced_user) = referenced_tweets_with_users.users.get(i) {
                 parse_and_insert_referenced_user(db_pool, referenced_user).await?;
             }
         }
@@ -312,8 +310,7 @@ pub fn get_expanded_url_parsed(expanded_url: Url) -> String {
     // Handle Youtube URL params
     // TODO convert Youtube mobile links to desktop
     if expanded_url.host_str().unwrap().contains("youtube.com") {
-        let hash_query: HashMap<String, String> =
-            expanded_url.query_pairs().into_owned().collect();
+        let hash_query: HashMap<String, String> = expanded_url.query_pairs().into_owned().collect();
         if let Some(v_param) = hash_query.get("v") {
             expanded_url_parsed.set_query(Some(&format!("v={}", v_param)));
         }

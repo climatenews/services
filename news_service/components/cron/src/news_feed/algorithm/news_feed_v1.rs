@@ -17,7 +17,7 @@ use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
 use db::util::time::past_days;
-use log::info;
+use log::{info, error};
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
 use std::collections::HashMap;
@@ -116,14 +116,23 @@ async fn update_is_climate_related_fields(db_pool: &PgPool) -> Result<()> {
             let news_tweet_url = find_news_tweet_url_by_url_id(db_pool, news_feed_url.url_id)
                 .await
                 .unwrap();
-            let is_climate_related =
-                fetch_news_tweet_url_climate_classification(news_tweet_url).await;
-            update_news_feed_url_url_is_climate_related(
-                db_pool,
-                news_feed_url.url_id,
-                is_climate_related,
-            )
-            .await?;
+
+            match fetch_news_tweet_url_climate_classification(news_tweet_url).await {
+                Ok(is_climate_related) => {
+                    update_news_feed_url_url_is_climate_related(
+                        db_pool,
+                        news_feed_url.url_id,
+                        is_climate_related,
+                    )
+                    .await?;
+                }
+                Err(err) => {
+                    error!(
+                        "fetch_news_tweet_url_climate_classification failed: {:?}",
+                        err
+                    );
+                }
+            }
         }
     }
 
