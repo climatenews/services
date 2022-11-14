@@ -30,9 +30,7 @@ async fn fetch_text_climate_classification(text: String) -> Result<bool> {
     return match completion?.as_str() {
         " 0" => Ok(false),
         " 1" => Ok(true),
-        _ => {
-            Err(Error::msg("OpenAI completion - invalid response error"))
-        }
+        _ => Err(Error::msg("OpenAI completion - invalid response error")),
     };
 }
 

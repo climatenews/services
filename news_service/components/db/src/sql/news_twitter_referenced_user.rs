@@ -34,9 +34,10 @@ pub async fn find_news_twitter_referenced_user_by_user_id(
             WHERE user_id = $1;
         "#,
         user_id
-    ).fetch_one(pool).await
+    )
+    .fetch_one(pool)
+    .await
 }
-
 
 pub async fn truncate_news_twitter_referenced_user(pool: &PgPool) -> anyhow::Result<()> {
     sqlx::query("TRUNCATE news_twitter_referenced_user RESTART IDENTITY")

@@ -1,6 +1,6 @@
 use crate::queries::news_user_referenced_tweet_query::NewsUserReferencedTweetQuery;
-use sqlx::PgPool;
 use anyhow::Result;
+use sqlx::PgPool;
 
 // Used for user score calculation
 // Find all user tweets that have been quoted or retweeted by others users

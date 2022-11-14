@@ -78,17 +78,13 @@ async fn fetch_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) ->
     Ok(())
 }
 
-async fn fetch_user_tweets(
-    db_pool: &PgPool,
-    twitter_api: &TwitterApi<BearerToken>,
-) -> Result<()> {
+async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()> {
     let english_language_detector = EnglishLanguageDetector::new();
 
     let news_twitter_users = find_all_news_twitter_users(db_pool).await?;
     for (i, news_twitter_user) in news_twitter_users.iter().enumerate() {
         let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
         let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
-
 
         if last_checked_minutes_diff > 60 {
             info!(

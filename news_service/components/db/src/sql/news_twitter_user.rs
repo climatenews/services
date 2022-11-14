@@ -1,5 +1,5 @@
 use crate::models::news_twitter_user::NewsTwitterUser;
-use sqlx::{PgPool, postgres::PgQueryResult};
+use sqlx::{postgres::PgQueryResult, PgPool};
 
 pub async fn insert_news_twitter_user(
     pool: &PgPool,
@@ -32,7 +32,9 @@ pub async fn insert_news_twitter_user(
     .await
 }
 
-pub async fn find_all_news_twitter_users(pool: &PgPool) -> Result<Vec<NewsTwitterUser>, sqlx::Error> {
+pub async fn find_all_news_twitter_users(
+    pool: &PgPool,
+) -> Result<Vec<NewsTwitterUser>, sqlx::Error> {
     sqlx::query_as!(
         NewsTwitterUser,
         r#"

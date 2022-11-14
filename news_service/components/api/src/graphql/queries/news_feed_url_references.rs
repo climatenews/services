@@ -21,9 +21,9 @@ pub async fn news_feed_url_references_query<'a>(
 
             let author_username = match news_feed_url_reference_query.username {
                 Some(author_username) => author_username,
-                None => match news_feed_url_reference_query.referenced_username{
+                None => match news_feed_url_reference_query.referenced_username {
                     Some(referenced_username) => referenced_username,
-                    None => "".to_string()
+                    None => "".to_string(),
                 },
             };
 
@@ -45,7 +45,7 @@ pub async fn news_feed_url_references_query<'a>(
 
 #[cfg(test)]
 mod tests {
-    
+
     use crate::graphql::test_util::create_fake_schema;
     use async_graphql::value;
     use db::{
@@ -53,21 +53,25 @@ mod tests {
         util::{
             convert::now_utc_timestamp,
             test::test_util::{
-                create_fake_news_tweet_url, create_fake_news_twitter_user, create_fake_news_referenced_tweet_url, create_fake_news_tweet,
+                create_fake_news_referenced_tweet_url, create_fake_news_referenced_tweets,
+                create_fake_news_tweet, create_fake_news_tweet_url, create_fake_news_twitter_user,
             },
         },
     };
 
+    // TODO update unit tests to handle multiple referenced tweets
     #[tokio::test]
     async fn get_news_feed_url_references_test() {
         init_env();
         let db_pool = init_test_db_pool().await.unwrap();
         let created_at_timestamp = now_utc_timestamp();
 
+        //TODO Add news_twitter_referenced_user & news_referenced_tweet
         create_fake_news_twitter_user(&db_pool).await;
         create_fake_news_tweet(&db_pool, created_at_timestamp).await;
         create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
         create_fake_news_referenced_tweet_url(&db_pool).await;
+        create_fake_news_referenced_tweets(&db_pool).await;
 
         let schema = create_fake_schema(db_pool);
 
@@ -96,11 +100,23 @@ mod tests {
                         "tweetCreatedAtStr": String::from("created_at_str"),
                         "authorUsername": String::from("username"),
                         "retweetedByUsernames": [],
-
+                    },
+                    {
+                        "tweetId": String::from("2"),
+                        "tweetText": String::from("tweet_text"),
+                        "tweetCreatedAtStr": String::from("created_at_str"),
+                        "authorUsername": String::from("username"),
+                        "retweetedByUsernames": [],
+                    },
+                    {
+                        "tweetId": String::from("1"),
+                        "tweetText": String::from("tweet_text"),
+                        "tweetCreatedAtStr": String::from("created_at_str"),
+                        "authorUsername": String::from("username"),
+                        "retweetedByUsernames": [],
                     }
                 ],
             })
         );
     }
 }
-

@@ -17,7 +17,7 @@ use db::util::convert::{
     datetime_from_unix_timestamp, datetime_to_str, now_utc_timestamp, seconds_in_hour,
 };
 use db::util::time::past_days;
-use log::{info, error};
+use log::{error, info};
 use rust_decimal_macros::dec;
 use sqlx::PgPool;
 use std::collections::HashMap;

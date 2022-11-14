@@ -195,8 +195,9 @@ pub async fn get_user_tweets(
 }
 
 #[derive(Debug)]
-pub struct TweetsWithUsers{
-    pub tweets: Vec<Tweet>, pub users: Vec<User>
+pub struct TweetsWithUsers {
+    pub tweets: Vec<Tweet>,
+    pub users: Vec<User>,
 }
 
 pub async fn get_tweets_with_users(
@@ -222,7 +223,7 @@ pub async fn get_tweets_with_users(
 
     if let (Some(tweets), Some(includes)) = (tweets, includes) {
         if let Some(users) = includes.users.clone() {
-            return Ok(TweetsWithUsers{tweets, users});
+            return Ok(TweetsWithUsers { tweets, users });
         }
     }
     bail!("get_tweets - unable to parse TweetsWithUsers from response")

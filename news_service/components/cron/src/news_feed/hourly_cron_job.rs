@@ -6,7 +6,6 @@ use chrono::Local;
 use log::info;
 use sqlx::PgPool;
 
-
 pub async fn hourly_cron_job(db_pool: &PgPool) -> Result<()> {
     info!("schedule_task event - {:?}", Local::now());
     let twitter_api = init_twitter_api();

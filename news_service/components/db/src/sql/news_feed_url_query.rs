@@ -1,6 +1,6 @@
-use sqlx::PgPool;
-use anyhow::Result;
 use crate::queries::news_feed_url_query::NewsFeedUrlQuery;
+use anyhow::Result;
+use sqlx::PgPool;
 
 pub async fn get_news_feed_urls(
     pool: &PgPool,
@@ -42,7 +42,6 @@ pub async fn get_news_feed_urls(
     .fetch_all(pool)
     .await
 }
-
 
 pub async fn get_news_feed_url(
     pool: &PgPool,

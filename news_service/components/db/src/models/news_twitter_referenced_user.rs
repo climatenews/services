@@ -5,5 +5,5 @@ use sqlx::FromRow;
 #[derive(FromRow, Deserialize, Serialize, Debug, Clone)]
 pub struct NewsTwitterReferencedUser {
     pub user_id: i64,
-    pub username: String
+    pub username: String,
 }

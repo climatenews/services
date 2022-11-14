@@ -1,6 +1,6 @@
 use crate::models::news_twitter_list::NewsTwitterList;
-use sqlx::PgPool;
 use anyhow::Result;
+use sqlx::PgPool;
 
 pub async fn insert_news_twitter_list(
     pool: &PgPool,
@@ -26,7 +26,7 @@ pub async fn insert_news_twitter_list(
 pub async fn find_news_twitter_list_by_list_id(
     pool: &PgPool,
     list_id: i64,
-) -> Result<NewsTwitterList, sqlx::Error>  {
+) -> Result<NewsTwitterList, sqlx::Error> {
     sqlx::query_as!(
         NewsTwitterList,
         r#"
@@ -35,7 +35,9 @@ pub async fn find_news_twitter_list_by_list_id(
             WHERE list_id = $1;
         "#,
         list_id
-    ).fetch_one(pool).await
+    )
+    .fetch_one(pool)
+    .await
 }
 
 pub async fn update_news_twitter_list_last_checked_at(

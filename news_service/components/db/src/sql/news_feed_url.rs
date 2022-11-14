@@ -1,5 +1,5 @@
 use crate::models::news_feed_url::NewsFeedUrl;
-use sqlx::{PgPool, postgres::PgQueryResult};
+use sqlx::{postgres::PgQueryResult, PgPool};
 
 pub async fn insert_news_feed_url(
     pool: &PgPool,
@@ -104,11 +104,11 @@ pub async fn update_news_feed_url_url_is_climate_related(
     )
     .execute(pool)
     .await
-
 }
 
-pub async fn find_top_news_feed_urls_without_is_climate_related_set(pool: &PgPool) -> Result<Vec<NewsFeedUrl>, sqlx::Error> {
-
+pub async fn find_top_news_feed_urls_without_is_climate_related_set(
+    pool: &PgPool,
+) -> Result<Vec<NewsFeedUrl>, sqlx::Error> {
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"

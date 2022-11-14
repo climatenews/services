@@ -6,8 +6,6 @@ use db::sql::news_feed_url_query::get_news_feed_urls;
 use db::util::time::past_days;
 use sqlx::postgres::PgPool;
 
-
-
 pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsFeedUrlQuery>> {
     let recent_timestamp = past_days(NEWS_FEED_URLS_NUM_DAYS).unix_timestamp();
     match get_news_feed_urls(db_pool, recent_timestamp, NEWS_FEED_URLS_LIMIT).await {
@@ -18,7 +16,7 @@ pub async fn news_feed_urls_query<'a>(db_pool: &PgPool) -> FieldResult<Vec<NewsF
 
 #[cfg(test)]
 mod tests {
-    
+
     use crate::graphql::test_util::create_fake_schema;
     use async_graphql::value;
     use db::{

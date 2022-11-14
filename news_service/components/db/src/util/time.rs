@@ -21,7 +21,7 @@ pub fn lookup_period() -> OffsetDateTime {
     // if cfg!(debug_assertions) {
     //     now_utc_timestamp().checked_add((-5).days()).unwrap()
     // }else{
-        now_utc_timestamp().checked_add((-90).days()).unwrap()
+    now_utc_timestamp().checked_add((-90).days()).unwrap()
     // }
 }
 
