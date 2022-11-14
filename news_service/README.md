@@ -31,8 +31,7 @@ sqlx migrate run
 sqlx migrate revert
 #test database
 export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action_test 
-
-sqlx database drop -y && sqlx database create &&  sqlx migrate run
+ sqlx database drop -y && sqlx database create &&  sqlx migrate run
 
 
 $ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null" > .git/hooks/pre-commit 

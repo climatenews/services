@@ -1,13 +1,30 @@
 // #[cfg(test)]
 pub mod test_util {
     use crate::models::news_feed_url::NewsFeedUrl;
+    use crate::models::news_referenced_tweet_url::NewsReferencedTweetUrl;
+    use crate::models::news_tweet::NewsTweet;
     use crate::models::news_tweet_url::NewsTweetUrl;
     use crate::models::news_twitter_user::NewsTwitterUser;
+    use crate::sql::news_referenced_tweet_url::{truncate_news_referenced_tweet_url, insert_news_referenced_tweet_url};
+    use crate::sql::news_tweet::{truncate_news_tweet, insert_news_tweet};
     use crate::sql::news_twitter_user::{insert_news_twitter_user, truncate_news_twitter_user};
     use crate::sql::news_feed_url::{insert_news_feed_url, truncate_news_feed_url};
     use crate::sql::news_tweet_url::{insert_news_tweet_url, truncate_news_tweet_url};
     use sqlx::PgPool;
 
+    
+    pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool){
+        truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
+
+        let news_referenced_tweet_url = NewsReferencedTweetUrl {
+            tweet_id: 1,
+            url_id: 1,
+        };
+        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url)
+            .await
+            .unwrap();
+
+    }
     pub async fn create_fake_news_tweet_url(db_pool: &PgPool, created_at_timestamp: i64){
         truncate_news_tweet_url(&db_pool).await.unwrap();
         let news_tweet_url = NewsTweetUrl {
@@ -28,7 +45,22 @@ pub mod test_util {
         insert_news_tweet_url(&db_pool, news_tweet_url)
             .await
             .unwrap();
+    }
 
+    pub async fn create_fake_news_tweet(db_pool: &PgPool, created_at_timestamp: i64){
+        truncate_news_tweet(&db_pool).await.unwrap();
+        let news_tweet = NewsTweet {
+            tweet_id: 1,
+            text: String::from("tweet_text"),
+            author_id: 1,
+            conversation_id: Some(1),
+            in_reply_to_user_id: None,
+            created_at: created_at_timestamp,
+            created_at_str: String::from("created_at_str"),
+        };
+        insert_news_tweet(&db_pool, news_tweet)
+            .await
+            .unwrap();
     }
 
     pub async fn create_fake_news_feed_url(db_pool: &PgPool, created_at_timestamp: i64){

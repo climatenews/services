@@ -26,8 +26,6 @@
 - [ ] Deploy to AWS
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
-- [ ] Fix is_init logig
-
 - [ ] Allow links without a description
 - [ ] Save cron runs in db + errors
 - [ ] Request timeout? just hangs...

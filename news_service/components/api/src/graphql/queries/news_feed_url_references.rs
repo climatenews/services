@@ -43,5 +43,64 @@ pub async fn news_feed_url_references_query<'a>(
     }
 }
 
-// #[tokio::test]
-// async fn get_news_feed_urls_test() {}
+#[cfg(test)]
+mod tests {
+    
+    use crate::graphql::test_util::create_fake_schema;
+    use async_graphql::value;
+    use db::{
+        init_env, init_test_db_pool,
+        util::{
+            convert::now_utc_timestamp,
+            test::test_util::{
+                create_fake_news_tweet_url, create_fake_news_twitter_user, create_fake_news_referenced_tweet_url, create_fake_news_tweet,
+            },
+        },
+    };
+
+    #[tokio::test]
+    async fn get_news_feed_url_references_test() {
+        init_env();
+        let db_pool = init_test_db_pool().await.unwrap();
+        let created_at_timestamp = now_utc_timestamp();
+
+        create_fake_news_twitter_user(&db_pool).await;
+        create_fake_news_tweet(&db_pool, created_at_timestamp).await;
+        create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
+        create_fake_news_referenced_tweet_url(&db_pool).await;
+
+        let schema = create_fake_schema(db_pool);
+
+        let resp = schema
+            .execute(
+                r#"
+                query {
+                    newsFeedUrlReferences(urlId: 1) {
+                        tweetId
+                        tweetText
+                        tweetCreatedAtStr
+                        authorUsername
+                        retweetedByUsernames 
+                      }
+                }
+                "#,
+            )
+            .await;
+        assert_eq!(
+            resp.data,
+            value!({
+                "newsFeedUrlReferences": [
+                    {
+                        "tweetId": String::from("1"),
+                        "tweetText": String::from("tweet_text"),
+                        "tweetCreatedAtStr": String::from("created_at_str"),
+                        "authorUsername": String::from("username"),
+                        "retweetedByUsernames": [],
+
+                    }
+                ],
+            })
+        );
+    }
+}
+
