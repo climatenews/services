@@ -54,7 +54,7 @@ mod tests {
             convert::now_utc_timestamp,
             test::test_util::{
                 create_fake_news_referenced_tweet_url, create_fake_news_referenced_tweets,
-                create_fake_news_tweet, create_fake_news_tweet_url, create_fake_news_twitter_user,
+                create_fake_news_tweet, create_fake_news_tweet_url, create_fake_news_twitter_user, create_fake_news_twitter_referenced_user,
             },
         },
     };
@@ -72,6 +72,7 @@ mod tests {
         create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
         create_fake_news_referenced_tweet_url(&db_pool).await;
         create_fake_news_referenced_tweets(&db_pool).await;
+        create_fake_news_twitter_referenced_user(&db_pool).await;
 
         let schema = create_fake_schema(db_pool);
 
@@ -103,16 +104,16 @@ mod tests {
                     },
                     {
                         "tweetId": String::from("2"),
-                        "tweetText": String::from("tweet_text"),
+                        "tweetText": String::from("RT tweet_text"),
                         "tweetCreatedAtStr": String::from("created_at_str"),
-                        "authorUsername": String::from("username"),
+                        "authorUsername": String::from("retweeted_username"),
                         "retweetedByUsernames": [],
                     },
                     {
-                        "tweetId": String::from("1"),
-                        "tweetText": String::from("tweet_text"),
+                        "tweetId": String::from("3"),
+                        "tweetText": String::from("quoted_tweet_text"),
                         "tweetCreatedAtStr": String::from("created_at_str"),
-                        "authorUsername": String::from("username"),
+                        "authorUsername": String::from("quoted_username"),
                         "retweetedByUsernames": [],
                     }
                 ],

@@ -20,17 +20,7 @@ pub mod test_util {
     use crate::sql::news_twitter_user::{insert_news_twitter_user, truncate_news_twitter_user};
     use sqlx::PgPool;
 
-    pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool) {
-        truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
 
-        let news_referenced_tweet_url = NewsReferencedTweetUrl {
-            tweet_id: 1,
-            url_id: 1,
-        };
-        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url)
-            .await
-            .unwrap();
-    }
     pub async fn create_fake_news_tweet_url(db_pool: &PgPool, created_at_timestamp: i64) {
         truncate_news_tweet_url(&db_pool).await.unwrap();
         let news_tweet_url = NewsTweetUrl {
@@ -65,14 +55,64 @@ pub mod test_util {
             created_at_str: String::from("created_at_str"),
         };
         insert_news_tweet(&db_pool, news_tweet).await.unwrap();
+        let news_tweet_retweeted = NewsTweet {
+            tweet_id: 2,
+            text: String::from("RT tweet_text"),
+            author_id: 2,
+            conversation_id: Some(2),
+            in_reply_to_user_id: None,
+            created_at: created_at_timestamp,
+            created_at_str: String::from("created_at_str"),
+        };
+        insert_news_tweet(&db_pool, news_tweet_retweeted).await.unwrap();
+
+        let news_tweet_quoted = NewsTweet {
+            tweet_id: 3,
+            text: String::from("quoted_tweet_text"),
+            author_id: 3,
+            conversation_id: Some(3),
+            in_reply_to_user_id: None,
+            created_at: created_at_timestamp,
+            created_at_str: String::from("created_at_str"),
+        };
+        insert_news_tweet(&db_pool, news_tweet_quoted).await.unwrap();
+    }
+
+
+    pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool) {
+        truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
+
+        let news_referenced_tweet_url = NewsReferencedTweetUrl {
+            tweet_id: 1,
+            url_id: 1,
+        };
+        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url)
+            .await
+            .unwrap();
+
+        let news_referenced_tweet_url_retweeted = NewsReferencedTweetUrl {
+            tweet_id: 2,
+            url_id: 1,
+        };
+        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url_retweeted)
+            .await
+            .unwrap();
+
+        let news_referenced_tweet_url_quoted = NewsReferencedTweetUrl {
+                tweet_id: 3,
+                url_id: 1,
+        };
+        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url_quoted)
+            .await
+            .unwrap();            
     }
 
     pub async fn create_fake_news_referenced_tweets(db_pool: &PgPool) {
         truncate_news_referenced_tweet(&db_pool).await.unwrap();
 
         let news_referenced_tweet_retweeted = NewsReferencedTweet {
-            tweet_id: 1,
-            referenced_tweet_id: 2,
+            tweet_id: 2,
+            referenced_tweet_id: 1,
             referenced_tweet_kind: String::from("retweeted"),
         };
         insert_news_referenced_tweet(&db_pool, news_referenced_tweet_retweeted)
@@ -80,8 +120,8 @@ pub mod test_util {
             .unwrap();
 
         let news_referenced_tweet_quoted = NewsReferencedTweet {
-            tweet_id: 1,
-            referenced_tweet_id: 3,
+            tweet_id: 3,
+            referenced_tweet_id: 1,
             referenced_tweet_kind: String::from("quoted"),
         };
         insert_news_referenced_tweet(&db_pool, news_referenced_tweet_quoted)
@@ -126,11 +166,18 @@ pub mod test_util {
 
     pub async fn create_fake_news_twitter_referenced_user(db_pool: &PgPool) {
         truncate_news_twitter_referenced_user(&db_pool).await.unwrap();
-        let news_twitter_referenced_user = NewsTwitterReferencedUser {
-            user_id: 1,
-            username: String::from("referenced_username"),
+        let news_twitter_referenced_user_retweeted = NewsTwitterReferencedUser {
+            user_id: 2,
+            username: String::from("retweeted_username"),
         };
-        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user)
+        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user_retweeted)
+            .await
+            .unwrap();
+        let news_twitter_referenced_user_quoted = NewsTwitterReferencedUser {
+            user_id: 3,
+            username: String::from("quoted_username"),
+        };
+        insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user_quoted)
             .await
             .unwrap();
     }
