@@ -23,11 +23,12 @@
 - [x] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [x] (bug) save users before updating list updated_at column
 - [x] Only make openAI requests for top 100 news feed articles after calculating score
+- [ ] Handle quoted by tweets - or fix num_references?
+- [ ] Save cron runs in db + errors
 - [ ] Deploy to AWS
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Allow links without a description
-- [ ] Save cron runs in db + errors
 - [ ] Request timeout? just hangs...
 - [ ] Handle cron errors and retry 3 times
 - [ ] print db errors, ensure we only get RecordNotFound errors

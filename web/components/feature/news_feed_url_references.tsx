@@ -1,4 +1,4 @@
-import { unescapeHTML } from "app/util";
+import { retweetedByText, unescapeHTML } from "app/util";
 import { NewsFeedUrlReference } from "graphql/generated/graphql";
 
 interface NewsFeedUrlReferencesProps {
@@ -41,10 +41,9 @@ export default function NewsFeedUrlDirectReferences(
                 <p className="text-m mt-1">
                   {unescapeHTML(newsFeedUrlReference.tweetText)}
                 </p>
-                {/* <p className="text-m font-bold">
-                  Retweeted by{" "}
-                  {newsFeedUrlReference.retweetedByUsernames.join(", ")}
-                </p> */}
+                <p className="text-sm font-light italic text-gray-600 mt-1 ">
+                  {retweetedByText(newsFeedUrlReference.retweetedByUsernames)}
+                </p>
               </div>
             );
           }

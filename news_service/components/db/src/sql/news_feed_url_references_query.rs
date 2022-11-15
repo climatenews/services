@@ -18,6 +18,7 @@ pub async fn get_news_feed_url_references(
             t.created_at_str,
             u.username as "username?",
             ru.username as "referenced_username?",
+            rt.referenced_tweet_id as "referenced_tweet_id?",
             rt.referenced_tweet_kind as "referenced_tweet_kind?"
         FROM
             news_referenced_tweet_url as rtu 
