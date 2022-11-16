@@ -6,7 +6,6 @@ pub struct EnglishLanguageDetector {
 }
 
 impl EnglishLanguageDetector {
-
     pub fn new(detector: LanguageDetector) -> EnglishLanguageDetector {
         EnglishLanguageDetector { detector }
     }

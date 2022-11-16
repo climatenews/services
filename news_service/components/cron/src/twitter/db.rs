@@ -115,13 +115,12 @@ pub async fn parse_and_insert_referenced_user(db_pool: &PgPool, user: &User) -> 
     let user_id = numeric_id_to_i64(user.id);
     // TODO ensure error is a RecordNotFoundError
 
-    if (find_news_twitter_referenced_user_by_user_id(db_pool, user_id).await).is_err(){
+    if (find_news_twitter_referenced_user_by_user_id(db_pool, user_id).await).is_err() {
         let news_twitter_referenced_user = NewsTwitterReferencedUser {
             user_id,
             username: user.username.clone(),
         };
         insert_news_twitter_referenced_user(db_pool, news_twitter_referenced_user).await?;
-
     }
     Ok(())
 }

@@ -77,7 +77,7 @@ mod tests {
         let is_climate_related = fetch_text_climate_classification(text.to_string())
             .await
             .unwrap();
-            assert!(is_climate_related);
+        assert!(is_climate_related);
     }
 
     #[tokio::test]

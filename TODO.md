@@ -24,9 +24,10 @@
 - [x] (bug) save users before updating list updated_at column
 - [x] Only make openAI requests for top 100 news feed articles after calculating score
 - [x] fix num_references
-- [x] fix to avoid showing tweets by the same author, unless it was retweeted
-- [x] handle users retweeting non-users, show tweet with retweeted by text
+- [ ] fix to avoid showing tweets by the same author, unless it was retweeted
+- [ ] handle users retweeting non-users, show tweet with retweeted by text
 - [ ] Save cron runs in db + errors
+- [ ] Show last_completed_at on web
 - [ ] Deploy to AWS
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
 - [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261

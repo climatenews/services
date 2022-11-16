@@ -1,4 +1,3 @@
-
 use crate::graphql::errors::GqlError;
 use async_graphql::{ErrorExtensions, FieldResult};
 use db::{
@@ -19,7 +18,8 @@ pub async fn news_feed_url_references_query<'a>(
     if let Some(news_feed_url_references_query_list) = news_feed_url_references_result {
         let mut news_feed_url_references: Vec<NewsFeedUrlReference> = vec![];
         for news_feed_url_reference_query in news_feed_url_references_query_list.clone() {
-            if news_feed_url_reference_query.referenced_tweet_kind != Some(String::from("retweeted"))
+            if news_feed_url_reference_query.referenced_tweet_kind
+                != Some(String::from("retweeted"))
             {
                 // TODO make const for "retweeted"
                 let retweeted_by_usernames: Vec<String> = news_feed_url_references_query_list
@@ -31,7 +31,7 @@ pub async fn news_feed_url_references_query<'a>(
                             && get_author_username(nfu).is_some()
                     })
                     .map(|nfu| get_author_username(&nfu))
-                    .map(|username| format!("@{}",username.unwrap()))
+                    .map(|username| format!("@{}", username.unwrap()))
                     .collect();
 
                 let author_username = get_author_username(&news_feed_url_reference_query.clone())

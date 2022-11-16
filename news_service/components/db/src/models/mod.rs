@@ -1,3 +1,4 @@
+pub mod news_cron_job;
 pub mod news_feed_url;
 pub mod news_feed_url_reference;
 pub mod news_referenced_tweet;

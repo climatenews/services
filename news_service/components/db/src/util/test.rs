@@ -78,9 +78,7 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(db_pool, news_tweet_quoted)
-            .await
-            .unwrap();
+        insert_news_tweet(db_pool, news_tweet_quoted).await.unwrap();
     }
 
     pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool) {
