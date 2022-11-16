@@ -118,7 +118,7 @@ pub async fn find_top_news_feed_urls_without_is_climate_related_set(
                 is_climate_related IS NULL 
                 AND url_score > 10
             ORDER BY url_score DESC
-            LIMIT 100
+            LIMIT 50
             
         "#
     );

@@ -23,7 +23,9 @@
 - [x] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
 - [x] (bug) save users before updating list updated_at column
 - [x] Only make openAI requests for top 100 news feed articles after calculating score
-- [ ] Handle quoted by tweets - or fix num_references?
+- [x] fix num_references
+- [x] fix to avoid showing tweets by the same author, unless it was retweeted
+- [x] handle users retweeting non-users, show tweet with retweeted by text
 - [ ] Save cron runs in db + errors
 - [ ] Deploy to AWS
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29

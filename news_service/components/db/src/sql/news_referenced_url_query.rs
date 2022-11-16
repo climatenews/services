@@ -25,13 +25,12 @@ pub async fn get_news_referenced_urls(
             news_referenced_tweet_url as rtu 
             JOIN news_tweet_url as tu ON tu.id = rtu.url_id
             JOIN news_tweet as t ON t.tweet_id = rtu.tweet_id
-            JOIN news_twitter_user as u ON t.author_id = u.user_id	
+            LEFT JOIN news_twitter_user as u ON t.author_id = u.user_id	
             
         WHERE
             tu.is_twitter_url = False
             AND tu.is_english = True
             AND tu.title IS NOT NULL
-            AND u.username IS NOT NULL
             AND t.in_reply_to_user_id IS NULL
         AND t.created_at > $1
         ORDER BY  
