@@ -133,11 +133,8 @@ async fn update_news_twitter_users_scores(db_pool: &PgPool) -> Result<()> {
             get_news_user_referenced_tweet_query(db_pool, news_twitter_user.user_id).await;
 
         let mut user_referenced_tweets_count = 0;
-        match news_user_referenced_tweets_result {
-            Ok(news_user_referenced_tweets) => {
-                user_referenced_tweets_count = news_user_referenced_tweets.len() as i32;
-            }
-            Err(_) => {}
+        if let Ok(news_user_referenced_tweets) = news_user_referenced_tweets_result {
+            user_referenced_tweets_count = news_user_referenced_tweets.len() as i32;
         }
         let user_score = calc_user_score(&news_twitter_user, user_referenced_tweets_count);
 
@@ -166,9 +163,9 @@ async fn update_user_last_checked_at(
 async fn update_user_last_updated_at(
     db_pool: &PgPool,
     news_twitter_user: &NewsTwitterUser,
-    tweets: &Vec<Tweet>,
+    tweets: &[Tweet],
 ) -> Result<()> {
-    if let Some(last_tweet) = tweets.clone().first() {
+    if let Some(last_tweet) = tweets.to_owned().first() {
         let last_tweet_id = numeric_id_to_i64(last_tweet.id);
         let last_updated_at = now_utc_timestamp();
         update_news_twitter_user_last_updated_at(
@@ -185,12 +182,12 @@ async fn update_user_last_updated_at(
 async fn fetch_user_tweet_references(
     db_pool: &PgPool,
     twitter_api: &TwitterApi<BearerToken>,
-    tweets: &Vec<Tweet>,
+    tweets: &[Tweet],
     english_language_detector: &EnglishLanguageDetector,
 ) -> Result<()> {
     let mut all_news_referenced_tweets: Vec<NewsReferencedTweet> = vec![];
     // TODO keep track of referenced author_ids and create author_id to username hashmap
-    for tweet in tweets.clone() {
+    for tweet in tweets.to_owned() {
         parse_and_insert_tweet(db_pool, &tweet, english_language_detector).await?;
         let news_referenced_tweets = parse_news_referenced_tweets(&tweet);
         all_news_referenced_tweets = [all_news_referenced_tweets, news_referenced_tweets].concat();

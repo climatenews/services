@@ -35,7 +35,7 @@ pub async fn news_feed_url_references_query<'a>(
                     .collect();
 
                 let author_username = get_author_username(&news_feed_url_reference_query.clone())
-                    .unwrap_or(String::from(""));
+                    .unwrap_or_else(|| String::from(""));
 
                 let news_feed_url_reference = NewsFeedUrlReference {
                     url_id: news_feed_url_reference_query.url_id,
