@@ -52,9 +52,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 
 # Pre build steps
 ## sqlx offline mode
-cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action cargo sqlx prepare --merged --check
 cargo clean && DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/climate_action cargo sqlx prepare --merged
-SQLX_OFFLINE=true cargo build --release --bin api
+
 
 ## docker compose
 sudo docker-compose up -d --build
