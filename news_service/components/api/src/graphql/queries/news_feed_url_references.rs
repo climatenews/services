@@ -59,10 +59,7 @@ fn get_author_username(
 ) -> Option<String> {
     match news_feed_url_reference_query.username.clone() {
         Some(author_username) => Some(author_username),
-        None => match news_feed_url_reference_query.referenced_username.clone() {
-            Some(referenced_username) => Some(referenced_username),
-            None => None,
-        },
+        None => news_feed_url_reference_query.referenced_username.clone(),
     }
 }
 

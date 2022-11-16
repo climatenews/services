@@ -55,7 +55,7 @@ pub async fn completion(prompt: String) -> Result<String> {
         .await;
     sleep(Duration::from_millis(REQUEST_SLEEP_DURATION)).await;
     match response {
-        Err(e) => Err(Error::new(e).context(format!("OpenAI completion API error"))),
+        Err(e) => Err(Error::new(e).context("OpenAI completion API error".to_string())),
         Ok(response) => {
             let mut result: Completion = response.json().await?;
             let choice = result.choices.remove(0);

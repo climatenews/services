@@ -79,7 +79,7 @@ async fn fetch_users(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) ->
 }
 
 async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToken>) -> Result<()> {
-    let english_language_detector = EnglishLanguageDetector::new();
+    let english_language_detector = EnglishLanguageDetector::init();
 
     let news_twitter_users = find_all_news_twitter_users(db_pool).await?;
     for (i, news_twitter_user) in news_twitter_users.iter().enumerate() {

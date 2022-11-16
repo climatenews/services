@@ -6,11 +6,15 @@ pub struct EnglishLanguageDetector {
 }
 
 impl EnglishLanguageDetector {
-    pub fn new() -> EnglishLanguageDetector {
+
+    pub fn new(detector: LanguageDetector) -> EnglishLanguageDetector {
+        EnglishLanguageDetector { detector }
+    }
+    pub fn init() -> EnglishLanguageDetector {
         let languages = vec![English, French, German, Spanish, Swedish];
         let detector: LanguageDetector =
             LanguageDetectorBuilder::from_languages(&languages).build();
-        EnglishLanguageDetector { detector }
+        EnglishLanguageDetector::new(detector)
     }
 
     pub fn is_english_language(&self, text: &str) -> bool {

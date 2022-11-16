@@ -23,7 +23,7 @@ pub mod test_util {
     use sqlx::PgPool;
 
     pub async fn create_fake_news_tweet_url(db_pool: &PgPool, created_at_timestamp: i64) {
-        truncate_news_tweet_url(&db_pool).await.unwrap();
+        truncate_news_tweet_url(db_pool).await.unwrap();
         let news_tweet_url = NewsTweetUrl {
             url: String::from("https://t.co/4HPNrqOnZj"),
             expanded_url: String::from("expanded_url"),
@@ -39,13 +39,13 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet_url(&db_pool, news_tweet_url)
+        insert_news_tweet_url(db_pool, news_tweet_url)
             .await
             .unwrap();
     }
 
     pub async fn create_fake_news_tweet(db_pool: &PgPool, created_at_timestamp: i64) {
-        truncate_news_tweet(&db_pool).await.unwrap();
+        truncate_news_tweet(db_pool).await.unwrap();
         let news_tweet = NewsTweet {
             tweet_id: 1,
             text: String::from("tweet_text"),
@@ -55,7 +55,7 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(&db_pool, news_tweet).await.unwrap();
+        insert_news_tweet(db_pool, news_tweet).await.unwrap();
         let news_tweet_retweeted = NewsTweet {
             tweet_id: 2,
             text: String::from("RT tweet_text"),
@@ -65,7 +65,7 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(&db_pool, news_tweet_retweeted)
+        insert_news_tweet(db_pool, news_tweet_retweeted)
             .await
             .unwrap();
 
@@ -78,19 +78,19 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(&db_pool, news_tweet_quoted)
+        insert_news_tweet(db_pool, news_tweet_quoted)
             .await
             .unwrap();
     }
 
     pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool) {
-        truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
+        truncate_news_referenced_tweet_url(db_pool).await.unwrap();
 
         let news_referenced_tweet_url = NewsReferencedTweetUrl {
             tweet_id: 1,
             url_id: 1,
         };
-        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url)
+        insert_news_referenced_tweet_url(db_pool, news_referenced_tweet_url)
             .await
             .unwrap();
 
@@ -98,7 +98,7 @@ pub mod test_util {
             tweet_id: 2,
             url_id: 1,
         };
-        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url_retweeted)
+        insert_news_referenced_tweet_url(db_pool, news_referenced_tweet_url_retweeted)
             .await
             .unwrap();
 
@@ -106,20 +106,20 @@ pub mod test_util {
             tweet_id: 3,
             url_id: 1,
         };
-        insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url_quoted)
+        insert_news_referenced_tweet_url(db_pool, news_referenced_tweet_url_quoted)
             .await
             .unwrap();
     }
 
     pub async fn create_fake_news_referenced_tweets(db_pool: &PgPool) {
-        truncate_news_referenced_tweet(&db_pool).await.unwrap();
+        truncate_news_referenced_tweet(db_pool).await.unwrap();
 
         let news_referenced_tweet_retweeted = NewsReferencedTweet {
             tweet_id: 2,
             referenced_tweet_id: 1,
             referenced_tweet_kind: String::from("retweeted"),
         };
-        insert_news_referenced_tweet(&db_pool, news_referenced_tweet_retweeted)
+        insert_news_referenced_tweet(db_pool, news_referenced_tweet_retweeted)
             .await
             .unwrap();
 
@@ -128,13 +128,13 @@ pub mod test_util {
             referenced_tweet_id: 1,
             referenced_tweet_kind: String::from("quoted"),
         };
-        insert_news_referenced_tweet(&db_pool, news_referenced_tweet_quoted)
+        insert_news_referenced_tweet(db_pool, news_referenced_tweet_quoted)
             .await
             .unwrap();
     }
 
     pub async fn create_fake_news_feed_url(db_pool: &PgPool, created_at_timestamp: i64) {
-        truncate_news_feed_url(&db_pool).await.unwrap();
+        truncate_news_feed_url(db_pool).await.unwrap();
         let news_feed_url = NewsFeedUrl {
             url_id: 1,
             url_score: 90,
@@ -144,11 +144,11 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_feed_url(&db_pool, news_feed_url).await.unwrap();
+        insert_news_feed_url(db_pool, news_feed_url).await.unwrap();
     }
 
     pub async fn create_fake_news_twitter_user(db_pool: &PgPool) {
-        truncate_news_twitter_user(&db_pool).await.unwrap();
+        truncate_news_twitter_user(db_pool).await.unwrap();
         let news_twitter_user = NewsTwitterUser {
             user_id: 1,
             username: String::from("username"),
@@ -169,7 +169,7 @@ pub mod test_util {
     }
 
     pub async fn create_fake_news_twitter_referenced_user(db_pool: &PgPool) {
-        truncate_news_twitter_referenced_user(&db_pool)
+        truncate_news_twitter_referenced_user(db_pool)
             .await
             .unwrap();
         let news_twitter_referenced_user_retweeted = NewsTwitterReferencedUser {
