@@ -1,6 +1,6 @@
 interface NewsHeaderProps {
   title: string;
-  subtitle?: string;  
+  subtitle?: string;
 }
 
 export default function NewsHeader(props: NewsHeaderProps) {

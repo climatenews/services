@@ -47,6 +47,9 @@ module.exports = {
     defaultLocale: "en"
   },
   reactStrictMode: true,
+  experimental: {
+    scrollRestoration: true
+  },
   async headers() {
     return [
       {

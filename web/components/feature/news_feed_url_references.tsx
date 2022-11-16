@@ -13,7 +13,6 @@ export default function NewsFeedUrlDirectReferences(
       <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4">
         {props.newsFeedUrlReferences.map(
           (newsFeedUrlReference: NewsFeedUrlReference) => {
-
             return (
               <div
                 key={newsFeedUrlReference.tweetId}
@@ -43,18 +42,20 @@ export default function NewsFeedUrlDirectReferences(
                   {unescapeHTML(newsFeedUrlReference.tweetText)}
                 </p>
 
-                {newsFeedUrlReference.retweetedByUsernames.length > 0 &&        
-                  <div className="flex flex-row mt-2">                  
+                {newsFeedUrlReference.retweetedByUsernames.length > 0 && (
+                  <div className="flex flex-row mt-2">
                     <img
-                          className="h-4 w-4 mt-1 mr-1"
-                          src={"/retweet_icon.png"}
-                          alt="retweet_icon"
-                        />
+                      className="h-4 w-4 mt-1 mr-1"
+                      src={"/retweet_icon.png"}
+                      alt="retweet_icon"
+                    />
                     <p className="text-m font-light italic text-gray-800 ">
-                      {retweetedByText(newsFeedUrlReference.retweetedByUsernames)}
+                      {retweetedByText(
+                        newsFeedUrlReference.retweetedByUsernames
+                      )}
                     </p>
-                  </div>            
-                }
+                  </div>
+                )}
               </div>
             );
           }

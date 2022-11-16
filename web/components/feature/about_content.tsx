@@ -27,8 +27,8 @@ export default function AboutContent() {
             </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              About ~3500 Twitter accounts are imported from the lists below to generate the
-              user list:
+              About ~3500 Twitter accounts are imported from the lists below to
+              generate the user list:
             </p>
             <ul className="mx-auto ml-5 mt-5 max-w-prose list-disc">
               <li className="mx-auto mt-2 text-lg text-gray-600">
@@ -66,8 +66,8 @@ export default function AboutContent() {
             </ul>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">
-              The news feed uses a ranking algorithm to find trending articles and is based on multiple
-              factors.
+              The news feed uses a ranking algorithm to find trending articles
+              and is based on multiple factors.
             </p>
 
             <p className="mx-auto mt-5  text-lg text-gray-600">

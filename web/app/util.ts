@@ -27,8 +27,10 @@ export function sharedByText(newsFeedUrl: NewsFeedUrl): String {
 
 export function retweetedByText(retweetedByUsernames: String[]): String {
   var retweetedByText = "";
-  if (retweetedByUsernames.length > 0){
-    retweetedByText = `Retweeted by ${retweetedByUsernames.reduce((res, k, i) => [res, k].join(i  === retweetedByUsernames.length - 1 ? ' and ' : ', '))}`
+  if (retweetedByUsernames.length > 0) {
+    retweetedByText = `Retweeted by ${retweetedByUsernames.reduce((res, k, i) =>
+      [res, k].join(i === retweetedByUsernames.length - 1 ? " and " : ", ")
+    )}`;
   }
   return retweetedByText;
 }
@@ -36,5 +38,3 @@ export function retweetedByText(retweetedByUsernames: String[]): String {
 export function dateText(newsFeedUrl: NewsFeedUrl): String {
   return timeSince(new Date(newsFeedUrl.createdAt * 1000));
 }
-
-
