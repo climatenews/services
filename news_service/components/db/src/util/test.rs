@@ -16,10 +16,11 @@ pub mod test_util {
     };
     use crate::sql::news_tweet::{insert_news_tweet, truncate_news_tweet};
     use crate::sql::news_tweet_url::{insert_news_tweet_url, truncate_news_tweet_url};
-    use crate::sql::news_twitter_referenced_user::{truncate_news_twitter_referenced_user, insert_news_twitter_referenced_user};
+    use crate::sql::news_twitter_referenced_user::{
+        insert_news_twitter_referenced_user, truncate_news_twitter_referenced_user,
+    };
     use crate::sql::news_twitter_user::{insert_news_twitter_user, truncate_news_twitter_user};
     use sqlx::PgPool;
-
 
     pub async fn create_fake_news_tweet_url(db_pool: &PgPool, created_at_timestamp: i64) {
         truncate_news_tweet_url(&db_pool).await.unwrap();
@@ -64,7 +65,9 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(&db_pool, news_tweet_retweeted).await.unwrap();
+        insert_news_tweet(&db_pool, news_tweet_retweeted)
+            .await
+            .unwrap();
 
         let news_tweet_quoted = NewsTweet {
             tweet_id: 3,
@@ -75,9 +78,10 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_tweet(&db_pool, news_tweet_quoted).await.unwrap();
+        insert_news_tweet(&db_pool, news_tweet_quoted)
+            .await
+            .unwrap();
     }
-
 
     pub async fn create_fake_news_referenced_tweet_url(db_pool: &PgPool) {
         truncate_news_referenced_tweet_url(&db_pool).await.unwrap();
@@ -99,12 +103,12 @@ pub mod test_util {
             .unwrap();
 
         let news_referenced_tweet_url_quoted = NewsReferencedTweetUrl {
-                tweet_id: 3,
-                url_id: 1,
+            tweet_id: 3,
+            url_id: 1,
         };
         insert_news_referenced_tweet_url(&db_pool, news_referenced_tweet_url_quoted)
             .await
-            .unwrap();            
+            .unwrap();
     }
 
     pub async fn create_fake_news_referenced_tweets(db_pool: &PgPool) {
@@ -165,7 +169,9 @@ pub mod test_util {
     }
 
     pub async fn create_fake_news_twitter_referenced_user(db_pool: &PgPool) {
-        truncate_news_twitter_referenced_user(&db_pool).await.unwrap();
+        truncate_news_twitter_referenced_user(&db_pool)
+            .await
+            .unwrap();
         let news_twitter_referenced_user_retweeted = NewsTwitterReferencedUser {
             user_id: 2,
             username: String::from("retweeted_username"),
