@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://0.0.0.0:8080/graphql" # TODO use schema file
+schema: "http://0.0.0.0:8000/graphql" # TODO use schema file
 documents: "graphql/queries/*.graphql"
 generates:
   graphql/generated/graphql.ts:
@@ -9,4 +9,4 @@ generates:
       - "typescript-graphql-request"
     config:
       fetcher:
-        endpoint: "http://0.0.0.0:8080/graphql" # TODO use 'process.env.ENDPOINT'
+        endpoint: "http://0.0.0.0:8000/graphql" # TODO use 'process.env.ENDPOINT'

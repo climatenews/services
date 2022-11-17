@@ -4,6 +4,8 @@ services:
     build:
       context: web
       target: development
+    environment:
+      - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
     networks:
       - client-side
     ports:
