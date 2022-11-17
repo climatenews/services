@@ -36,16 +36,24 @@ export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/clim
 
 $ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null" > .git/hooks/pre-commit 
 # stop database
-sudo service docker stop
+
 sudo service postgresql stop
 systemctl status 'postgresql*'
+#docker
+
+sudo systemctl disable docker.service
+sudo systemctl disable docker.socket
+sudo systemctl stop docker
+sudo service docker stop
 ```
 Mozilla example: https://github.com/mozilla-services/cjms
 
 # running tests
 cargo test --package cron --bin cron -- twitter::db::tests::get_expanded_url_parsed_youtube_params_test --exact --nocapture 
 
-# Ubuntu
+# Running the services
+cargo run --bin api
+cargo run --bin cron
 
 ## NVM
 ```bash

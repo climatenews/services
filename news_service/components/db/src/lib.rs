@@ -13,7 +13,7 @@ pub mod util;
 pub const NUM_DB_CONNECTIONS: u32 = 4;
 
 pub fn init_env() {
-    dotenv::from_filename("../db/.env").ok();
+    dotenv::from_filename("components/db/.env").ok();
     env_logger::builder()
         .filter_level(log::LevelFilter::Info)
         .init();
@@ -21,7 +21,7 @@ pub fn init_env() {
 
 pub async fn init_db_pool() -> anyhow::Result<PgPool> {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set");
-
+    println!("{}", database_url);
     let mut connection_options = PgConnectOptions::from_str(&database_url)?;
     connection_options
         .disable_statement_logging()
