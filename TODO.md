@@ -24,17 +24,15 @@
 - [x] (bug) save users before updating list updated_at column
 - [x] Only make openAI requests for top 100 news feed articles after calculating score
 - [x] fix num_references
+- [x] Save cron runs in db + errors
+- [ ] Show last_completed_at on web
+- [ ] build with docker on my laptop
+- [ ] use vault for env variables?
+- [ ] Deploy to AWS
 - [ ] fix to avoid showing tweets by the same author, unless it was retweeted
 - [ ] handle users retweeting non-users, show tweet with retweeted by text
-- [ ] Save cron runs in db + errors
 - [ ] use log4rs to save files
-- [ ] Show last_completed_at on web
-- [ ] Deploy to AWS
-- [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29
-- [ ] Only show one tweet if same tweet retweeted multiple times - http://localhost:3000/news_item/1261
 - [ ] Allow links without a description
-- [ ] Request timeout? just hangs...
-- [ ] Handle cron errors and retry 3 times
 - [ ] print db errors, ensure we only get RecordNotFound errors
 - [ ] remove all unwraps
 - [ ] handle openAI api errors
