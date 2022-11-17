@@ -27,6 +27,7 @@
 - [ ] fix to avoid showing tweets by the same author, unless it was retweeted
 - [ ] handle users retweeting non-users, show tweet with retweeted by text
 - [ ] Save cron runs in db + errors
+- [ ] use log4rs to save files
 - [ ] Show last_completed_at on web
 - [ ] Deploy to AWS
 - [ ] Only show one direct tweet if same link tweeted multiple times - http://localhost:3000/news_item/29

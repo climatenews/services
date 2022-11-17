@@ -71,3 +71,22 @@ pub async fn update_news_cron_job_error(
 
     Ok(rows_affected > 0)
 }
+
+// pub async fn get_last_completed_news_cron_job(
+//     pool: &PgPool,
+//     url_id: i32,
+// ) -> Result<NewsCronJob, sqlx::Error> {
+//     sqlx::query_as!(
+//         NewsCronJob,
+//         r#"
+//         SELECT started_at, started_at_str, completed_at, completed_at_str, error            
+//         FROM news_cron_job
+//         WHERE completed_at IS NOT NULL
+//         ORDER BY completed_at DESC
+//         LIMIT 1
+//      "#,
+//         url_id
+//     )
+//     .fetch_one(pool)
+//     .await
+// }

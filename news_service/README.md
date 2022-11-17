@@ -36,7 +36,9 @@ export DATABASE_URL=postgres://climate_action:climate_action@localhost:5432/clim
 
 $ echo "cargo sqlx prepare > /dev/null 2>&1; git add sqlx-data.json > /dev/null" > .git/hooks/pre-commit 
 # stop database
+sudo service docker stop
 sudo service postgresql stop
+systemctl status 'postgresql*'
 ```
 Mozilla example: https://github.com/mozilla-services/cjms
 
