@@ -47,9 +47,6 @@ chrono = "0.4.22"
 actix-web = "4.2.1"
 actix-rt = "2.7.0"
 
-# schedule tasks in tokio runtime
-tokio_schedule = "0.3.0"
-
 # language detection library
 lingua = { version = "1.4.0", default-features = false, features = ["english", "french", "german" ,"italian", "spanish", "swedish"] }
 

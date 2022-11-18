@@ -1,7 +1,6 @@
 use crate::news_feed::hourly_cron_job::hourly_cron_job;
 use actix_web::{get, App, HttpResponse, HttpServer, Result};
 use chrono::Local;
-use chrono::Utc;
 use db::init_env;
 use db::models::news_cron_job::NewsCronJob;
 use db::sql::news_cron_job::insert_news_cron_job;
@@ -14,7 +13,6 @@ use log::error;
 use log::info;
 use sqlx::PgPool;
 use std::env;
-use tokio_schedule::{every, Job};
 
 pub mod language;
 pub mod news_feed;
@@ -49,17 +47,12 @@ async fn main() -> std::io::Result<()> {
 pub async fn start_scheduler() {
     info!("start_scheduler - {:?}", Local::now());
     let db_pool = init_db().await;
-
-    if let Err(err) = start_cron_job(&db_pool).await {
-        error!("start_cron_job failed: {:?}", err);
-    }
-
-    let scheduler = every(2).hours().in_timezone(&Utc).perform(|| async {
+    loop {
+        // cron job continuous loop
         if let Err(err) = start_cron_job(&db_pool).await {
             error!("start_cron_job failed: {:?}", err);
         }
-    });
-    scheduler.await;
+    }
 }
 
 pub async fn start_cron_job(db_pool: &PgPool) -> anyhow::Result<()> {
