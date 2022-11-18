@@ -17,5 +17,8 @@ Set the OPENAI_API_KEY & TWITTER_BEARER_TOKEN variables in `.env.dev`.
 
 ```
 # Build the docker images
-docker-compose --env-file .env.dev  up -d  --build --force-recreate service-name-here
+docker-compose --env-file .env.dev  up -d  --build 
+
+docker-compose --env-file .env.dev  up -d  --build --force-recreate news_cron
+
 ```
