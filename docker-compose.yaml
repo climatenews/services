@@ -14,6 +14,13 @@ services:
       - ./web/src:/code/src:ro
     depends_on:
       - news_api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always  
 
   news_api:
     build:
@@ -34,6 +41,13 @@ services:
       - ./news_service/src:/code/src
     depends_on:
       - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s  
+    restart: always      
 
   news_cron:
     build:
@@ -54,6 +68,13 @@ services:
       - ./news_service/src:/code/src
     depends_on:
       - news_api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s    
+    restart: always        
 
 
   db:

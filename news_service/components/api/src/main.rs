@@ -1,6 +1,6 @@
 use crate::graphql::{init_graphql_schema, ClimateActionSchema};
 use actix_cors::Cors;
-use actix_web::{guard, web, web::Data, App, HttpResponse, HttpServer, Result};
+use actix_web::{get, guard, web, web::Data, App, HttpResponse, HttpServer, Result};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use db::{init_db_pool, init_env};
@@ -13,6 +13,11 @@ pub const N_WORKERS: usize = 4;
 
 async fn index(schema: web::Data<ClimateActionSchema>, req: GraphQLRequest) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
+}
+
+#[get("/health")]
+pub async fn health() -> Result<HttpResponse> {
+    Ok(HttpResponse::Ok().body("success".to_string()))
 }
 
 async fn index_playground() -> Result<HttpResponse> {
@@ -47,6 +52,7 @@ async fn async_main() {
             .wrap(Cors::permissive()) //TODO: remove
             .wrap(actix_web::middleware::Logger::default())
             .app_data(Data::new(schema.clone()))
+            .service(health)
             .service(web::resource("/graphql").guard(guard::Post()).to(index))
             .service(
                 web::resource("/playground")
