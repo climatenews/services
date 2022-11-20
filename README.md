@@ -21,4 +21,8 @@ docker-compose --env-file .env.dev  up -d  --build
 
 docker-compose --env-file .env.dev  up -d  --build --force-recreate news_cron
 
+docker-compose logs --tail="all" -f
+
+docker stack deploy -c docker-compose.yaml climate_action_stack
+
 ```
