@@ -1,6 +1,7 @@
 version: '3.4'
 services:
   web:
+    image: climateactioncollective/web:latest
     build:
       context: web
       target: development
@@ -23,7 +24,7 @@ services:
     restart: always  
 
   news_api:
-    image: climateactioncollective/cron:latest
+    image: climateactioncollective/news_api:latest
     build:
       context: news_service
       args:
@@ -51,6 +52,7 @@ services:
     restart: always      
 
   news_cron:
+    image: climateactioncollective/news_cron:latest
     build:
       context: news_service
       args:
