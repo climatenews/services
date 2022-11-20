@@ -1,4 +1,4 @@
-name: web
+name: news_service api
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./web
+          context: ./news_service
           push: true
-          tags: climate-action-collective/web:latest
-          build-args: SERVICE_NAME=cron
+          tags: climate-action-collective/api:latest
+          build-args: SERVICE_NAME=api
