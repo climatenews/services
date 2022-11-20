@@ -23,6 +23,7 @@ services:
     restart: always  
 
   news_api:
+    image: climateactioncollective/cron:latest
     build:
       context: news_service
       args:
