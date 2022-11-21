@@ -7,14 +7,14 @@
 - [OpenAI API key](https://openai.com/api/)
 
 ## Setting up the .env.dev file
-```
+```bash
 # copy the sample .env file 
 cp .env.sample .env.dev
 ```
-Set the OPENAI_API_KEY & TWITTER_BEARER_TOKEN variables in `.env.dev`.
+Set the `OPENAI_API_KEY` & `TWITTER_BEARER_TOKEN` variables in `.env.dev`
 
-## Test the app with Compose
-```
+## Test the app with Docker Compose
+```bash
 # Start the app
 docker-compose up -d --build
 
@@ -23,8 +23,8 @@ docker-compose logs --tail="all" -f
 ```
 
 # Deploying
-## Deploy the stack to the swarm
-```
+## Deploy the stack with Docker Swarm
+```bash
 # Initialize a docker swarm
 docker swarm init 
 
