@@ -1,19 +1,19 @@
-### Climate Action Collective Services
+# Climate Action Collective - Services
 
-# Running locally
-## Prerequisites
+## Running locally
+### Prerequisites
 - Docker & Docker Compose
 - [Twitter API key](https://developer.twitter.com/en/docs/authentication/oauth-2-0/bearer-tokens)
 - [OpenAI API key](https://openai.com/api/)
 
-## Setting up the .env.dev file
+### Setting up the .env.dev file
 ```bash
 # copy the sample .env file 
 cp .env.sample .env.dev
 ```
 Set the `OPENAI_API_KEY` & `TWITTER_BEARER_TOKEN` variables in `.env.dev`
 
-## Test the app with Docker Compose
+### Test the app with Docker Compose
 ```bash
 # Start the app
 docker-compose up -d --build
@@ -22,8 +22,8 @@ docker-compose up -d --build
 docker-compose logs --tail="all" -f
 ```
 
-# Deploying
-## Deploy the stack with Docker Swarm
+## Deploying
+### Deploy the stack with Docker Swarm
 ```bash
 # Initialize a docker swarm
 docker swarm init 
