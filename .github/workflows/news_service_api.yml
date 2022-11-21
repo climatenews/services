@@ -1,6 +1,5 @@
 name: news_service api
 
-
 # run build steps for all pushes
 # on:
 #   push:
@@ -30,5 +29,5 @@ jobs:
           push: true
           build-args: SERVICE_NAME=api
           tags: |
-              ${{ secrets.DOCKER_HUB_USERNAME }}/news_api:${{ steps.vars.outputs.tag }}
-              ${{ secrets.DOCKER_HUB_USERNAME }}/news_api:latest              
+            ${{ secrets.DOCKERHUB_USERNAME }}/news_api:${{ steps.vars.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/news_api:latest

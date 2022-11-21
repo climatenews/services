@@ -23,5 +23,5 @@ jobs:
           push: true
           build-args: SERVICE_NAME=cron
           tags: |
-              ${{ secrets.DOCKER_HUB_USERNAME }}/news_cron:${{ steps.vars.outputs.tag }}
-              ${{ secrets.DOCKER_HUB_USERNAME }}/news_cron:latest               
+            ${{ secrets.DOCKERHUB_USERNAME }}/news_cron:${{ steps.vars.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/news_cron:latest

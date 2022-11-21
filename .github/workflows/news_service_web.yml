@@ -23,5 +23,5 @@ jobs:
           context: ./web
           push: true
           tags: |
-              ${{ secrets.DOCKER_HUB_USERNAME }}/web:${{ steps.vars.outputs.tag }}
-              ${{ secrets.DOCKER_HUB_USERNAME }}/web:latest          
+            ${{ secrets.DOCKERHUB_USERNAME }}/web:${{ steps.vars.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/web:latest
