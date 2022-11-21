@@ -23,5 +23,5 @@ jobs:
           context: ./web
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/web:${{ steps.vars.outputs.tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/web:latest
+            climateactioncollective/web:${{ github.ref_name }}
+            climateactioncollective/web:latest
