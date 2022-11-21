@@ -1,5 +1,12 @@
 name: news_service api
 
+
+# run build steps for all pushes
+# on:
+#   push:
+#     branches:
+#       - 'main'
+# TODO only deploy docker images on a new tag
 on:
   create:
     tags:
