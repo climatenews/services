@@ -1,83 +1,83 @@
 version: '3.4'
 services:
-  web:
-    image: climateactioncollective/web:latest
-    build:
-      context: web
-      target: development
-    environment:
-      - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
-    networks:
-      - client-side
-    ports:
-      - 3000:3000
-    volumes:
-      - ./web/src:/code/src:ro
-    depends_on:
-      - news_api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: always  
+  # web:
+  #   image: climateactioncollective/web:latest
+  #   build:
+  #     context: web
+  #     target: development
+  #   environment:
+  #     - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
+  #   networks:
+  #     - client-side
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - news_api
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
+  #   restart: always  
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #         constraints:
+  #             - node.role == manager
 
-  news_api:
-    image: climateactioncollective/news_api:latest
-    build:
-      context: news_service
-      args:
-        SERVICE_NAME: api 
-    environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=8000
-      - RUST_LOG=info,actix=info
-      - DATABASE_URL=${DATABASE_URL}
-    ports:
-      - 8000:8000
-    networks:
-      - client-side
-      - server-side
-    volumes:
-      - ./news_service/src:/code/src
-    depends_on:
-      - db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s  
-    restart: always      
 
-  news_cron:
-    image: climateactioncollective/news_cron:latest
-    build:
-      context: news_service
-      args:
-        SERVICE_NAME: cron 
-    environment:
-      - CRON_HOST=0.0.0.0
-      - CRON_PORT=8001
-      - RUST_LOG=info,actix=info
-      - DATABASE_URL=${DATABASE_URL}
-      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
- 
-    networks:
-      - server-side
-    volumes:
-      - ./news_service/src:/code/src
-    depends_on:
-      - news_api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s    
-    restart: always        
+  # news_api:
+  #   image: climateactioncollective/news_api:latest
+  #   build:
+  #     context: news_service
+  #     args:
+  #       SERVICE_NAME: api 
+  #   environment:
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8000
+  #     - RUST_LOG=info,actix=info
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - client-side
+  #     - server-side
+  #   depends_on:
+  #     - db
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://0.0.0.0:8000/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s  
+  #   restart: always      
+
+  # news_cron:
+  #   image: climateactioncollective/news_cron:latest
+  #   build:
+  #     context: news_service
+  #     args:
+  #       SERVICE_NAME: cron 
+  #   environment:
+  #     - CRON_HOST=0.0.0.0
+  #     - CRON_PORT=8001
+  #     - RUST_LOG=info,actix=info
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #   networks:
+  #     - server-side
+  #   depends_on:
+  #     - news_api
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://0.0.0.0:8001/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s    
+  #   restart: always        
 
 
   db:
@@ -93,6 +93,11 @@ services:
       - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   client-side: {}
