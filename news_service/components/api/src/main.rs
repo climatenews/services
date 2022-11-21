@@ -17,6 +17,7 @@ async fn index(schema: web::Data<ClimateActionSchema>, req: GraphQLRequest) -> G
 
 #[get("/health")]
 pub async fn health() -> Result<HttpResponse> {
+    //TODO add db check: https://tjmaynes.com/posts/implementing-the-health-check-api-pattern-with-rust/
     Ok(HttpResponse::Ok().body("success".to_string()))
 }
 

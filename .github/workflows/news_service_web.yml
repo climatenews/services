@@ -1,9 +1,9 @@
 name: web
 
 on:
-  push:
-    branches:
-      - "main"
+  create:
+    tags:
+      - v*
 
 jobs:
   docker:
@@ -22,5 +22,6 @@ jobs:
         with:
           context: ./web
           push: true
-          tags: climateactioncollective/web:latest
-          build-args: SERVICE_NAME=cron
+          tags: |
+              ${{ secrets.DOCKER_HUB_USERNAME }}/web:${{ steps.vars.outputs.tag }}
+              ${{ secrets.DOCKER_HUB_USERNAME }}/web:latest          

@@ -25,23 +25,30 @@ docker-compose logs --tail="all" -f
 # Deploying
 ## Deploy the stack to the swarm
 ```
+# Initialize a docker swarm
+docker swarm init 
+
 # Deploy the stack
-# TODO use docker secrets
-env $(cat .env.dev | xargs) docker stack deploy --compose-file docker-compose.yaml climate_action_stack
+# TODO use docker secrets?
+env $(cat .env.dev | xargs) docker stack deploy --compose-file docker-compose.yaml climate_action_stack 
+
+# Remove the stack
+docker stack rm climate_action_stack
 
 # Display stack info
 docker stack ps climate_action_stack
 
 # Display service info
+docker service ps climate_action_stack_db
+docker service ps climate_action_stack_news_api
+docker service ps climate_action_stack_news_cron
 docker service ps climate_action_stack_web
 
-
-# Remove the stack
-docker stack rm climate_action_stack
 
 # Stack logs for a service
 docker service logs climate_action_stack_db --follow
 docker service logs climate_action_stack_news_api --follow
+docker service logs climate_action_stack_news_cron --follow
 docker service logs climate_action_stack_web --follow
 
 ```

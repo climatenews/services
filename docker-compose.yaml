@@ -11,8 +11,6 @@ services:
   #     - client-side
   #   ports:
   #     - 3000:3000
-  #   depends_on:
-  #     - news_api
   #   healthcheck:
   #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
   #     interval: 30s
@@ -23,36 +21,35 @@ services:
   #   deploy:
   #     mode: replicated
   #     replicas: 1
-  #     placement:
-  #         constraints:
-  #             - node.role == manager
 
-
-  # news_api:
-  #   image: climateactioncollective/news_api:latest
-  #   build:
-  #     context: news_service
-  #     args:
-  #       SERVICE_NAME: api 
-  #   environment:
-  #     - API_HOST=0.0.0.0
-  #     - API_PORT=8000
-  #     - RUST_LOG=info,actix=info
-  #     - DATABASE_URL=${DATABASE_URL}
-  #   ports:
-  #     - 8000:8000
-  #   networks:
-  #     - client-side
-  #     - server-side
-  #   depends_on:
-  #     - db
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://0.0.0.0:8000/health"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 10s  
-  #   restart: always      
+  news_api:
+    image: climateactioncollective/news_api:latest
+    build:
+      context: news_service
+      args:
+        SERVICE_NAME: api 
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - RUST_LOG=info,actix=info
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - 8000:8000
+    networks:
+      - client-side
+      - server-side
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s  
+    restart: always    
+    deploy:
+      mode: replicated
+      replicas: 1      
 
   # news_cron:
   #   image: climateactioncollective/news_cron:latest
@@ -70,14 +67,17 @@ services:
   #   networks:
   #     - server-side
   #   depends_on:
-  #     - news_api
+  #     - db
   #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://0.0.0.0:8001/health"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 10s    
-  #   restart: always        
+  #     test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 20s   
+  #   restart: always  
+    # deploy:
+    #   mode: replicated
+    #   replicas: 1        
 
 
   db:
@@ -98,6 +98,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
+    deploy:
+      mode: replicated
+      replicas: 1      
 
 networks:
   client-side: {}
