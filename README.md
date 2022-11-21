@@ -1,5 +1,8 @@
 # Climate Action Collective - Services
 
+## Overview
+`web` - Next.js frontend
+
 ## Running locally
 ### Prerequisites
 - Docker & Docker Compose
