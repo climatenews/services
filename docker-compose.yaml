@@ -1,26 +1,26 @@
 version: '3.4'
 services:
-  # web:
-  #   image: climateactioncollective/web:latest
-  #   build:
-  #     context: web
-  #     target: development
-  #   environment:
-  #     - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
-  #   networks:
-  #     - client-side
-  #   ports:
-  #     - 3000:3000
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 10s
-  #   restart: always  
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
+  web:
+    image: climateactioncollective/web:latest
+    build:
+      context: web
+      target: development
+    environment:
+      - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
+    networks:
+      - client-side
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always  
+    deploy:
+      mode: replicated
+      replicas: 1
 
   news_api:
     image: climateactioncollective/news_api:latest
@@ -42,7 +42,7 @@ services:
       - db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 5
       start_period: 20s  
@@ -51,33 +51,33 @@ services:
       mode: replicated
       replicas: 1      
 
-  # news_cron:
-  #   image: climateactioncollective/news_cron:latest
-  #   build:
-  #     context: news_service
-  #     args:
-  #       SERVICE_NAME: cron 
-  #   environment:
-  #     - CRON_HOST=0.0.0.0
-  #     - CRON_PORT=8001
-  #     - RUST_LOG=info,actix=info
-  #     - DATABASE_URL=${DATABASE_URL}
-  #     - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
-  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
-  #   networks:
-  #     - server-side
-  #   depends_on:
-  #     - db
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 20s   
-  #   restart: always  
-    # deploy:
-    #   mode: replicated
-    #   replicas: 1        
+  news_cron:
+    image: climateactioncollective/news_cron:latest
+    build:
+      context: news_service
+      args:
+        SERVICE_NAME: cron 
+    environment:
+      - CRON_HOST=0.0.0.0
+      - CRON_PORT=8001
+      - RUST_LOG=info,actix=info
+      - DATABASE_URL=${DATABASE_URL}
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    networks:
+      - server-side
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s   
+    restart: always  
+    deploy:
+      mode: replicated
+      replicas: 1        
 
 
   db:
