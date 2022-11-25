@@ -54,4 +54,7 @@ docker service logs climate_action_stack_news_api --follow
 docker service logs climate_action_stack_news_cron --follow
 docker service logs climate_action_stack_web --follow
 
+
+docker service inspect --pretty climate_action_stack_news_cron
+
 ```
