@@ -6,7 +6,7 @@ export default function AboutContent() {
     <NewsHeader title="About" subtitle="Who we are" />
     <div className="container w-full md:max-w-3xl mx-auto">
       {/* Content */}
-      <div className="relative py-4">
+      <div className="relative py-2">
         <div className="mx-auto max-w-md px-4 sm:max-w-3xl">
           {/* <p className="mt-4 text-2xl font-extrabold tracking-tight text-gray-900">
             Mission
@@ -17,9 +17,9 @@ export default function AboutContent() {
             organizations and activists.
           </p> */}
 
-          <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
+          {/* <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
             About
-          </p>
+          </p> */}
           <p className="mx-auto mt-5  text-lg text-gray-600">
             The climate news feed shows trending articles shared by climate
             scientists, organizations and activists on Twitter.
@@ -34,14 +34,14 @@ export default function AboutContent() {
               <Link
                 href="https://twitter.com/i/lists/1586920047964205057"
                 className="font-medium hover:underline">
-                Climate heros
+                Climate News
               </Link>
               {" - "}
               <Link
-                href="https://twitter.com/climate_act_col"
+                href="https://twitter.com/climate_news_io"
                 className="font-medium hover:underline">
                 
-                  @climate_act_col
+                  @climate_news_io
                 
               </Link>
             </li>
@@ -113,9 +113,9 @@ export default function AboutContent() {
             </Link>
             {"."}
           </p>
-          <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
+          {/* <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
             About Us
-          </p>
+          </p> */}
           <p className="mx-auto mt-5  text-lg text-gray-600">
             Made with 💚 in Nanaimo, Canada by{" "}
             <Link

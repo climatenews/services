@@ -14,6 +14,7 @@ export default function NewsContent(props: NewsContentProps) {
     <NewsHeader
       title="News"
       subtitle="Trending articles shared by climate scientists, organizations and activists."
+      lastUpdated="5 mins ago"
     />
     <div className="container px-4 w-full md:max-w-3xl mx-auto">
       <ul>
