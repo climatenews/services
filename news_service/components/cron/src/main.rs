@@ -28,6 +28,7 @@ pub struct AppState {
 
 #[get("/health")]
 pub async fn health(data: web::Data<AppState>) -> Result<HttpResponse> {
+    // TODO move to db component
     let is_database_connected = sqlx::query("SELECT 1")
         .fetch_one(&data.db_pool)
         .await
