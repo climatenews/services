@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const navigation = [
-  { name: "Climate News", href: "/" },
+  { name: "News", href: "/" },
   { name: "About", href: "/about" }
 ];
 
@@ -30,12 +30,12 @@ export default function NavBar(props: NavBarProps) {
               <img
                 className="block h-8 w-auto mb-2"
                 src="/cac_logo.svg"
-                alt="Your Company"
+                alt="Climate News"
               />
             </div>
             <div className="flex flex-shrink-0">
               <p className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4">
-                Climate Action Collective
+                ClimateNews.io
               </p>
             </div>
           </div>

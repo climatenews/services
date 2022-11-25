@@ -71,18 +71,18 @@ const Meta: NextPage<Props> = ({
 export default Meta;
 
 Meta.defaultProps = {
-  title: "Climate Action Collective - Climate News",
+  title: "Climate News - Climate News",
   keywords: "climate change, climate news",
   description:
-    "Climate Action Collective - Trending climate news articles shared by climate scientists, organizations and activists.",
+    "Climate News - Trending climate news articles shared by climate scientists, organizations and activists.",
   imageSource: "https://thankyounext.vercel.app/seo.png",
   imageType: "image/png",
-  imageAltText: "Climate Action Collective",
+  imageAltText: "Climate News",
   imageWidth: "1600",
   imageHeight: "882",
   type: "website",
-  websiteUrl: "https://climateactioncollective.net",
-  siteName: "Climate Action Collective",
+  websiteUrl: "https://climatenews.io",
+  siteName: "Climate News",
   twitterCard: "summary_large_image",
-  twitterName: "@climate_act_col"
+  twitterName: "@climate_news_io"
 };

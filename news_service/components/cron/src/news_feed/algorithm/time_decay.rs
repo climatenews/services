@@ -11,7 +11,7 @@ use rust_decimal_macros::dec;
 // T = time since submission (in hours)
 // G = Gravity, defaults to 1.8 in news.arc
 
-// Climate Action Collective version:
+// Climate News version:
 //
 // url_score / (( hours_since_first_created +2 )^gravity)
 //

@@ -13,8 +13,10 @@ pub mod util;
 pub const NUM_DB_CONNECTIONS: u32 = 4;
 
 pub fn init_env() {
-    //TODO: enable in debug mode?
-    // dotenv::from_filename("components/db/.env").ok();
+    // Enabled in debug mode
+    if cfg!(debug_assertions) {
+        dotenv::from_filename("../.env.localhost").ok();
+    }   
     env_logger::builder()
         .filter_level(log::LevelFilter::Info)
         .init();
@@ -34,7 +36,7 @@ pub async fn init_db_pool() -> anyhow::Result<PgPool> {
         .connect_with(connection_options)
         .await?;
 
-    //Auto-migrate db
+    // Auto-migrate db
     sqlx::migrate!("./migrations").run(&db_pool).await?;
     Ok(db_pool)
 }

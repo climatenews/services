@@ -12,7 +12,7 @@ export default function NewsContent(props: NewsContentProps) {
 
   return <>
     <NewsHeader
-      title="Climate News"
+      title="News"
       subtitle="Trending articles shared by climate scientists, organizations and activists."
     />
     <div className="container px-4 w-full md:max-w-3xl mx-auto">

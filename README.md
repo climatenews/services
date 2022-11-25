@@ -1,4 +1,4 @@
-# Climate Action Collective - Services
+# Climate News - Services
 
 ## Overview
 `web` - Next.js frontend

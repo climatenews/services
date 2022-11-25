@@ -1,4 +1,4 @@
-### Climate Action Collective - News feed backend service
+### Climate News - News feed backend service
 
 
 

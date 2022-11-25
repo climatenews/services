@@ -12,13 +12,13 @@ export default function AboutContent() {
             Mission
           </p>
           <p className="mx-auto mt-5 text-lg text-gray-600">
-            Climate Action Collective is an open source project aiming to improve climate
+            Climate News is an open source project aiming to improve climate
             related education and amplify the voices of by climate scientists,
             organizations and activists.
           </p> */}
 
           <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
-            Climate News
+            About
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">
             The climate news feed shows trending articles shared by climate
