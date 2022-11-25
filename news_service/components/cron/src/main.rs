@@ -37,7 +37,8 @@ async fn main() -> std::io::Result<()> {
     let port = env::var("CRON_PORT").expect("PORT is not set");
 
     // Start Web server
-    HttpServer::new(|| App::new().service(health))
+    HttpServer::new(|| App::new()
+        .service(health))
         .bind(format!("{}:{}", host, port))
         .unwrap_or_else(|_| panic!("Couldn't bind to port {}", port))
         .run()

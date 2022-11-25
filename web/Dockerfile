@@ -23,6 +23,9 @@ RUN npm run build
 FROM node:19-alpine AS development
 WORKDIR /app
 
+# curl is used for docker health checks
+RUN apk --no-cache add curl
+
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 

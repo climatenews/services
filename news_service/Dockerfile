@@ -29,6 +29,8 @@ ENV SERVICE_NAME=${SERVICE_NAME}
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 RUN update-ca-certificates
+# curl is used for docker health checks
+RUN apt-get install -y curl 
 
 WORKDIR /app
 COPY --from=builder /app/target/release/${SERVICE_NAME} /usr/local/bin
