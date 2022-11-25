@@ -53,3 +53,6 @@ lingua = { version = "1.4.0", default-features = false, features = ["english", "
 # JSON
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.64" }
+
+# Workaround for https://github.com/gyscos/zstd-rs/issues/177
+zstd-sys = "=2.0.1+zstd.1.5.2"

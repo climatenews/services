@@ -33,3 +33,6 @@ itertools = "0.10.5"
 # Logging
 log = "0.4.0"
 
+# Workaround for https://github.com/gyscos/zstd-rs/issues/177
+zstd-sys = "=2.0.1+zstd.1.5.2"
+
