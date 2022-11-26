@@ -23,7 +23,7 @@ variable "aws_base_ami" {
 }
 
 variable "base_domain_name" {
-  default = "climatenews.io"
+  default = "climatenews.app"
 }
 
 variable "terraform_state_bucket" {

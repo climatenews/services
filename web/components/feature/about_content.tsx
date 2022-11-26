@@ -10,10 +10,10 @@ export default function AboutContent() {
         <div className="mx-auto max-w-md px-4 sm:max-w-3xl">
 
           <p className="mx-auto mt-5 text-lg text-gray-600">
-            ClimateNews.io is an open source project aiming to improve climate
+            ClimateNews.app is an open source project aiming to improve climate
             related education and amplify the voices of by climate scientists,
             organizations and activists.
-          </p> 
+          </p>
 
           <p className="mx-auto mt-5  text-lg text-gray-600">
             The climate news feed shows trending articles shared by climate
@@ -33,20 +33,20 @@ export default function AboutContent() {
               </Link>
               {" - "}
               <Link
-                href="https://twitter.com/climate_news_io"
+                href="https://twitter.com/climatenews_app"
                 className="font-medium hover:underline">
-                
-                  @climate_news_io
-                
+
+                @climatenews_app
+
               </Link>
             </li>
             <li className="mx-auto mt-1  text-lg text-gray-600">
               <Link
                 href="https://twitter.com/i/lists/1053067173961326594"
                 className="font-medium hover:underline">
-                
-                  scientists who do climate
-                
+
+                scientists who do climate
+
               </Link>
               {" - "}
               <Link
@@ -72,7 +72,7 @@ export default function AboutContent() {
           </ul>
 
           <p className="mx-auto mt-5  text-lg text-gray-600">
-            The news feed uses a ranking algorithm to find trending articles. 
+            The news feed uses a ranking algorithm to find trending articles.
           </p>
 
           <p className="mx-auto mt-5  text-lg text-gray-600">
@@ -81,7 +81,7 @@ export default function AboutContent() {
             referenced by other users.
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">
-            The article's score is based on the score of the users that shared it. 
+            The article's score is based on the score of the users that shared it.
             It will gradually decrease over time.
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">
@@ -116,7 +116,7 @@ export default function AboutContent() {
             <Link
               href="https://twitter.com/patrickf_ca"
               className="font-medium hover:underline">
-                Patrick Fitzgerald
+              Patrick Fitzgerald
             </Link>
             {"."}
           </p>

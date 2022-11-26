@@ -1,7 +1,7 @@
 ---
 climatenews:
   hosts:
-    climatenews.io:
+    climatenews.app:
       ansible_user: ubuntu
-      ansible_host: climatenews.io
+      ansible_host: climatenews.app
       ansible_ssh_private_key_file: ~/.ssh/ubuntu_desktop.pem        

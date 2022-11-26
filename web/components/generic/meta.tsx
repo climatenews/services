@@ -74,15 +74,15 @@ Meta.defaultProps = {
   title: "Climate News",
   keywords: "climate change, climate news, climate science",
   description:
-    "Climate News - Trending climate news articles shared by climate scientists, organizations and activists.",
-  imageSource: "https://climatenews.io/cac_logo.svg",
+    "Trending climate related articles shared by leading climate scientists, organizations and activists.",
+  imageSource: "https://climatenews.app/cac_logo.svg",
   imageType: "image/svg",
   imageAltText: "Climate News",
   imageWidth: "150",
   imageHeight: "150",
   type: "website",
-  websiteUrl: "https://climatenews.io",
+  websiteUrl: "https://climatenews.app",
   siteName: "Climate News",
   twitterCard: "summary_large_image",
-  twitterName: "@climate_news_io"
+  twitterName: "@climatenews_app"
 };
