@@ -71,15 +71,15 @@ const Meta: NextPage<Props> = ({
 export default Meta;
 
 Meta.defaultProps = {
-  title: "Climate News - Climate News",
-  keywords: "climate change, climate news",
+  title: "Climate News",
+  keywords: "climate change, climate news, climate science",
   description:
     "Climate News - Trending climate news articles shared by climate scientists, organizations and activists.",
-  imageSource: "https://thankyounext.vercel.app/seo.png",
-  imageType: "image/png",
+  imageSource: "https://climatenews.io/cac_logo.svg",
+  imageType: "image/svg",
   imageAltText: "Climate News",
-  imageWidth: "1600",
-  imageHeight: "882",
+  imageWidth: "150",
+  imageHeight: "150",
   type: "website",
   websiteUrl: "https://climatenews.io",
   siteName: "Climate News",
