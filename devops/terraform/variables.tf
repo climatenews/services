@@ -1,12 +1,3 @@
-variable "terraform_state_bucket" {
-  default = "climate-news-terraform-state"
-}
-
-variable "terraform_state_lock_table" {
-  default = "climate-news-terraform-state-lock-table"
-}
-
-
 variable "aws_region" {
   default = "us-east-2"
 }
@@ -20,7 +11,7 @@ variable "aws_key_name" {
 }
 
 variable "aws_pem_file" {
-  default = "/home/paddy/.ssh/ubuntu_desktop.pem"
+  default = "~/.ssh/ubuntu_desktop.pem"
 }
 
 variable "aws_instance_type" {
@@ -33,4 +24,12 @@ variable "aws_base_ami" {
 
 variable "base_domain_name" {
   default = "climatenews.io"
+}
+
+variable "terraform_state_bucket" {
+  default = "climate-news-terraform-state"
+}
+
+variable "terraform_state_lock_table" {
+  default = "climate-news-terraform-state-lock-table"
 }

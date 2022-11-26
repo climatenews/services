@@ -21,7 +21,6 @@ resource "aws_instance" "climate-news-service" {
     host        = self.public_ip
   }
 
-  # https://github.com/apriley/AWS-NiFiCluster-By-Terraform/blob/020ae8c285a9633aae23e72a2334703bd7553c75/DocumentStub/DocumentStub.tf
   provisioner "remote-exec" {
     inline = [
       "sudo apt-add-repository ppa:ansible/ansible -y",
@@ -38,8 +37,6 @@ resource "aws_eip" "elastic_ip" {
 }
 
 # Security Group 
-// TODO only allow ssh access from current ip
-// Only allow traffic to post 443
 resource "aws_security_group" "main" {
   egress = [
     {

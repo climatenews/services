@@ -26,13 +26,12 @@
 - [x] fix num_references
 - [x] Save cron runs in db + errors
 - [x] build with docker on my laptop
-- [ ] Deploy to AWS with domain name
-- [ ] Setup SSL cert with nginx? https://medium.com/today-i-solved/how-to-deploy-next-js-on-aws-ec2-with-ssl-https-7980ec6fe8d3
-- [ ] Host images on CDN
-- [ ] Store terraform state in s3
+- [x] Deploy to AWS with domain name
+- [x] Setup SSL cert with caddy
+- [x] Store terraform state in s3
 - [ ] Show last_completed_at on web
-- [ ] update security groups
-- [ ] Setup ssh certificate on AWS
+- [ ] Host images on CDN?
+- [ ] update docker ansible playbook
 - [ ] Update readme and cleanup code
 - [ ] fix to avoid showing tweets by the same author, unless it was retweeted
 - [ ] handle users retweeting non-users, show tweet with retweeted by text
