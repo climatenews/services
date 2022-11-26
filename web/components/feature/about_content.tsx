@@ -9,14 +9,16 @@ export default function AboutContent() {
       <div className="relative py-2">
         <div className="mx-auto max-w-md px-4 sm:max-w-3xl">
 
-          <p className="mx-auto mt-5 text-lg text-gray-600">
-            ClimateNews.app is an open source project aiming to improve climate
-            related education and amplify the voices of by climate scientists,
-            organizations and activists.
-          </p>
-
-          <p className="mx-auto mt-5  text-lg text-gray-600">
-            The climate news feed shows trending articles shared by climate
+          <p className="mx-auto mt-5 text-lg text-gray-600">            
+            <Link
+                href="https://climatenews.app"
+                className="font-medium hover:underline">
+                ClimateNews.app
+            </Link>
+            {" "}
+            is an open source project aiming to improve climate
+            related education. 
+            The news feed shows trending articles shared by climate
             scientists, organizations and activists on Twitter.
           </p>
 
@@ -31,7 +33,7 @@ export default function AboutContent() {
                 className="font-medium hover:underline">
                 Climate News
               </Link>
-              {" - "}
+              {" by "}
               <Link
                 href="https://twitter.com/climatenews_app"
                 className="font-medium hover:underline">
@@ -48,7 +50,7 @@ export default function AboutContent() {
                 scientists who do climate
 
               </Link>
-              {" - "}
+              {" by "}
               <Link
                 href="https://twitter.com/KHayhoe"
                 className="font-medium hover:underline">
@@ -61,7 +63,7 @@ export default function AboutContent() {
                 className="font-medium hover:underline">
                 Climate change
               </Link>
-              {" - "}
+              {" by "}
               <Link
                 href="https://twitter.com/TwitterMoments"
                 className="font-medium hover:underline">
@@ -105,7 +107,7 @@ export default function AboutContent() {
               className="font-medium hover:underline">
               GitHub
             </Link>
-            {"."}
+            {". "}
             Contributions are welcome!
           </p>
           {/* <p className="mt-8 text-2xl font-extrabold tracking-tight text-gray-900">
