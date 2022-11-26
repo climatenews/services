@@ -30,6 +30,8 @@
 - [x] Setup SSL cert with caddy
 - [x] Store terraform state in s3
 - [ ] Create list of twitter users, instead of hardcoded names in source code
+- [ ] Use cron job end time to show accurate share count
+- [ ] Run tests and build app on each push
 - [ ] Show last_completed_at on web
 - [ ] Host images on CDN?
 - [ ] update docker ansible playbook
