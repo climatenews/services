@@ -1,0 +1,91 @@
+# Service
+- [x] Add cron job every 1H
+- [x] Create database using docker?
+- [x] Add migrations to code "sqlx::migrate!("./migrations")"
+- [x] Implement NewsFeedUrlSharesQuery
+- [x] Add domain (theverge.com)
+- [x] Handle Cron API errors gracefully
+- [x] Add optionals to NewsFeedUrlReferencesQuery, show debug log
+- [x] handle youtube links
+- [x] Add link images
+- [x] Add last checked at to user
+- [x] Add request timeout
+- [x] Import list of users
+- [x] Cache list users in db
+- [x] Manual docker deploy - https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67
+- [x] Create OpenAI fine tune model
+- [x] Detect tweet language in cron job https://github.com/pemistahl/lingua-rs
+- [x] Make openAI request manually - https://www.youtube.com/watch?v=sIS_OgplWN8
+- [x] sqlx fix / test on linux?  https://github.com/JoeyMckenzie/realworld-rust-axum-sqlx/commit/e777afcfba1b125367b28065c66641d9a8563ea9
+- [x] Save list users first and then parse tweets, to avoid multiple lookups
+- [x] First run, just check if they have been updated at all
+- [x] handle 100+ requests of usernames
+- [x] Add info about tweet to share page e.g Reddit - update GetNewsFeedUrlReferences query
+- [x] (bug) save users before updating list updated_at column
+- [x] Only make openAI requests for top 100 news feed articles after calculating score
+- [x] fix num_references
+- [x] Save cron runs in db + errors
+- [x] build with docker on my laptop
+- [ ] Deploy to AWS with domain name
+- [ ] Setup SSL cert with nginx? https://medium.com/today-i-solved/how-to-deploy-next-js-on-aws-ec2-with-ssl-https-7980ec6fe8d3
+- [ ] Host images on CDN
+- [ ] Store terraform state in s3
+- [ ] Show last_completed_at on web
+- [ ] update security groups
+- [ ] Setup ssh certificate on AWS
+- [ ] Update readme and cleanup code
+- [ ] fix to avoid showing tweets by the same author, unless it was retweeted
+- [ ] handle users retweeting non-users, show tweet with retweeted by text
+- [ ] use log4rs to save files
+- [ ] Allow links without a description
+- [ ] print db errors, ensure we only get RecordNotFound errors
+- [ ] remove all unwraps
+- [ ] handle openAI api errors
+- [ ] setup slack for errors
+- [ ] Improve mobile design
+- [ ] Remove links from is_english classification?
+- [ ] Prepare larger model training data https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
+- [ ] Dedup news_feed_url_references
+- [ ] Parse bit.ly links https://stackoverflow.com/a/69944864
+- [ ] use env logger
+- [ ] use anyhow for errors, remove unwraps
+- [ ] Fix API tests
+- [ ] Use decimal for url score or *100 
+- [ ] retry failed API requests 2 times - https://github.com/jpopesculian/twitter-v2-rs/issues/8
+- [ ] terraform git action - https://learn.hashicorp.com/tutorials/terraform/github-actions
+- [ ] update terraform admin user 
+- [ ] use k8s? https://kompose.io/cd or docker swarm?
+- [ ] github action to lint web and services
+
+# Web
+- [x] Show 1 hour ago, 11 hours ago, 1 day ago on web or "7 shares | 13h"
+- [ ] Transparent nav menu with logo
+- [ ] Use env variable for graphql host
+- [ ] Add request caching / cache busting every hour - next.js website
+
+# Backlog
+
+- [ ] Incorporate benefit corporation
+- [ ] Add news bot 
+- [ ] Add User accounts
+- [ ] Add comment section
+- [ ] Display scores
+- [ ] Count API requests
+
+
+- [x] Pagination support e.g [link](https://github.com/ekuinox/mikage/blob/7c96ae27021a6e9236a8408a05ea15efdf59f291/src/twitter.rs)
+- [x] Parse multiple referenced tweets
+- [x] Add join query to rust
+- [x] Save last tweet_id with user to avoid multiple requests
+- [x] Calculate user scores
+- [x] Add NewsIndirectReferencedUrlQuery
+- [x] Script to find most referenced climate scientists not on user list
+- [x] Add more climate scientists to user list
+- [x] User last_updated_at field, to avoid making requests if updated in the last hour
+- [x] Add tweet URL created_at field using first tweet
+- [x] Create API with news feed urls by score
+- [x] Create API with news feed url details with references
+- [x] Create web repo
+- [x] Add News feed page
+- [x] Find users with large num of references, but not on list (script or join query)
+- [x] Implement time decay, similar to reddit

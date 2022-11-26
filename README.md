@@ -43,18 +43,14 @@ docker stack ps climate_action_stack
 
 # Display service info
 docker service ps climate_action_stack_db
-docker service ps climate_action_stack_news_api
-docker service ps climate_action_stack_news_cron
-docker service ps climate_action_stack_web
 
+# Inspect a service
+docker service inspect --pretty climate_action_stack_news_cron
 
 # Stack logs for a service
 docker service logs climate_action_stack_db --follow
 docker service logs climate_action_stack_news_api --follow
 docker service logs climate_action_stack_news_cron --follow
 docker service logs climate_action_stack_web --follow
-
-
-docker service inspect --pretty climate_action_stack_news_cron
-
+docker service logs climate_action_stack_caddy
 ```
