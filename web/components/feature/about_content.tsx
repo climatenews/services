@@ -101,7 +101,7 @@ export default function AboutContent() {
           <p className="mx-auto mt-5 text-lg text-gray-600">
             Our code is available on{" "}
             <Link
-              href="https://github.com/climate-action"
+              href="https://github.com/climatenews/services"
               className="font-medium hover:underline">
               GitHub
             </Link>
