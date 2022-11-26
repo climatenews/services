@@ -81,7 +81,7 @@ export default function AboutContent() {
             referenced by other users.
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">
-            The article's score is based on the score of the users that shared it.
+            The article&apos;s score is based on the score of the users that shared it.
             It will gradually decrease over time.
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">
