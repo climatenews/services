@@ -34,7 +34,7 @@ export default function NavBar(props: NavBarProps) {
               />
             </div>
             <div className="flex flex-shrink-0">
-              <p className="text-gray-900 text-base no-underline hover:no-underline font-extrabold text-lg pl-4">
+              <p className="text-gray-900 no-underline hover:no-underline font-extrabold text-lg pl-4 mb-2">
                 ClimateNews.app
               </p>
             </div>
