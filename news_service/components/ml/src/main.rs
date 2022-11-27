@@ -24,7 +24,6 @@ struct Record {
 #[tokio::main]
 async fn main() -> Result<()> {
     init_env();
-    //gpt3_classification().await;
     export_news_feed_urls().await?;
     Ok(())
 }
