@@ -16,9 +16,10 @@ export default function AboutContent() {
                 ClimateNews.app
             </Link>
             {" "}
-            is an open source project aiming to improve climate
-            related education. 
-            The news feed shows trending articles shared by climate
+            is an open source project aiming to improve climate related education. 
+          </p>
+          <p className="mx-auto mt-5  text-lg text-gray-600">            
+            The news feed shows climate related articles shared by leading climate
             scientists, organizations and activists on Twitter.
           </p>
 
@@ -101,7 +102,7 @@ export default function AboutContent() {
             articles appear in the news feed.
           </p>
           <p className="mx-auto mt-5 text-lg text-gray-600">
-            Our code is available on{" "}
+            Our source code is available on{" "}
             <Link
               href="https://github.com/climatenews/services"
               className="font-medium hover:underline">
