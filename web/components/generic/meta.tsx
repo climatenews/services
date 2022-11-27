@@ -74,7 +74,7 @@ Meta.defaultProps = {
   title: "Climate News",
   keywords: "climate change, climate news, climate science",
   description:
-    "Trending climate related articles shared by leading climate scientists, organizations and activists.",
+    "Trending climate related articles shared by leading scientists, organizations, journalists and activists.",
   imageSource: "https://climatenews.app/cac_logo.svg",
   imageType: "image/svg",
   imageAltText: "Climate News",

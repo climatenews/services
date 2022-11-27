@@ -20,7 +20,7 @@ export default function AboutContent() {
           </p>
           <p className="mx-auto mt-5  text-lg text-gray-600">            
             The news feed shows climate related articles shared by leading climate
-            scientists, organizations and activists on Twitter.
+            scientists, organizations, journalists and activists on Twitter.
           </p>
 
           <p className="mx-auto mt-5  text-lg text-gray-600">
@@ -32,7 +32,7 @@ export default function AboutContent() {
               <Link
                 href="https://twitter.com/i/lists/1586920047964205057"
                 className="font-medium hover:underline">
-                Climate News
+                Climate Scientists, Journalists and Activists
               </Link>
               {" by "}
               <Link
