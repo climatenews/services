@@ -16,7 +16,7 @@ pub fn init_env() {
     // Enabled in debug mode
     if cfg!(debug_assertions) {
         dotenv::from_filename("../.env.localhost").ok();
-    }   
+    }
     env_logger::builder()
         .filter_level(log::LevelFilter::Info)
         .init();

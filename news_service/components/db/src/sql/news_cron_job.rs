@@ -72,9 +72,7 @@ pub async fn update_news_cron_job_error(
     Ok(rows_affected > 0)
 }
 
-pub async fn get_last_completed_news_cron_job(
-    pool: &PgPool,
-) -> Result<NewsCronJob, sqlx::Error> {
+pub async fn get_last_completed_news_cron_job(pool: &PgPool) -> Result<NewsCronJob, sqlx::Error> {
     sqlx::query_as!(
         NewsCronJob,
         r#"
@@ -87,4 +85,11 @@ pub async fn get_last_completed_news_cron_job(
     )
     .fetch_one(pool)
     .await
+}
+
+pub async fn truncate_news_cron_job(pool: &PgPool) -> anyhow::Result<()> {
+    sqlx::query("TRUNCATE news_cron_job RESTART IDENTITY")
+        .execute(pool)
+        .await?;
+    Ok(())
 }

@@ -36,5 +36,5 @@ export function retweetedByText(retweetedByUsernames: String[]): String {
 }
 
 export function dateText(newsFeedUrl: NewsFeedUrl): String {
-  return timeSince(new Date(newsFeedUrl.createdAt * 1000));
+  return timeSince(newsFeedUrl.createdAt);
 }

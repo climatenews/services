@@ -1,24 +1,30 @@
 import create from "zustand";
-import { NewsFeedUrl, getSdk } from "graphql/generated/graphql";
+import { NewsFeedUrl, getSdk, NewsFeedStatus } from "graphql/generated/graphql";
 import { graphQLClient } from "graphql/client";
 import { log } from "./log";
 
 interface NewsFeedUrlState {
   newsFeedUrls: NewsFeedUrl[];
+  newsFeedStatus: NewsFeedStatus;
   isLoading: boolean;
-  getNewsFeedUrls: () => void;
+  getNewsFeedUrlsAndNewsFeedStatus: () => void;
 }
 
 export const useNewsFeedUrlStore = create<NewsFeedUrlState>(
   log((set: any, get: any) => ({
     newsFeedUrls: [],
+    newsFeedStatus: null,
     isLoading: false,
-    getNewsFeedUrls: async () => {
+    getNewsFeedUrlsAndNewsFeedStatus: async () => {
       if (get().newsFeedUrls.length == 0) {
         set({ isLoading: true });
         const sdk = getSdk(graphQLClient);
-        const response = await sdk.GetNewsFeedUrls();
-        set({ newsFeedUrls: response.newsFeedUrls, isLoading: false });
+        const response = await sdk.GetNewsFeedUrlsAndNewsFeedStatus();
+        set({
+          newsFeedUrls: response.newsFeedUrls,
+          newsFeedStatus: response.newsFeedStatus,
+          isLoading: false
+        });
       }
     }
   }))

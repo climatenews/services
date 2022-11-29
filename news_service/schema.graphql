@@ -2,6 +2,10 @@
 
 
 
+type NewsFeedStatus {
+	completedAt: Int
+}
+
 type NewsFeedUrl {
 	urlId: Int!
 	urlScore: Int!
@@ -27,6 +31,7 @@ type NewsFeedUrlReference {
 }
 
 type Query {
+	newsFeedStatus: NewsFeedStatus!
 	newsFeedUrls: [NewsFeedUrl!]!
 	newsFeedUrl(urlId: Int!): NewsFeedUrl!
 	newsFeedUrlReferences(urlId: Int!): [NewsFeedUrlReference!]!

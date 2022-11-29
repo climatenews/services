@@ -21,6 +21,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type NewsFeedStatus = {
+  __typename?: "NewsFeedStatus";
+  completedAt?: Maybe<Scalars["Int"]>;
+};
+
 export type NewsFeedUrl = {
   __typename?: "NewsFeedUrl";
   createdAt: Scalars["Int"];
@@ -42,13 +47,14 @@ export type NewsFeedUrlReference = {
   authorUsername: Scalars["String"];
   retweetedByUsernames: Array<Scalars["String"]>;
   tweetCreatedAtStr: Scalars["String"];
-  tweetId: Scalars["Int"];
+  tweetId: Scalars["String"];
   tweetText: Scalars["String"];
   urlId: Scalars["Int"];
 };
 
 export type Query = {
   __typename?: "Query";
+  newsFeedStatus: NewsFeedStatus;
   newsFeedUrl: NewsFeedUrl;
   newsFeedUrlReferences: Array<NewsFeedUrlReference>;
   newsFeedUrls: Array<NewsFeedUrl>;
@@ -85,7 +91,7 @@ export type GetNewsFeedUrlAndReferencesQuery = {
   };
   newsFeedUrlReferences: Array<{
     __typename?: "NewsFeedUrlReference";
-    tweetId: number;
+    tweetId: string;
     tweetText: string;
     tweetCreatedAtStr: string;
     authorUsername: string;
@@ -93,9 +99,11 @@ export type GetNewsFeedUrlAndReferencesQuery = {
   }>;
 };
 
-export type GetNewsFeedUrlsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetNewsFeedUrlsAndNewsFeedStatusQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
-export type GetNewsFeedUrlsQuery = {
+export type GetNewsFeedUrlsAndNewsFeedStatusQuery = {
   __typename?: "Query";
   newsFeedUrls: Array<{
     __typename?: "NewsFeedUrl";
@@ -112,6 +120,10 @@ export type GetNewsFeedUrlsQuery = {
     previewImageUrl?: string | null;
     displayUrl: string;
   }>;
+  newsFeedStatus: {
+    __typename?: "NewsFeedStatus";
+    completedAt?: number | null;
+  };
 };
 
 export const GetNewsFeedUrlAndReferencesDocument = gql`
@@ -139,8 +151,8 @@ export const GetNewsFeedUrlAndReferencesDocument = gql`
     }
   }
 `;
-export const GetNewsFeedUrlsDocument = gql`
-  query GetNewsFeedUrls {
+export const GetNewsFeedUrlsAndNewsFeedStatusDocument = gql`
+  query GetNewsFeedUrlsAndNewsFeedStatus {
     newsFeedUrls {
       urlId
       urlScore
@@ -154,6 +166,9 @@ export const GetNewsFeedUrlsDocument = gql`
       previewImageThumbnailUrl
       previewImageUrl
       displayUrl
+    }
+    newsFeedStatus {
+      completedAt
     }
   }
 `;
@@ -190,18 +205,18 @@ export function getSdk(
         "query"
       );
     },
-    GetNewsFeedUrls(
-      variables?: GetNewsFeedUrlsQueryVariables,
+    GetNewsFeedUrlsAndNewsFeedStatus(
+      variables?: GetNewsFeedUrlsAndNewsFeedStatusQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<GetNewsFeedUrlsQuery> {
+    ): Promise<GetNewsFeedUrlsAndNewsFeedStatusQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetNewsFeedUrlsQuery>(
-            GetNewsFeedUrlsDocument,
+          client.request<GetNewsFeedUrlsAndNewsFeedStatusQuery>(
+            GetNewsFeedUrlsAndNewsFeedStatusDocument,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders }
           ),
-        "GetNewsFeedUrls",
+        "GetNewsFeedUrlsAndNewsFeedStatus",
         "query"
       );
     }

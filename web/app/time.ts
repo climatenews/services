@@ -11,16 +11,21 @@ const intervals: Interval[] = [
   { label: "second", seconds: 1 }
 ];
 
-export function timeSince(date: Date): String {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  const interval: Interval | undefined = intervals.find(
-    (i) => i.seconds < seconds
-  );
-  if (interval) {
-    const count = Math.floor(seconds / interval.seconds);
-    return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
+export function timeSince(timestamp?: number): string {
+  if (timestamp === undefined) {
+    return "";
+  } else {
+    const date = new Date(timestamp * 1000);
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    const interval: Interval | undefined = intervals.find(
+      (i) => i.seconds < seconds
+    );
+    if (interval) {
+      const count = Math.floor(seconds / interval.seconds);
+      return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
+    }
+    return "Invalid date";
   }
-  return "Invalid date";
 }
 
 export const getCurrentYear = () => new Date().getFullYear();

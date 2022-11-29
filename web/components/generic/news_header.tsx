@@ -21,8 +21,8 @@ export default function NewsHeader(props: NewsHeaderProps) {
           )}
           {props.lastUpdated ? (
             <p className="text-sm font-light italic text-gray-600 mt-1 ">
-            Last Updated: {props.lastUpdated}
-          </p>
+              Last Updated: {props.lastUpdated}
+            </p>
           ) : (
             ""
           )}

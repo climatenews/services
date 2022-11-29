@@ -1,4 +1,4 @@
-query GetNewsFeedUrls {
+query GetNewsFeedUrlsAndNewsFeedStatus {
   newsFeedUrls {
     urlId
     urlScore
@@ -12,5 +12,8 @@ query GetNewsFeedUrls {
     previewImageThumbnailUrl
     previewImageUrl
     displayUrl
+  }
+  newsFeedStatus {
+    completedAt
   }
 }

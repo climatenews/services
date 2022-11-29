@@ -2,12 +2,17 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 // Cron job information
-#[derive(FromRow, Deserialize, Serialize, Debug, Clone)]
+#[derive(FromRow, Deserialize, Serialize, Debug, Clone, async_graphql::SimpleObject)]
+#[graphql(name = "NewsFeedStatus")]
 pub struct NewsCronJob {
+    #[graphql(skip)]
     pub started_at: i64,
+    #[graphql(skip)]
     pub started_at_str: String,
     pub completed_at: Option<i64>,
+    #[graphql(skip)]
     pub completed_at_str: Option<String>,
+    #[graphql(skip)]
     pub error: Option<String>,
 }
 

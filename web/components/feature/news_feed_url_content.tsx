@@ -9,70 +9,71 @@ interface NewsFeedUrlContentProps {
 }
 
 export default function NewsFeedUrlContent(props: NewsFeedUrlContentProps) {
-  return <>
-    <BackButtonHeader />
-    <div className="container px-4 w-full md:max-w-3xl mx-auto">
-      <div
-        className="my-4 grid grid-cols-12"
-        key={props.newsFeedUrl.expandedUrlParsed}
-      >
-        {/* Title */}
-        <div className="col-span-10">
-          <div className="flex flex-row">
-            <a
-              className="hover:underline"
-              href={props.newsFeedUrl?.expandedUrlParsed}
-            >
-              <p className="text-xl font-bold">{props.newsFeedUrl?.title}</p>
-            </a>
-          </div>
-          <div className="flex flex-row mt-2">
-            <p className="text-base">{props.newsFeedUrl?.description}</p>
+  return (
+    <>
+      <BackButtonHeader />
+      <div className="container px-4 w-full md:max-w-3xl mx-auto">
+        <div
+          className="my-4 grid grid-cols-12"
+          key={props.newsFeedUrl.expandedUrlParsed}
+        >
+          {/* Title */}
+          <div className="col-span-10">
+            <div className="flex flex-row">
+              <a
+                className="hover:underline"
+                href={props.newsFeedUrl?.expandedUrlParsed}
+              >
+                <p className="text-xl font-bold">{props.newsFeedUrl?.title}</p>
+              </a>
+            </div>
+            <div className="flex flex-row mt-2">
+              <p className="text-base">{props.newsFeedUrl?.description}</p>
+            </div>
+
+            <div className="flex flex-row mt-2">
+              {/* link */}
+              <a
+                className="text-blue-600 text-sm hover:underline"
+                href={props.newsFeedUrl?.expandedUrlParsed}
+              >
+                {props.newsFeedUrl?.displayUrl} &rarr;
+              </a>
+            </div>
           </div>
 
-          <div className="flex flex-row mt-2">
-            {/* link */}
-            <a
-              className="text-blue-600 text-sm hover:underline"
-              href={props.newsFeedUrl?.expandedUrlParsed}
+          {/* Image preview */}
+          <div className="col-span-2">
+            <Link
+              href={{
+                pathname: "/news_feed/[url_id]",
+                query: { url_id: props.newsFeedUrl.urlId }
+              }}
+              className=" hover:underline"
             >
-              {props.newsFeedUrl?.displayUrl} &rarr;
-            </a>
+              <img
+                className="mx-auto h-30 w-30 rounded lg:h-30 lg:w-30 lg:rounded-md"
+                src={
+                  props.newsFeedUrl.previewImageThumbnailUrl
+                    ? props.newsFeedUrl.previewImageThumbnailUrl
+                    : "https://via.placeholder.com/150/FFFFFF"
+                }
+                alt="TODO"
+              />
+            </Link>
           </div>
         </div>
 
-        {/* Image preview */}
-        <div className="col-span-2">
-          <Link
-            href={{
-              pathname: "/news_feed/[url_id]",
-              query: { url_id: props.newsFeedUrl.urlId }
-            }}
-            className=" hover:underline">
+        <h3 className="text-lg font-bold text-gray-900 text-left mt-6 mb-2">
+          Tweets:
+        </h3>
 
-            <img
-              className="mx-auto h-30 w-30 rounded lg:h-30 lg:w-30 lg:rounded-md"
-              src={
-                props.newsFeedUrl.previewImageThumbnailUrl
-                  ? props.newsFeedUrl.previewImageThumbnailUrl
-                  : "https://via.placeholder.com/150/FFFFFF"
-              }
-              alt="TODO"
-            />
-
-          </Link>
-        </div>
+        {props.newsFeedUrlReferences.length > 0 && (
+          <NewsFeedUrlReferences
+            newsFeedUrlReferences={props.newsFeedUrlReferences}
+          />
+        )}
       </div>
-
-      <h3 className="text-lg font-bold text-gray-900 text-left mt-6 mb-2">
-        Tweets:
-      </h3>
-
-      {props.newsFeedUrlReferences.length > 0 && (
-        <NewsFeedUrlReferences
-          newsFeedUrlReferences={props.newsFeedUrlReferences}
-        />
-      )}
-    </div>
-  </>;
+    </>
+  );
 }
