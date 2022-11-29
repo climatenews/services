@@ -58,7 +58,7 @@ docker service logs climate_action_stack_caddy
 
 # Triggering a new Docker image build
 ```bash
-git tag -a v0.0.7 -m "about updates" && git push origin v0.0.7 
+git tag -a v0.0.8 -m "html updates" && git push origin v0.0.8 
 
 ```
 

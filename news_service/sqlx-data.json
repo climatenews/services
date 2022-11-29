@@ -430,6 +430,48 @@
     },
     "query": "\n        SELECT\n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            u.username as first_referenced_by_username,\n            nfu.created_at,\n            tu.title,\n            tu.description,\n            tu.expanded_url_parsed,\n            tu.expanded_url_host,\n            tu.display_url,\n            tu.preview_image_thumbnail_url,\n            tu.preview_image_url\n            \n        FROM\n            news_feed_url as nfu\n            JOIN news_tweet_url as tu ON tu.id = nfu.url_id\n            JOIN news_twitter_user as u ON u.user_id = nfu.first_referenced_by\n        WHERE\n            nfu.url_id = $1\n     "
   },
+  "2dccf25c9c774cec1656ae4690667cea9c10a5b03cd9ab5d708de10e1c6e1271": {
+    "describe": {
+      "columns": [
+        {
+          "name": "started_at",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "started_at_str",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "completed_at",
+          "ordinal": 2,
+          "type_info": "Int8"
+        },
+        {
+          "name": "completed_at_str",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "error",
+          "ordinal": 4,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n        SELECT started_at, started_at_str, completed_at, completed_at_str, error            \n        FROM news_cron_job\n        WHERE completed_at IS NOT NULL\n        ORDER BY completed_at DESC\n        LIMIT 1\n     "
+  },
   "35cfa643c75c36cb1ad6721534624ded40d662bffb1ee6ccb527eb6849daed89": {
     "describe": {
       "columns": [

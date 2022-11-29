@@ -86,7 +86,7 @@ async fn fetch_user_tweets(db_pool: &PgPool, twitter_api: &TwitterApi<BearerToke
         let last_checked_minutes_diff = datetime_minutes_diff(news_twitter_user.last_checked_at);
         let last_updated_minutes_diff = datetime_minutes_diff(news_twitter_user.last_updated_at);
 
-        if last_checked_minutes_diff > 60 {
+        if last_checked_minutes_diff > 120 {
             info!(
                 "{} Updating tweets for:{} last_checked {} mins ago, last_updated: {} mins ago",
                 i, news_twitter_user.username, last_checked_minutes_diff, last_updated_minutes_diff
