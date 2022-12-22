@@ -44,9 +44,6 @@ docker swarm init
 # Deploy the stack
 env $(cat .env.dev | xargs) docker stack deploy --compose-file docker-compose.yaml climate_action_stack 
 
-# Remove the stack
-docker stack rm climate_action_stack
-
 # Display stack info
 docker stack ps climate_action_stack
 
@@ -70,10 +67,14 @@ docker service logs climate_action_stack_news_cron --follow
 docker service logs climate_action_stack_web --follow
 docker service logs climate_action_stack_caddy
 
+# Remove the stack
+docker stack rm climate_action_stack
+
 ```
 
 # Triggering a new Docker image build
 ```bash
-git tag -a v0.0.23 -m "sitemap bug fix #2" && git push origin v0.0.23
+
+git tag -a v0.0.24 -m "sitemap bug fix #3" && git push origin v0.0.24
 
 ```

@@ -1,6 +1,6 @@
 CREATE TABLE news_feed_url (
     id                      SERIAL,
-    url_slug                TEXT NOT NULL UNIQUE,
+    url_slug                TEXT        NOT NULL UNIQUE,
     url_id                  INTEGER     NOT NULL UNIQUE,  
     url_score               INTEGER     NOT NULL,  
     num_references          INTEGER     NOT NULL,
