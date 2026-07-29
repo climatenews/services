@@ -2,3 +2,6 @@
 .env.dev
 .env.localhost
 /oauth/oauth2_token.json
+
+# opencode / ocx generated plugin code
+/.opencode/plugins
