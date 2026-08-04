@@ -1,46 +1,68 @@
+use crate::queries::news_feed_url_references_query::{
+    NewsFeedUrlReferenceRepost, NewsFeedUrlReferencesQuery,
+};
 use sqlx::PgPool;
 
-use crate::queries::news_feed_url_references_query::NewsFeedUrlReferencesQuery;
-
-// TODO add user_score
 pub async fn get_news_feed_url_references(
     pool: &PgPool,
     url_slug: String,
-) -> Option<Vec<NewsFeedUrlReferencesQuery>> {
-    let news_feed_url_references_query_result = sqlx::query_as!(
+) -> Result<Vec<NewsFeedUrlReferencesQuery>, sqlx::Error> {
+    sqlx::query_as!(
         NewsFeedUrlReferencesQuery,
         r#"
         SELECT 
-            rtu.url_id,
-            t.text,
-            t.tweet_id,
-            t.author_id,
-            t.created_at,
-            t.created_at_str,
-            u.username as "username?",
-            ru.username as "referenced_username?",
-            rt.referenced_tweet_id as "referenced_tweet_id?",
-            rt.referenced_tweet_kind as "referenced_tweet_kind?"
+            rpu.url_id,
+            p.text,
+            p.post_uri,
+            p.author_did,
+            u.handle as "author_handle?",
+            p.created_at,
+            p.created_at_str
         FROM
-            news_referenced_tweet_url as rtu 
-            JOIN news_tweet_url as tu ON tu.id = rtu.url_id
-            JOIN news_tweet as t ON t.tweet_id = rtu.tweet_id
-            JOIN news_feed_url as nfu ON nfu.url_id = rtu.url_id
-            LEFT JOIN news_twitter_user as u ON t.author_id = u.user_id	
-            LEFT JOIN news_twitter_referenced_user as ru ON t.author_id = ru.user_id
-            LEFT JOIN news_referenced_tweet as rt ON t.tweet_id = rt.tweet_id
+            news_bsky_referenced_post_url as rpu 
+            JOIN news_bsky_post_url as pu ON pu.url_id = rpu.url_id
+            JOIN news_bsky_post as p ON p.post_uri = rpu.post_uri
+            JOIN news_feed_url as nfu ON nfu.url_id = rpu.url_id
+            LEFT JOIN news_bsky_user as u ON p.author_did = u.did
         WHERE
             nfu.url_slug = $1
-            AND tu.is_twitter_url = False
-            AND tu.title IS NOT NULL
-            AND t.in_reply_to_user_id IS NULL
+            AND pu.is_bsky_url = False
+            AND pu.title IS NOT NULL
+            AND p.reply_parent_uri IS NULL
+        ORDER BY
+            p.created_at DESC
         "#,
         url_slug
     )
     .fetch_all(pool)
-    .await;
-    match news_feed_url_references_query_result {
-        Ok(news_feed_url_references) => Some(news_feed_url_references),
-        Err(_) => None,
+    .await
+}
+
+// Reposted-by handles for a set of post URIs
+// news_bsky_reference rows with ref_kind = 'repost' store the reposter DID
+// in ref_post_uri, joined here to news_bsky_user for the handle.
+pub async fn get_news_feed_url_reposted_by_handles(
+    pool: &PgPool,
+    post_uris: &Vec<String>,
+) -> Result<Vec<NewsFeedUrlReferenceRepost>, sqlx::Error> {
+    if post_uris.is_empty() {
+        return Ok(vec![]);
     }
+    sqlx::query_as!(
+        NewsFeedUrlReferenceRepost,
+        r#"
+        SELECT 
+            nbr.post_uri,
+            u.handle as "reposted_by_handle?"
+        FROM
+            news_bsky_reference as nbr
+            JOIN news_bsky_user as u ON u.did = nbr.ref_post_uri
+        WHERE
+            nbr.ref_kind = 'repost'
+            AND nbr.post_uri = ANY($1)
+        "#,
+        post_uris
+    )
+    .fetch_all(pool)
+    .await
 }

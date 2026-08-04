@@ -1,16 +1,16 @@
 [workspace]
+resolver = "2"
+
 members = [
     "components/api",
     "components/db",
     "components/cron",
-    "components/ml",
 ]
 
 default-members = [
     "components/api",
     "components/db",
     "components/cron",
-    "components/ml",
 ]
 
 

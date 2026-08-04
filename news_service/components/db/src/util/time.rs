@@ -1,15 +1,17 @@
 use super::convert::{datetime_from_unix_timestamp, now_local_datetime, now_utc_datetime};
 use anyhow::bail;
 use anyhow::Result;
+use time::format_description::FormatItem;
 use time::ext::NumericalDuration;
-use time::{format_description, Date, Duration, Month, OffsetDateTime};
+use time::macros::format_description;
+use time::{Date, Duration, Month, OffsetDateTime};
+
+const DATETIME_FORMAT: &[FormatItem<'static>] =
+    format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
 
 pub fn now_formated() -> String {
-    match format_description::parse("[year]-[month]-[day] [hour]:[minute]:[second]") {
-        Ok(format) => match now_local_datetime().format(&format) {
-            Ok(datetime) => datetime,
-            Err(_) => String::from("error"),
-        },
+    match now_local_datetime().format(DATETIME_FORMAT) {
+        Ok(datetime) => datetime,
         Err(_) => String::from("error"),
     }
 }
@@ -42,7 +44,7 @@ pub fn past_days(days: i64) -> OffsetDateTime {
 
 fn now_utc_timestamp() -> OffsetDateTime {
     let now_utc_timestamp = now_utc_datetime();
-    // Remove nanoseconds to avoid Twitter API error
+    // Remove nanoseconds to avoid Bluesky API error
     now_utc_timestamp
         .checked_add(-time::Duration::nanoseconds(
             now_utc_timestamp.nanosecond() as i64

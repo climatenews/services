@@ -10,14 +10,14 @@ pub struct NewsFeedUrlQuery {
     pub url_score: i32,
     pub num_references: i32,
     #[graphql(skip)]
-    pub tweeted_at: Option<i64>,
+    pub bsky_posted_at: Option<i64>,
     pub first_referenced_by_username: String,
     pub created_at: i64,
-    pub title: String,
-    pub description: String,
+    pub title: Option<String>,
+    pub description: Option<String>,
     pub expanded_url_parsed: String,
     pub expanded_url_host: String,
-    pub display_url: String,
+    pub display_url: Option<String>,
     pub preview_image_thumbnail_url: Option<String>,
     pub preview_image_url: Option<String>,
 }

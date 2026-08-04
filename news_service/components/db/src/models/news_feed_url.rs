@@ -8,12 +8,12 @@ pub struct NewsFeedUrl {
     pub url_id: i32,
     pub url_score: i32,
     pub num_references: i32,
-    pub first_referenced_by: i64,
+    pub first_referenced_by: String,
     pub is_climate_related: Option<bool>,
     pub created_at: i64,
     pub created_at_str: String,
-    pub tweeted_at: Option<i64>,
-    pub tweeted_at_str: Option<String>,
+    pub bsky_posted_at: Option<i64>,
+    pub bsky_posted_at_str: Option<String>,
 }
 
 // News feed URL - Url Slug only

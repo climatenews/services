@@ -16,7 +16,9 @@ pub const NUM_DB_CONNECTIONS: u32 = 4;
 pub fn init_env() {
     // Enabled in debug mode
     if cfg!(debug_assertions) {
-        dotenv::from_filename("../.env.localhost").ok();
+        dotenv::from_filename(".env.localhost")
+            .or_else(|_| dotenv::from_filename(".env.dev"))
+            .ok();
     }
     // ignore the logger error after its first invocation
     let _ = env_logger::builder()

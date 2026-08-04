@@ -1,130 +1,125 @@
 version: '3.4'
 services:
 
-  caddy:
-      image: caddy:2.6.2-alpine
-      restart: unless-stopped
-      command: caddy reverse-proxy --from climatenews.app:443 --to web:3000
-      ports:
-        - 80:80
-        - 443:443
-      volumes:
-        - caddy_data:/data
-      depends_on:
-        - web
-      networks:
-        - client-side  
-      env_file:
-        - .env.dev
+  # caddy:
+  #     image: caddy:2.6.2-alpine
+  #     restart: unless-stopped
+  #     command: caddy reverse-proxy --from climatenews.app:443 --to web:3000
+  #     ports:
+  #       - 80:80
+  #       - 443:443
+  #     volumes:
+  #       - caddy_data:/data
+  #     depends_on:
+  #       - web
+  #     networks:
+  #       - client-side  
+  #     env_file:
+  #       - .env.dev
 
 
-  web:
-    image: climatenews/web:latest
-    build:
-      context: web
-      target: development
-    environment:
-      - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
-    networks:
-      - client-side
-    ports:
-      - 3000:3000
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: always  
-    deploy:
-      mode: replicated
-      replicas: 1
-    env_file:
-      - .env.dev      
+  # web:
+  #   image: climatenews/web:latest
+  #   build:
+  #     context: web
+  #     target: development
+  #   environment:
+  #     - GRAPHQL_API_URL=${GRAPHQL_API_URL}   
+  #   networks:
+  #     - client-side
+  #   ports:
+  #     - 3000:3000
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
+  #   restart: always  
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #   env_file:
+  #     - .env.dev      
 
-  news_api:
-    image: climatenews/news_api:latest
-    build:
-      context: news_service
-      args:
-        SERVICE_NAME: api 
-    environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=8000
-      - RUST_LOG=info,actix=info
-      - DATABASE_URL=${DATABASE_URL}
-    ports:
-      - 8000:8000
-    networks:
-      - client-side
-      - server-side
-    depends_on:
-      - db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s  
-    restart: always    
-    deploy:
-      mode: replicated
-      replicas: 1  
-    env_file:
-      - .env.dev           
+  # news_api:
+  #   image: climatenews/news_api:latest
+  #   build:
+  #     context: news_service
+  #     args:
+  #       SERVICE_NAME: api 
+  #   environment:
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8000
+  #     - RUST_LOG=info,actix=info
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - client-side
+  #     - server-side
+  #   depends_on:
+  #     - db
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 10s  
+  #   restart: always    
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1  
+  #   env_file:
+  #     - .env.dev           
 
-  news_cron:
-    image: climatenews/news_cron:latest
-    build:
-      context: news_service
-      args:
-        SERVICE_NAME: cron 
-    environment:
-      - CRON_HOST=0.0.0.0
-      - CRON_PORT=8001
-      - RUST_LOG=info,actix=info
-      - DATABASE_URL=${DATABASE_URL}
-      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - TWITTER_CLIENT_ID=${TWITTER_CLIENT_ID}
-      - TWITTER_CLIENT_SECRET=${TWITTER_CLIENT_SECRET}
-      - TWITTER_OAUTH_TOKEN_FILE=${TWITTER_OAUTH_TOKEN_FILE}            
-    networks:
-      - server-side
-    volumes:
-      - ./oauth:/oauth
-    depends_on:
-      - db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s   
-    restart: always  
-    deploy:
-      mode: replicated
-      replicas: 1    
-    env_file:
-      - .env.dev           
+  # news_cron:
+  #   image: climatenews/news_cron:latest
+  #   build:
+  #     context: news_service
+  #     args:
+  #       SERVICE_NAME: cron 
+  #   environment:
+  #     - CRON_HOST=0.0.0.0
+  #     - CRON_PORT=8001
+  #     - RUST_LOG=info,actix=info
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #     - POST_CRON_WEBHOOK_URL=${POST_CRON_WEBHOOK_URL}
+  #     - MAIN_CRON_WEBHOOK_URL=${MAIN_CRON_WEBHOOK_URL}
+  #     - BLUESKY_HANDLE=${BLUESKY_HANDLE}
+  #     - BLUESKY_APP_PASSWORD=${BLUESKY_APP_PASSWORD}
+  #     - BLUESKY_SERVICE=${BLUESKY_SERVICE}            
+  #   networks:
+  #     - server-side
+  #   depends_on:
+  #     - db
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 10s   
+  #   restart: always  
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1    
+  #   env_file:
+  #     - .env.dev           
 
 
   db:
     image: postgres:12-alpine
     restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}    
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - server-side
     ports:
       - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
-      - /backups:/backups
+      - ./backups:/backups
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -136,9 +131,9 @@ services:
       - .env.dev         
 
 networks:
-  client-side: {}
+  # client-side: {}
   server-side: {}
 
 volumes:
   db_data: {}
-  caddy_data: {}  
+  # caddy_data: {}  

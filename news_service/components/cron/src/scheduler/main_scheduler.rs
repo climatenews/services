@@ -1,7 +1,7 @@
+use crate::bluesky::init_bluesky_agent;
 use crate::news_feed::algorithm::news_feed_v1::populate_news_feed_v1;
-use crate::news_feed::user_tweets::get_all_user_tweets;
+use crate::news_feed::user_tweets_bsky::get_all_bsky_posts;
 use crate::slack::send_main_cron_message;
-use crate::twitter::init_twitter_api;
 use anyhow::Result;
 use db::models::news_cron_job::{CronType, NewsCronJob};
 use db::sql::news_cron_job::{
@@ -16,16 +16,16 @@ use tokio::time::{sleep, Duration};
 
 pub async fn start_main_scheduler() {
     loop {
-        send_main_cron_message(format!("main_scheduler started - {:?}", now_formated()));
+        send_main_cron_message(format!("main_scheduler started - {:?}", now_formated())).await;
         match init_main_cron_job().await {
             Ok(_) => {
                 send_main_cron_message(format!(
                     "init_main_cron_job success - {:?}",
                     now_formated()
-                ));
+                )).await;
             }
             Err(err) => {
-                send_main_cron_message(format!("init_main_cron_job error - {:?}", err));
+                send_main_cron_message(format!("init_main_cron_job error - {:?}", err)).await;
             }
         }
         // Sleep for 10 minutes
@@ -38,10 +38,10 @@ pub async fn init_main_cron_job() -> Result<()> {
     // cron job continuous loop
     match start_main_cron_job(&db_pool).await {
         Ok(_) => {
-            send_main_cron_message(format!("main_cron_job ended - {:?}", now_formated()));
+            send_main_cron_message(format!("main_cron_job ended - {:?}", now_formated())).await;
         }
         Err(err) => {
-            send_main_cron_message(format!("main_cron_job failed - {:?}", err));
+            send_main_cron_message(format!("main_cron_job failed - {:?}", err)).await;
         }
     }
     db_pool.close().await;
@@ -74,7 +74,7 @@ pub async fn start_main_cron_job(db_pool: &PgPool) -> anyhow::Result<()> {
         Err(err) => {
             error!("main_cron_job failed: {:?}", err);
             update_news_cron_job_error(&db_pool, news_cron_job_db.id, err.to_string()).await?;
-            send_main_cron_message(format!("main_cron_job failed: {:?}", err));
+            send_main_cron_message(format!("main_cron_job failed: {:?}", err)).await;
         }
     }
     Ok(())
@@ -82,11 +82,19 @@ pub async fn start_main_cron_job(db_pool: &PgPool) -> anyhow::Result<()> {
 
 pub async fn main_cron_job(db_pool: &PgPool) -> Result<()> {
     info!("main_cron_job started - {:?}", now_formated());
-    let twitter_api = init_twitter_api();
-    match get_all_user_tweets(db_pool, &twitter_api).await {
-        Ok(_) => populate_news_feed_v1(db_pool).await?,
-        Err(err) => error!("get_all_user_tweets error - {:?}", err),
-    };
 
+    // Bluesky flow
+    match init_bluesky_agent().await {
+        Ok(bsky_agent) => {
+            if let Err(err) = get_all_bsky_posts(db_pool, &bsky_agent).await {
+                error!("get_all_bsky_posts error - {:?}", err);
+            }
+        }
+        Err(err) => {
+            error!("init_bluesky_agent error - {:?}", err);
+        }
+    }
+
+    populate_news_feed_v1(db_pool).await?;
     Ok(())
 }

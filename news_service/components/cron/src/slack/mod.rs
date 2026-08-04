@@ -2,27 +2,27 @@ use log::{error, info};
 use slack_hook::{PayloadBuilder, Slack};
 use std::env;
 
-static TWEET_CRON_CHANNEL: &str = "#tweet-cron";
+static POST_CRON_CHANNEL: &str = "#post-cron";
 static MAIN_CRON_CHANNEL: &str = "#main-cron";
 
-pub fn send_tweet_cron_message(message: String) {
-    match env::var("TWEET_CRON_WEBHOOK_URL") {
+pub async fn send_post_cron_message(message: String) {
+    match env::var("POST_CRON_WEBHOOK_URL") {
         Ok(webhook_url) => {
-            send_message(webhook_url, TWEET_CRON_CHANNEL.to_string(), message);
+            send_message(webhook_url, POST_CRON_CHANNEL.to_string(), message).await;
         }
         Err(err) => {
             error!(
-                "Unable to parse TWEET_CRON_WEBHOOK_URL env variable {}",
+                "Unable to parse POST_CRON_WEBHOOK_URL env variable {}",
                 err
             )
         }
     }
 }
 
-pub fn send_main_cron_message(message: String) {
+pub async fn send_main_cron_message(message: String) {
     match env::var("MAIN_CRON_WEBHOOK_URL") {
         Ok(webhook_url) => {
-            send_message(webhook_url, MAIN_CRON_CHANNEL.to_string(), message);
+            send_message(webhook_url, MAIN_CRON_CHANNEL.to_string(), message).await;
         }
         Err(err) => {
             error!("Unable to parse MAIN_CRON_WEBHOOK_URL env variable {}", err)
@@ -30,7 +30,7 @@ pub fn send_main_cron_message(message: String) {
     }
 }
 
-fn send_message(webhook_url: String, channel: String, message: String) {
+async fn send_message(webhook_url: String, channel: String, message: String) {
     if cfg!(debug_assertions) {
         info!("[{}]", message);
     } else {
@@ -45,7 +45,7 @@ fn send_message(webhook_url: String, channel: String, message: String) {
                     .build()
                     .unwrap();
 
-                if let Err(err) = slack.send(&payload) {
+                if let Err(err) = slack.send(&payload).await {
                     log::error!("unable to send slack message: {}", err);
                 }
             }

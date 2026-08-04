@@ -4,7 +4,7 @@ use sqlx::FromRow;
 #[derive(strum_macros::Display)]
 pub enum CronType {
     Main,
-    Tweet,
+    Post,
 }
 
 // Cron job information
@@ -42,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_cron_type() {
-        assert_eq!(CronType::Tweet.to_string(), String::from("Tweet"));
+        assert_eq!(CronType::Post.to_string(), String::from("Post"));
         assert_eq!(CronType::Main.to_string(), String::from("Main"));
     }
 }

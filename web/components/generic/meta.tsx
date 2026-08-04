@@ -13,8 +13,6 @@ interface Props {
   imageAltText?: string;
   imageWidth?: string;
   imageHeight?: string;
-  twitterCard?: string;
-  twitterName?: string;
 }
 
 const Meta: NextPage<Props> = ({
@@ -28,9 +26,7 @@ const Meta: NextPage<Props> = ({
   imageType,
   imageAltText,
   imageWidth,
-  imageHeight,
-  twitterCard,
-  twitterName
+  imageHeight
 }) => {
   return (
     <Head>
@@ -67,13 +63,6 @@ const Meta: NextPage<Props> = ({
       <meta property="og:image:alt" content={imageAltText} />
       <meta property="og:image:width" content={imageWidth} />
       <meta property="og:image:height" content={imageHeight} />
-      {/* Twitter */}
-      <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:site" content={twitterName} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={imageSource} />
-      <meta name="twitter:image:alt" content={imageAltText} />
     </Head>
   );
 };
@@ -92,7 +81,5 @@ Meta.defaultProps = {
   imageHeight: "627",
   type: "website",
   websiteUrl: "https://climatenews.app",
-  siteName: "Climate News",
-  twitterCard: "summary_large_image",
-  twitterName: "@climatenews_app"
+  siteName: "Climate News"
 };

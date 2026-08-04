@@ -3,7 +3,6 @@ use async_graphql::{ErrorExtensions, FieldResult};
 use db::{
     models::news_feed_url_reference::NewsFeedUrlReference,
     queries::news_feed_url_references_query::get_news_feed_url_references_with_metadata,
-    sql::news_feed_url_references_query::get_news_feed_url_references,
 };
 use sqlx::postgres::PgPool;
 
@@ -11,14 +10,9 @@ pub async fn news_feed_url_references_query<'a>(
     pool: &PgPool,
     url_slug: String,
 ) -> FieldResult<Vec<NewsFeedUrlReference>> {
-    let news_feed_url_references_result = get_news_feed_url_references(pool, url_slug).await;
-
-    if let Some(news_feed_url_references_query_list) = news_feed_url_references_result {
-        Ok(get_news_feed_url_references_with_metadata(
-            news_feed_url_references_query_list,
-        ))
-    } else {
-        Err(GqlError::NotFound.extend())
+    match get_news_feed_url_references_with_metadata(pool, url_slug).await {
+        Ok(news_feed_url_references) => Ok(news_feed_url_references),
+        Err(_) => Err(GqlError::NotFound.extend()),
     }
 }
 
@@ -32,9 +26,9 @@ mod tests {
         util::{
             convert::now_utc_timestamp,
             test::test_util::{
-                create_fake_news_referenced_tweet_url, create_fake_news_referenced_tweets,
-                create_fake_news_tweet, create_fake_news_tweet_url,
-                create_fake_news_twitter_referenced_user, create_fake_news_twitter_user,
+                create_fake_news_bsky_post, create_fake_news_bsky_post_url,
+                create_fake_news_bsky_referenced_post_url, create_fake_news_bsky_references,
+                create_fake_news_bsky_user, create_fake_news_feed_url,
             },
         },
     };
@@ -45,12 +39,19 @@ mod tests {
         let db_pool = init_test_db_pool().await.unwrap();
         let created_at_timestamp = now_utc_timestamp();
 
-        create_fake_news_twitter_user(&db_pool).await;
-        create_fake_news_tweet(&db_pool, created_at_timestamp).await;
-        create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
-        create_fake_news_referenced_tweet_url(&db_pool).await;
-        create_fake_news_referenced_tweets(&db_pool).await;
-        create_fake_news_twitter_referenced_user(&db_pool).await;
+        create_fake_news_bsky_user(&db_pool).await;
+        create_fake_news_bsky_post(&db_pool, created_at_timestamp).await;
+        create_fake_news_bsky_post_url(&db_pool, created_at_timestamp).await;
+        create_fake_news_bsky_referenced_post_url(&db_pool).await;
+        create_fake_news_bsky_references(&db_pool).await;
+        create_fake_news_feed_url(
+            &db_pool,
+            String::from("example-title"),
+            1,
+            created_at_timestamp,
+            true,
+        )
+        .await;
 
         let schema = create_fake_schema(db_pool);
 
@@ -59,11 +60,11 @@ mod tests {
                 r#"
                 query {
                     newsFeedUrlReferences(urlSlug: "example-title") {
-                        tweetId
-                        tweetText
-                        tweetCreatedAtStr
-                        authorUsername
-                        retweetedByUsernames 
+                        postUri
+                        postText
+                        postCreatedAtStr
+                        authorHandle
+                        repostedByHandles 
                       }
                 }
                 "#,
@@ -74,18 +75,18 @@ mod tests {
             value!({
                 "newsFeedUrlReferences": [
                     {
-                        "tweetId": String::from("3"),
-                        "tweetText": String::from("quoted_tweet_text"),
-                        "tweetCreatedAtStr": String::from("created_at_str"),
-                        "authorUsername": String::from("quoted_username"),
-                        "retweetedByUsernames": [],
+                        "postUri": String::from("at://did:plc:user1/app.bsky.feed.post/rkey1"),
+                        "postText": String::from("post_text"),
+                        "postCreatedAtStr": String::from("created_at_str"),
+                        "authorHandle": String::from("user1.bsky.social"),
+                        "repostedByHandles": [String::from("@reposter.bsky.social")],
                     },
                     {
-                        "tweetId": String::from("1"),
-                        "tweetText": String::from("tweet_text"),
-                        "tweetCreatedAtStr": String::from("created_at_str"),
-                        "authorUsername": String::from("username"),
-                        "retweetedByUsernames": [String::from("@retweeted_username")],
+                        "postUri": String::from("at://did:plc:user1/app.bsky.feed.post/rkey3"),
+                        "postText": String::from("quoted_post_text"),
+                        "postCreatedAtStr": String::from("created_at_str"),
+                        "authorHandle": String::from("user1.bsky.social"),
+                        "repostedByHandles": [],
                     }
                 ],
             })

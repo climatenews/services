@@ -61,14 +61,14 @@ export default function NewsFeedUrlContent(props: NewsFeedUrlContentProps) {
                     ? props.newsFeedUrl.previewImageThumbnailUrl
                     : "/news_article_placeholder.png"
                 }
-                alt={props.newsFeedUrl?.title}
+                alt={props.newsFeedUrl?.title ?? ""}
               />
             </a>
           </div>
         </div>
 
         <h3 className="text-lg font-bold text-gray-900 text-left mt-6 mb-2">
-          Tweets:
+          Posts:
         </h3>
 
         {props.newsFeedUrlReferences.length > 0 && (

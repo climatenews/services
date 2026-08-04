@@ -1,6 +1,6 @@
 pub const NEWS_FEED_URLS_NUM_DAYS: i64 = 3;
 pub const NEWS_FEED_URLS_LIMIT: i64 = 20;
-pub const NEWS_FEED_MIN_NUM_SHARES_BEFORE_TWEETING: i32 = 3;
+pub const NEWS_FEED_MIN_NUM_SHARES_BEFORE_POSTING: i32 = 3;
 pub const NEWS_FEED_SLUG_NUM_WORDS: usize = 8;
-pub const MAX_TWEET_CHARACTER_COUNT: usize = 280;
-pub const TWEET_TEXT_LENGTH: usize = 23;
+pub const MAX_POST_CHARACTER_COUNT: usize = 300;
+pub const POST_URL_PLACEHOLDER_LENGTH: usize = 20;

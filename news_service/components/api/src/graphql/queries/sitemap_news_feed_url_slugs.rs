@@ -59,9 +59,7 @@ mod tests {
             .execute(
                 r#"
                 query {
-                    query {
-                        sitemapNewsFeedUrlSlugs(month: 1, year: 2022) 
-                    }(month: 1, year: 2022) 
+                    sitemapNewsFeedUrlSlugs(month: 1, year: 2022)
                 }
                 "#,
             )

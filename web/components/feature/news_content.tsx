@@ -18,7 +18,7 @@ export default function NewsContent(props: NewsContentProps) {
   return (
     <>
       <NewsHeader
-        subtitle="Trending climate related articles shared by leading climate scientists, organizations, journalists and activists."
+        subtitle="Trending climate related articles shared by leading climate scientists, organizations, journalists and activists on Bluesky."
         lastUpdated={lastUpdated}
       />
       <div className="container px-4 w-full md:max-w-3xl mx-auto">

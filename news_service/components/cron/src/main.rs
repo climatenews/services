@@ -2,17 +2,17 @@ use actix_web::{get, web, App, HttpResponse, HttpServer, Result};
 use db::init_env;
 use db::util::db::init_db;
 use scheduler::main_scheduler::start_main_scheduler;
-use scheduler::tweet_scheduler::start_tweet_scheduler;
+use scheduler::post_scheduler::start_post_scheduler;
 use sqlx::Pool;
 use sqlx::Postgres;
 use std::env;
 
+pub mod bluesky;
 pub mod language;
 pub mod news_feed;
 pub mod openai;
 pub mod scheduler;
 pub mod slack;
-pub mod twitter;
 pub mod util;
 
 pub struct AppState {
@@ -42,14 +42,14 @@ async fn main() -> std::io::Result<()> {
     init_env();
     let db_pool = init_db().await;
 
-    // Start mainscheduler on a new thread
+    // Start main scheduler on a new thread
     actix_rt::spawn(async move {
         start_main_scheduler().await;
     });
 
-    // Start tweet scheduler on a new thread
+    // Start post scheduler on a new thread
     actix_rt::spawn(async move {
-        start_tweet_scheduler().await;
+        start_post_scheduler().await;
     });
 
     let host = env::var("CRON_HOST").expect("HOST is not set");

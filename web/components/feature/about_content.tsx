@@ -20,7 +20,7 @@ export default function AboutContent() {
               </Link>{" "}
               is an open source project that shows climate related articles
               shared by leading climate scientists, organizations, journalists
-              and activists on Twitter.
+              and activists on Bluesky.
             </p>
 
             <p className="mt-8 text-xl font-extrabold tracking-tight text-gray-900">
@@ -42,12 +42,12 @@ export default function AboutContent() {
             <p className="mx-auto mt-5  text-lg text-gray-700">
               The{" "}
               <Link
-                href="https://developer.twitter.com/en/docs/twitter-api"
+                href="https://atproto.com/"
                 className="font-medium hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Twitter API
+                AT Protocol
               </Link>{" "}
               is used to keep track of articles shared by users. The{" "}
               <Link
@@ -63,35 +63,16 @@ export default function AboutContent() {
             </p>
 
             <p className="mt-8 text-xl font-extrabold tracking-tight text-gray-900">
-              Twitter Lists
+              Bluesky Feeds
             </p>
             <p className="mx-auto mt-5  text-lg text-gray-700">
-              3.5K+ Twitter accounts are imported from the lists below to
-              generate the user list:
+              Climate related articles are sourced from Bluesky feeds and
+              accounts:
             </p>
             <ul className="mx-auto ml-5 mt-5 max-w-prose list-disc">
               <li className="mx-auto mt-2 text-lg text-gray-700">
                 <Link
-                  href="https://twitter.com/i/lists/1586920047964205057"
-                  className="font-medium hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Climate News
-                </Link>
-                {" by "}
-                <Link
-                  href="https://twitter.com/climatenews_app"
-                  className="font-medium hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @climatenews_app
-                </Link>
-              </li>
-              <li className="mx-auto mt-1  text-lg text-gray-700">
-                <Link
-                  href="https://twitter.com/i/lists/1053067173961326594"
+                  href="https://bsky.app/profile/katharinehayhoe.bsky.social"
                   className="font-medium hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -100,33 +81,51 @@ export default function AboutContent() {
                 </Link>
                 {" by "}
                 <Link
-                  href="https://twitter.com/KHayhoe"
+                  href="https://bsky.app/profile/katharinehayhoe.bsky.social"
                   className="font-medium hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  @KHayhoe
+                  @katharinehayhoe.bsky.social
                 </Link>
               </li>
               <li className="mx-auto mt-1  text-lg text-gray-700">
                 <Link
-                  href="https://twitter.com/i/lists/1308140854524162059"
+                  href="https://bsky.app/profile/billmckibben.bsky.social"
                   className="font-medium hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Climate change
+                  Climate journalists
                 </Link>
                 {" by "}
                 <Link
-                  href="https://twitter.com/TwitterMoments"
+                  href="https://bsky.app/profile/billmckibben.bsky.social"
                   className="font-medium hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  @TwitterMoments
+                  @billmckibben.bsky.social
                 </Link>
-                .
+              </li>
+              <li className="mx-auto mt-1  text-lg text-gray-700">
+                <Link
+                  href="https://bsky.app/profile/climatecouncil.bsky.social"
+                  className="font-medium hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Climate organizations
+                </Link>
+                {" by "}
+                <Link
+                  href="https://bsky.app/profile/climatecouncil.bsky.social"
+                  className="font-medium hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  @climatecouncil.bsky.social
+                </Link>
               </li>
             </ul>
 
@@ -152,7 +151,7 @@ export default function AboutContent() {
             <p className="mx-auto mt-5  text-lg text-gray-700">
               Made with 💚 in Nanaimo, Canada by{" "}
               <Link
-                href="https://twitter.com/patrickf_ca"
+                href="https://bsky.app/profile/patrickfitzgerald.bsky.social"
                 className="font-medium hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"

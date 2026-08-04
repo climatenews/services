@@ -23,15 +23,15 @@ export type NewsFeedStatus = {
 export type NewsFeedUrl = {
   __typename?: 'NewsFeedUrl';
   createdAt: Scalars['Int'];
-  description: Scalars['String'];
-  displayUrl: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  displayUrl?: Maybe<Scalars['String']>;
   expandedUrlHost: Scalars['String'];
   expandedUrlParsed: Scalars['String'];
   firstReferencedByUsername: Scalars['String'];
   numReferences: Scalars['Int'];
   previewImageThumbnailUrl?: Maybe<Scalars['String']>;
   previewImageUrl?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   urlId: Scalars['Int'];
   urlScore: Scalars['Int'];
   urlSlug: Scalars['String'];
@@ -39,11 +39,11 @@ export type NewsFeedUrl = {
 
 export type NewsFeedUrlReference = {
   __typename?: 'NewsFeedUrlReference';
-  authorUsername: Scalars['String'];
-  retweetedByUsernames: Array<Scalars['String']>;
-  tweetCreatedAtStr: Scalars['String'];
-  tweetId: Scalars['String'];
-  tweetText: Scalars['String'];
+  authorHandle: Scalars['String'];
+  postCreatedAtStr: Scalars['String'];
+  postText: Scalars['String'];
+  postUri: Scalars['String'];
+  repostedByHandles: Array<Scalars['String']>;
   urlId: Scalars['Int'];
 };
 
@@ -77,12 +77,12 @@ export type GetNewsFeedUrlAndReferencesQueryVariables = Exact<{
 }>;
 
 
-export type GetNewsFeedUrlAndReferencesQuery = { __typename?: 'Query', newsFeedUrl: { __typename?: 'NewsFeedUrl', urlSlug: string, urlId: number, urlScore: number, numReferences: number, firstReferencedByUsername: string, createdAt: number, title: string, description: string, expandedUrlParsed: string, expandedUrlHost: string, previewImageThumbnailUrl?: string | null, previewImageUrl?: string | null, displayUrl: string }, newsFeedUrlReferences: Array<{ __typename?: 'NewsFeedUrlReference', tweetId: string, tweetText: string, tweetCreatedAtStr: string, authorUsername: string, retweetedByUsernames: Array<string> }> };
+export type GetNewsFeedUrlAndReferencesQuery = { __typename?: 'Query', newsFeedUrl: { __typename?: 'NewsFeedUrl', urlSlug: string, urlId: number, urlScore: number, numReferences: number, firstReferencedByUsername: string, createdAt: number, title?: string | null, description?: string | null, expandedUrlParsed: string, expandedUrlHost: string, previewImageThumbnailUrl?: string | null, previewImageUrl?: string | null, displayUrl?: string | null }, newsFeedUrlReferences: Array<{ __typename?: 'NewsFeedUrlReference', postUri: string, postText: string, postCreatedAtStr: string, authorHandle: string, repostedByHandles: Array<string> }> };
 
 export type GetNewsFeedUrlsAndNewsFeedStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNewsFeedUrlsAndNewsFeedStatusQuery = { __typename?: 'Query', newsFeedUrls: Array<{ __typename?: 'NewsFeedUrl', urlSlug: string, urlId: number, urlScore: number, numReferences: number, firstReferencedByUsername: string, createdAt: number, title: string, description: string, expandedUrlParsed: string, expandedUrlHost: string, previewImageThumbnailUrl?: string | null, previewImageUrl?: string | null, displayUrl: string }>, newsFeedStatus?: { __typename?: 'NewsFeedStatus', completedAt?: number | null } | null };
+export type GetNewsFeedUrlsAndNewsFeedStatusQuery = { __typename?: 'Query', newsFeedUrls: Array<{ __typename?: 'NewsFeedUrl', urlSlug: string, urlId: number, urlScore: number, numReferences: number, firstReferencedByUsername: string, createdAt: number, title?: string | null, description?: string | null, expandedUrlParsed: string, expandedUrlHost: string, previewImageThumbnailUrl?: string | null, previewImageUrl?: string | null, displayUrl?: string | null }>, newsFeedStatus?: { __typename?: 'NewsFeedStatus', completedAt?: number | null } | null };
 
 export type GetSitemapNewsFeedUrlSlugsQueryVariables = Exact<{
   month: Scalars['Int'];
@@ -111,11 +111,11 @@ export const GetNewsFeedUrlAndReferencesDocument = gql`
     displayUrl
   }
   newsFeedUrlReferences(urlSlug: $urlSlug) {
-    tweetId
-    tweetText
-    tweetCreatedAtStr
-    authorUsername
-    retweetedByUsernames
+    postUri
+    postText
+    postCreatedAtStr
+    authorHandle
+    repostedByHandles
   }
 }
     `;

@@ -11,9 +11,7 @@ path = "src/main.rs"
 [dependencies]
 db = { path = "../db" }
 
-# Twitter API
-twitter-v2 = {version = "0.1.8", features = ["rustls-tls"] }
-reqwest = "0.11.12"
+reqwest = { version = "0.11.12", features = ["json"] }
 
 # URL parsing
 url = "2.2.2"
@@ -62,10 +60,10 @@ serde_json = { version = "1.0.64" }
 lazy_static = "1.4.0"
 
 # Slack
-slack-hook = "0.8.0" 
+slack-hook = "0.9.1" 
 
 # misc
-itertools = "0.10.5"
+itertools = "0.15.0"
 
 # Workaround for https://github.com/gyscos/zstd-rs/issues/177
-zstd-sys = "=2.0.1+zstd.1.5.2"
+zstd-sys = "=2.0.16"

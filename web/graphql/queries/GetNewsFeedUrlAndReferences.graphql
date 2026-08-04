@@ -15,10 +15,10 @@ query GetNewsFeedUrlAndReferences($urlSlug: String!) {
     displayUrl
   }
   newsFeedUrlReferences(urlSlug: $urlSlug) {
-    tweetId
-    tweetText
-    tweetCreatedAtStr
-    authorUsername
-    retweetedByUsernames
+    postUri
+    postText
+    postCreatedAtStr
+    authorHandle
+    repostedByHandles
   }
 }

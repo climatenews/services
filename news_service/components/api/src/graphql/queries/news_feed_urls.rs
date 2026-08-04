@@ -24,8 +24,8 @@ mod tests {
         util::{
             convert::now_utc_timestamp,
             test::test_util::{
-                create_fake_news_feed_url, create_fake_news_tweet_url,
-                create_fake_news_twitter_user,
+                create_fake_news_bsky_post_url, create_fake_news_bsky_user,
+                create_fake_news_feed_url,
             },
         },
     };
@@ -35,7 +35,8 @@ mod tests {
         init_env();
         let db_pool = init_test_db_pool().await.unwrap();
         let created_at_timestamp = now_utc_timestamp();
-        create_fake_news_tweet_url(&db_pool, created_at_timestamp).await;
+        create_fake_news_bsky_post_url(&db_pool, created_at_timestamp).await;
+        create_fake_news_bsky_user(&db_pool).await;
         create_fake_news_feed_url(
             &db_pool,
             String::from("example-title"),
@@ -44,7 +45,6 @@ mod tests {
             true,
         )
         .await;
-        create_fake_news_twitter_user(&db_pool).await;
 
         let schema = create_fake_schema(db_pool);
 
@@ -80,15 +80,15 @@ mod tests {
                         "urlId": 1,
                         "urlScore": 90,
                         "numReferences": 2,
-                        "firstReferencedByUsername": String::from("username"),
+                        "firstReferencedByUsername": String::from("user1.bsky.social"),
                         "createdAt": now_utc_timestamp(),
                         "title": String::from("example title"),
                         "description": String::from("description"),
-                        "expandedUrlParsed": String::from("expanded_url_parsed"),
-                        "expandedUrlHost": String::from("expanded_url_host"),
+                        "expandedUrlParsed": String::from("https://example.com/link"),
+                        "expandedUrlHost": String::from("example.com"),
                         "previewImageThumbnailUrl": String::from("preview_image_thumbnail_url"),
                         "previewImageUrl": String::from("preview_image_url"),
-                        "displayUrl": String::from("display_url"),
+                        "displayUrl": String::from("example.com/link"),
 
                     }
                 ],
