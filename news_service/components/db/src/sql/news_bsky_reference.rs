@@ -5,7 +5,7 @@ pub async fn insert_news_bsky_reference(
     pool: &PgPool,
     reference: NewsBskyReference,
 ) -> Result<NewsBskyReference, sqlx::Error> {
-    sqlx::query_as!(
+    let result = sqlx::query_as!(
         NewsBskyReference,
         r#"
         INSERT INTO news_bsky_reference ( post_uri, ref_post_uri, ref_kind )
@@ -17,8 +17,10 @@ pub async fn insert_news_bsky_reference(
         reference.ref_post_uri,
         reference.ref_kind,
     )
-    .fetch_one(pool)
-    .await
+    .fetch_optional(pool)
+    .await?;
+
+    Ok(result.unwrap_or(reference))
 }
 
 pub async fn truncate_news_bsky_reference(pool: &PgPool) -> anyhow::Result<()> {

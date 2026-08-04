@@ -23,6 +23,7 @@ pub fn init_env() {
     // ignore the logger error after its first invocation
     let _ = env_logger::builder()
         .filter_level(log::LevelFilter::Info)
+        .filter_module("sqlx::query", log::LevelFilter::Warn)
         .try_init();
 }
 
@@ -31,7 +32,7 @@ pub async fn init_db_pool() -> anyhow::Result<PgPool> {
     let mut connection_options = PgConnectOptions::from_str(&database_url)?;
     connection_options
         .disable_statement_logging()
-        .log_slow_statements(log::LevelFilter::Error, Duration::from_millis(500));
+        .log_slow_statements(log::LevelFilter::Warn, Duration::from_millis(500));
 
     let db_pool = PgPoolOptions::new()
         .min_connections(NUM_DB_CONNECTIONS)

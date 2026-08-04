@@ -5,7 +5,7 @@ pub async fn insert_news_bsky_post(
     pool: &PgPool,
     post: NewsBskyPost,
 ) -> Result<NewsBskyPost, sqlx::Error> {
-    sqlx::query_as!(
+    let result = sqlx::query_as!(
         NewsBskyPost,
         r#"
         INSERT INTO news_bsky_post ( post_uri, cid, text, author_did, reply_parent_uri, reply_root_uri, created_at, created_at_str )
@@ -22,8 +22,10 @@ pub async fn insert_news_bsky_post(
         post.created_at,
         post.created_at_str,
     )
-    .fetch_one(pool)
-    .await
+    .fetch_optional(pool)
+    .await?;
+
+    Ok(result.unwrap_or(post))
 }
 
 pub async fn find_news_bsky_post_by_uri(

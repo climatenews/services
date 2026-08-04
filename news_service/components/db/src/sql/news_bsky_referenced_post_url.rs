@@ -5,7 +5,7 @@ pub async fn insert_news_bsky_referenced_post_url(
     pool: &PgPool,
     ref_url: NewsBskyReferencedPostUrl,
 ) -> Result<NewsBskyReferencedPostUrl, sqlx::Error> {
-    sqlx::query_as!(
+    let result = sqlx::query_as!(
         NewsBskyReferencedPostUrl,
         r#"
         INSERT INTO news_bsky_referenced_post_url ( post_uri, url_id )
@@ -16,8 +16,10 @@ pub async fn insert_news_bsky_referenced_post_url(
         ref_url.post_uri,
         ref_url.url_id,
     )
-    .fetch_one(pool)
-    .await
+    .fetch_optional(pool)
+    .await?;
+
+    Ok(result.unwrap_or(ref_url))
 }
 
 pub async fn truncate_news_bsky_referenced_post_url(pool: &PgPool) -> anyhow::Result<()> {

@@ -3,6 +3,8 @@ use anyhow::Result;
 use log::info;
 use serde::{Deserialize, Serialize};
 
+const BLUESKY_APPVIEW: &str = "https://public.api.bsky.app";
+
 #[derive(Debug, Deserialize)]
 pub struct FeedViewPost {
     pub post: PostView,
@@ -12,8 +14,14 @@ pub struct FeedViewPost {
 
 #[derive(Debug, Deserialize)]
 pub struct ReplyRef {
-    pub parent: PostView,
-    pub root: PostView,
+    pub parent: StrongRef,
+    pub root: StrongRef,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct StrongRef {
+    pub uri: String,
+    pub cid: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -25,7 +33,7 @@ pub struct ReasonRepost {
 #[derive(Debug, Deserialize)]
 pub struct PostView {
     pub uri: String,
-    pub cid: String,
+    pub cid: Option<String>,
     pub author: ActorBasic,
     pub record: Option<serde_json::Value>,
     pub indexed_at: Option<String>,
@@ -36,6 +44,7 @@ pub struct PostView {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ActorBasic {
     pub did: String,
     pub handle: String,
@@ -75,38 +84,26 @@ pub struct ResolveHandleResponse {
     pub did: String,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct ActorProfile {
-    pub did: String,
-    pub handle: String,
-    pub display_name: Option<String>,
-    pub avatar: Option<String>,
-    pub description: Option<String>,
-    pub followers_count: Option<i32>,
-    pub follows_count: Option<i32>,
-    pub posts_count: Option<i32>,
-}
-
 pub async fn get_author_feed(
     agent: &BlueskyAgent,
     actor: &str,
     cursor: Option<&str>,
     limit: Option<u32>,
 ) -> Result<AuthorFeedResponse> {
-    let mut url = format!(
-        "{}/xrpc/app.bsky.feed.getAuthorFeed?actor={}",
-        agent.service, actor
-    );
+    let url = format!("{}/xrpc/app.bsky.feed.getAuthorFeed", BLUESKY_APPVIEW);
+
+    let mut query_params = vec![("actor", actor.to_string())];
     if let Some(c) = cursor {
-        url.push_str(&format!("&cursor={}", c));
+        query_params.push(("cursor", c.to_string()));
     }
     if let Some(l) = limit {
-        url.push_str(&format!("&limit={}", l));
+        query_params.push(("limit", l.to_string()));
     }
 
     let resp: AuthorFeedResponse = agent
         .client
         .get(&url)
+        .query(&query_params)
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -123,20 +120,20 @@ pub async fn get_feed(
     cursor: Option<&str>,
     limit: Option<u32>,
 ) -> Result<FeedResponse> {
-    let mut url = format!(
-        "{}/xrpc/app.bsky.feed.getFeed?feed={}",
-        agent.service, feed_uri
-    );
+    let url = format!("{}/xrpc/app.bsky.feed.getFeed", BLUESKY_APPVIEW);
+
+    let mut query_params = vec![("feed", feed_uri.to_string())];
     if let Some(c) = cursor {
-        url.push_str(&format!("&cursor={}", c));
+        query_params.push(("cursor", c.to_string()));
     }
     if let Some(l) = limit {
-        url.push_str(&format!("&limit={}", l));
+        query_params.push(("limit", l.to_string()));
     }
 
     let resp: FeedResponse = agent
         .client
         .get(&url)
+        .query(&query_params)
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -148,14 +145,12 @@ pub async fn get_feed(
 }
 
 pub async fn get_post_thread(agent: &BlueskyAgent, uri: &str) -> Result<PostThreadResponse> {
-    let url = format!(
-        "{}/xrpc/app.bsky.feed.getPostThread?uri={}",
-        agent.service, uri
-    );
+    let url = format!("{}/xrpc/app.bsky.feed.getPostThread", BLUESKY_APPVIEW);
 
     let resp: PostThreadResponse = agent
         .client
         .get(&url)
+        .query(&[("uri", uri)])
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -167,14 +162,12 @@ pub async fn get_post_thread(agent: &BlueskyAgent, uri: &str) -> Result<PostThre
 }
 
 pub async fn resolve_handle(agent: &BlueskyAgent, handle: &str) -> Result<String> {
-    let url = format!(
-        "{}/xrpc/com.atproto.identity.resolveHandle?handle={}",
-        agent.service, handle
-    );
+    let url = format!("{}/xrpc/com.atproto.identity.resolveHandle", BLUESKY_APPVIEW);
 
     let resp: ResolveHandleResponse = agent
         .client
         .get(&url)
+        .query(&[("handle", handle)])
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -185,15 +178,13 @@ pub async fn resolve_handle(agent: &BlueskyAgent, handle: &str) -> Result<String
     Ok(resp.did)
 }
 
-pub async fn get_actor_profile(agent: &BlueskyAgent, actor: &str) -> Result<ActorProfile> {
-    let url = format!(
-        "{}/xrpc/app.bsky.actor.getProfile?actor={}",
-        agent.service, actor
-    );
+pub async fn get_actor_profile(agent: &BlueskyAgent, actor: &str) -> Result<ActorBasic> {
+    let url = format!("{}/xrpc/app.bsky.actor.getProfile", BLUESKY_APPVIEW);
 
-    let resp: ActorProfile = agent
+    let resp: ActorBasic = agent
         .client
         .get(&url)
+        .query(&[("actor", actor)])
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -295,6 +286,7 @@ pub fn extract_embed_from_post(post: &PostView) -> Option<serde_json::Value> {
 
 #[derive(Debug, Deserialize)]
 pub struct StarterPackResponse {
+    #[serde(rename = "starterPack", alias = "starter_pack")]
     pub starter_pack: StarterPackView,
 }
 
@@ -317,14 +309,12 @@ pub struct ListItemView {
 }
 
 pub async fn get_starter_pack(agent: &BlueskyAgent, starter_pack: &str) -> Result<StarterPackResponse> {
-    let url = format!(
-        "{}/xrpc/app.bsky.graph.getStarterPack?starterPack={}",
-        agent.service, starter_pack
-    );
+    let url = format!("{}/xrpc/app.bsky.graph.getStarterPack", BLUESKY_APPVIEW);
 
     let resp: StarterPackResponse = agent
         .client
         .get(&url)
+        .query(&[("starterPack", starter_pack)])
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?
@@ -341,20 +331,20 @@ pub async fn get_list(
     cursor: Option<&str>,
     limit: Option<u32>,
 ) -> Result<GetListResponse> {
-    let mut url = format!(
-        "{}/xrpc/app.bsky.graph.getList?list={}",
-        agent.service, list
-    );
+    let url = format!("{}/xrpc/app.bsky.graph.getList", BLUESKY_APPVIEW);
+
+    let mut query_params = vec![("list", list.to_string())];
     if let Some(c) = cursor {
-        url.push_str(&format!("&cursor={}", c));
+        query_params.push(("cursor", c.to_string()));
     }
     if let Some(l) = limit {
-        url.push_str(&format!("&limit={}", l));
+        query_params.push(("limit", l.to_string()));
     }
 
     let resp: GetListResponse = agent
         .client
         .get(&url)
+        .query(&query_params)
         .bearer_auth(&agent.session.access_jwt)
         .send()
         .await?

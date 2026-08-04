@@ -13,23 +13,30 @@ use db::sql::news_bsky_post_url::{
 };
 use db::sql::news_bsky_reference::insert_news_bsky_reference;
 use db::sql::news_bsky_referenced_post_url::insert_news_bsky_referenced_post_url;
-use db::sql::news_bsky_user::insert_news_bsky_user;
+use db::sql::news_bsky_user::{find_news_bsky_user_by_did, insert_news_bsky_user};
 use db::util::convert::now_utc_timestamp;
 use log::info;
 use sqlx::PgPool;
 use std::time::Duration;
 use url::Url;
 
-pub fn parse_bsky_user(actor: &ActorBasic) -> NewsBskyUser {
+pub fn parse_bsky_user(
+    actor: &ActorBasic,
+    existing_user: Option<&NewsBskyUser>,
+) -> NewsBskyUser {
+    let existing_followers_count = existing_user.map_or(0, |u| u.followers_count);
+    let existing_follows_count = existing_user.map_or(0, |u| u.follows_count);
+    let existing_posts_count = existing_user.map_or(0, |u| u.posts_count);
+
     NewsBskyUser {
         did: actor.did.clone(),
         handle: actor.handle.clone(),
         display_name: actor.display_name.clone(),
         avatar_url: actor.avatar.clone(),
         description: actor.description.clone(),
-        followers_count: actor.followers_count.unwrap_or(0),
-        follows_count: actor.follows_count.unwrap_or(0),
-        posts_count: actor.posts_count.unwrap_or(0),
+        followers_count: actor.followers_count.unwrap_or(existing_followers_count),
+        follows_count: actor.follows_count.unwrap_or(existing_follows_count),
+        posts_count: actor.posts_count.unwrap_or(existing_posts_count),
         user_score: None,
         last_post_cid: None,
         last_updated_at: now_utc_timestamp(),
@@ -38,6 +45,11 @@ pub fn parse_bsky_user(actor: &ActorBasic) -> NewsBskyUser {
 }
 
 pub fn parse_bsky_post(post_view: &PostView) -> Result<Option<NewsBskyPost>> {
+    let Some(cid) = post_view.cid.clone() else {
+        info!("Skipping post without cid: {}", post_view.uri);
+        return Ok(None);
+    };
+
     if let Some(ref record) = post_view.record {
         let text = api::extract_post_text_from_record(record).unwrap_or_default();
         let created_at_str = api::extract_created_at_from_record(record).unwrap_or_default();
@@ -60,7 +72,7 @@ pub fn parse_bsky_post(post_view: &PostView) -> Result<Option<NewsBskyPost>> {
 
         Ok(Some(NewsBskyPost {
             post_uri: post_view.uri.clone(),
-            cid: post_view.cid.clone(),
+            cid,
             text,
             author_did: post_view.author.did.clone(),
             reply_parent_uri,
@@ -95,7 +107,8 @@ pub async fn parse_and_insert_bsky_user(
     db_pool: &PgPool,
     actor: &ActorBasic,
 ) -> Result<NewsBskyUser> {
-    let user = parse_bsky_user(actor);
+    let existing_user = find_news_bsky_user_by_did(db_pool, actor.did.clone()).await.ok();
+    let user = parse_bsky_user(actor, existing_user.as_ref());
     Ok(insert_news_bsky_user(db_pool, user).await?)
 }
 
