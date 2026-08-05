@@ -44,9 +44,9 @@ Start Postgres, load the development environment, then start the processes
 defined in `Procfile`:
 
 ```bash
-docker-compose --env-file ".env.dev" up -d db
+docker-compose --env-file ".env.dev" up 
 export DATABASE_URL="postgres://climate_news:climate_news@localhost:5432/climate_news"
-overmind start
+overmind start 
 ```
 
 Stop all Procfile processes with `overmind stop`.

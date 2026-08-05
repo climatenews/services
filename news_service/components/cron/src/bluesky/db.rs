@@ -8,8 +8,7 @@ use db::models::news_bsky_referenced_post_url::NewsBskyReferencedPostUrl;
 use db::models::news_bsky_user::NewsBskyUser;
 use db::sql::news_bsky_post::insert_news_bsky_post;
 use db::sql::news_bsky_post_url::{
-    find_news_bsky_post_url_by_expanded_url_parsed, insert_news_bsky_post_url,
-    update_news_bsky_post_url_metadata,
+    insert_news_bsky_post_url, update_news_bsky_post_url_metadata,
 };
 use db::sql::news_bsky_reference::insert_news_bsky_reference;
 use db::sql::news_bsky_referenced_post_url::insert_news_bsky_referenced_post_url;
@@ -170,16 +169,6 @@ pub async fn parse_bsky_post_urls(
                 // post -> URL mapping is recorded for every sharing post
                 let url_db = match insert_news_bsky_post_url(db_pool, post_url).await {
                     Ok(url_db) => Some(url_db),
-                    Err(sqlx::Error::Database(ref e))
-                        if e.constraint()
-                            == Some("news_bsky_post_url_expanded_url_parsed_key") =>
-                    {
-                        info!("URL already exists: {}", link.uri);
-                        find_news_bsky_post_url_by_expanded_url_parsed(db_pool, link.uri.clone())
-                            .await
-                            .ok()
-                            .flatten()
-                    }
                     Err(e) => {
                         log::error!("Error inserting Bsky URL: {}", e);
                         None

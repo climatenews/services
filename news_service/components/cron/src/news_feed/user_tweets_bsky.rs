@@ -18,7 +18,7 @@ use db::sql::news_bsky_user::{
 };
 use db::util::convert::now_utc_timestamp;
 use db::util::time::now_formated;
-use log::{error, info};
+use log::{error, info, warn};
 use sqlx::PgPool;
 use std::time::Duration;
 
@@ -304,12 +304,42 @@ async fn fetch_user_feed(
 }
 
 async fn update_bsky_user_scores(db_pool: &PgPool) -> Result<()> {
-    info!("update_bsky_user_scores - {:?}", now_formated());
+    info!("update_bsky_user_scores started - {:?}", now_formated());
     let users = find_all_news_bsky_users(db_pool).await?;
+    info!("update_bsky_user_scores - users_to_update={}", users.len());
+
+    let mut updated = 0usize;
+    let mut failed = 0usize;
 
     for user in users {
         let score = (user.followers_count / 1000).max(1);
-        update_news_bsky_user_stats(db_pool, user.did.clone(), score).await?;
+        match update_news_bsky_user_stats(db_pool, user.did.clone(), score).await {
+            Ok(_) => {
+                updated += 1;
+            }
+            Err(err) => {
+                failed += 1;
+                warn!(
+                    "update_bsky_user_scores - failed did={} handle={} err={:?}",
+                    user.did, user.handle, err
+                );
+            }
+        }
     }
+
+    info!(
+        "update_bsky_user_scores complete - updated={} failed={} at {:?}",
+        updated,
+        failed,
+        now_formated()
+    );
+
+    if failed > 0 {
+        return Err(anyhow!(
+            "update_bsky_user_scores failed for {} users",
+            failed
+        ));
+    }
+
     Ok(())
 }

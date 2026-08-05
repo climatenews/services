@@ -5,27 +5,37 @@ pub async fn insert_news_bsky_post_url(
     pool: &PgPool,
     url: NewsBskyPostUrl,
 ) -> Result<NewsBskyPostUrl, sqlx::Error> {
-    sqlx::query_as!(
-        NewsBskyPostUrl,
+    sqlx::query_as::<_, NewsBskyPostUrl>(
         r#"
         INSERT INTO news_bsky_post_url ( url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_bsky_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str )
         VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 )
+        ON CONFLICT (expanded_url_parsed) DO UPDATE SET
+            url = EXCLUDED.url,
+            expanded_url = EXCLUDED.expanded_url,
+            expanded_url_host = COALESCE(news_bsky_post_url.expanded_url_host, EXCLUDED.expanded_url_host),
+            display_url = COALESCE(news_bsky_post_url.display_url, EXCLUDED.display_url),
+            is_bsky_url = COALESCE(news_bsky_post_url.is_bsky_url, EXCLUDED.is_bsky_url),
+            is_english = COALESCE(news_bsky_post_url.is_english, EXCLUDED.is_english),
+            title = COALESCE(news_bsky_post_url.title, EXCLUDED.title),
+            description = COALESCE(news_bsky_post_url.description, EXCLUDED.description),
+            preview_image_thumbnail_url = COALESCE(news_bsky_post_url.preview_image_thumbnail_url, EXCLUDED.preview_image_thumbnail_url),
+            preview_image_url = COALESCE(news_bsky_post_url.preview_image_url, EXCLUDED.preview_image_url)
         RETURNING url_id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_bsky_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str
         "#,
-        url.url,
-        url.expanded_url,
-        url.expanded_url_parsed,
-        url.expanded_url_host,
-        url.display_url,
-        url.is_bsky_url,
-        url.is_english,
-        url.title,
-        url.description,
-        url.preview_image_thumbnail_url,
-        url.preview_image_url,
-        url.created_at,
-        url.created_at_str,
     )
+    .bind(url.url)
+    .bind(url.expanded_url)
+    .bind(url.expanded_url_parsed)
+    .bind(url.expanded_url_host)
+    .bind(url.display_url)
+    .bind(url.is_bsky_url)
+    .bind(url.is_english)
+    .bind(url.title)
+    .bind(url.description)
+    .bind(url.preview_image_thumbnail_url)
+    .bind(url.preview_image_url)
+    .bind(url.created_at)
+    .bind(url.created_at_str)
     .fetch_one(pool)
     .await
 }
