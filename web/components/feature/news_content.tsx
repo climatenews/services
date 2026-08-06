@@ -71,9 +71,9 @@ export default function NewsContent(props: NewsContentProps) {
                       <img
                         className="mx-auto h-15 w-15 rounded lg:h-20 lg:w-20 lg:rounded-md"
                         src={
-                          newsFeedUrl.previewImageThumbnailUrl
-                            ? newsFeedUrl.previewImageThumbnailUrl
-                            : "/news_article_placeholder.png"
+                          newsFeedUrl.previewImageThumbnailUrl ||
+                          newsFeedUrl.previewImageUrl ||
+                          "/news_article_placeholder.png"
                         }
                         alt=""
                       />

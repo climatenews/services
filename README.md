@@ -23,10 +23,17 @@ cp .env.sample .env.dev
 ```
 Set the `OPENAI_API_KEY`, `BLUESKY_APP_PASSWORD`, and (optionally) the Slack `POST_CRON_WEBHOOK_URL` / `MAIN_CRON_WEBHOOK_URL` variables in `.env.dev`
 
+For faster local testing, you can optionally limit ingestion to a small subset of
+users per cron run:
+
+```bash
+BSKY_MAX_USERS_PER_RUN=10
+```
+
 ### Test the app with Docker Compose
 ```bash
 # Start the app
-docker-compose --env-file ".env.dev" up -d --build 
+docker-compose --env-file ".env.dev" up --build 
 docker-compose --env-file ".env.dev" up
 # tail the logs
 docker-compose logs --tail="all" -f

@@ -218,7 +218,7 @@ async fn enrich_post_url_metadata(
             metadata.title,
             metadata.description,
             Some(is_english),
-            None,
+            metadata.preview_image_url.clone(),
             metadata.preview_image_url,
         )
         .await
