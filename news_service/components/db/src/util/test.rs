@@ -9,7 +9,9 @@ pub mod test_util {
     use crate::models::news_feed_url::NewsFeedUrl;
     use crate::sql::news_bsky_post::{insert_news_bsky_post, truncate_news_bsky_post};
     use crate::sql::news_bsky_post_url::{insert_news_bsky_post_url, truncate_news_bsky_post_url};
-    use crate::sql::news_bsky_reference::{insert_news_bsky_reference, truncate_news_bsky_reference};
+    use crate::sql::news_bsky_reference::{
+        insert_news_bsky_reference, truncate_news_bsky_reference,
+    };
     use crate::sql::news_bsky_referenced_post_url::{
         insert_news_bsky_referenced_post_url, truncate_news_bsky_referenced_post_url,
     };
@@ -59,7 +61,9 @@ pub mod test_util {
             last_updated_at: 0,
             last_checked_at: 0,
         };
-        insert_news_bsky_user(db_pool, news_bsky_user).await.unwrap();
+        insert_news_bsky_user(db_pool, news_bsky_user)
+            .await
+            .unwrap();
 
         let news_bsky_user_retweeted = NewsBskyUser {
             did: String::from("did:plc:reposter"),
@@ -92,7 +96,9 @@ pub mod test_util {
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
         };
-        insert_news_bsky_post(db_pool, news_bsky_post).await.unwrap();
+        insert_news_bsky_post(db_pool, news_bsky_post)
+            .await
+            .unwrap();
 
         let news_bsky_post_quoted = NewsBskyPost {
             post_uri: String::from("at://did:plc:user1/app.bsky.feed.post/rkey3"),
@@ -163,6 +169,7 @@ pub mod test_util {
             is_climate_related: Some(true),
             created_at: created_at_timestamp,
             created_at_str: String::from("created_at_str"),
+            updated_at: created_at_timestamp,
             bsky_posted_at: None,
             bsky_posted_at_str: None,
         };

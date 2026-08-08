@@ -18,6 +18,7 @@ pub async fn get_news_feed_urls(
             nfu.bsky_posted_at,
             u.handle as first_referenced_by_username,
             nfu.created_at,
+            nfu.updated_at,
             pu.title,
             pu.description,
             pu.expanded_url_parsed,
@@ -44,7 +45,6 @@ pub async fn get_news_feed_urls(
     .fetch_all(pool)
     .await
 }
-
 pub async fn get_news_feed_url(
     pool: &PgPool,
     url_slug: String,
@@ -60,6 +60,7 @@ pub async fn get_news_feed_url(
             nfu.bsky_posted_at,
             u.handle as first_referenced_by_username,
             nfu.created_at,
+            nfu.updated_at,
             pu.title,
             pu.description,
             pu.expanded_url_parsed,

@@ -22,7 +22,8 @@ pub async fn start_main_scheduler() {
                 send_main_cron_message(format!(
                     "init_main_cron_job success - {:?}",
                     now_formated()
-                )).await;
+                ))
+                .await;
             }
             Err(err) => {
                 send_main_cron_message(format!("init_main_cron_job error - {:?}", err)).await;

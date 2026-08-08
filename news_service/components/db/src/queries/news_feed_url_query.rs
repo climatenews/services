@@ -13,6 +13,7 @@ pub struct NewsFeedUrlQuery {
     pub bsky_posted_at: Option<i64>,
     pub first_referenced_by_username: String,
     pub created_at: i64,
+    pub updated_at: i64,
     pub title: Option<String>,
     pub description: Option<String>,
     pub expanded_url_parsed: String,

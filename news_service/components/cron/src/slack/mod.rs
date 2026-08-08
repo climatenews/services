@@ -11,10 +11,7 @@ pub async fn send_post_cron_message(message: String) {
             send_message(webhook_url, POST_CRON_CHANNEL.to_string(), message).await;
         }
         Err(err) => {
-            error!(
-                "Unable to parse POST_CRON_WEBHOOK_URL env variable {}",
-                err
-            )
+            error!("Unable to parse POST_CRON_WEBHOOK_URL env variable {}", err)
         }
     }
 }

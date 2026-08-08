@@ -1,4 +1,4 @@
-use crate::models::news_feed_url::{NewsFeedUrl, NewsFeedUrlSlug};
+use crate::models::news_feed_url::{NewsFeedBuildMetadata, NewsFeedUrl, NewsFeedUrlSlug};
 use anyhow::Result;
 use sqlx::{postgres::PgQueryResult, PgPool};
 
@@ -10,11 +10,11 @@ pub async fn insert_news_feed_url(
         NewsFeedUrl,
         r#"
             INSERT INTO news_feed_url ( 
-                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str
+                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str
              )
-            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING 
-                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str
+                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str
             "#,
         news_feed_url.url_slug,
         news_feed_url.url_id,
@@ -24,6 +24,7 @@ pub async fn insert_news_feed_url(
         news_feed_url.is_climate_related,
         news_feed_url.created_at,
         news_feed_url.created_at_str,
+        news_feed_url.updated_at,
         news_feed_url.bsky_posted_at,
         news_feed_url.bsky_posted_at_str,
     )
@@ -35,7 +36,7 @@ pub async fn find_news_feed_url_by_url_id(pool: &PgPool, url_id: i32) -> Option<
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
-            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str
+            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str
             FROM news_feed_url
             WHERE url_id = $1;
         "#,
@@ -69,16 +70,18 @@ pub async fn update_news_feed_url_url_score_and_num_references(
     url_id: i32,
     url_score: i32,
     num_references: i32,
+    updated_at: i64,
 ) -> anyhow::Result<bool> {
     let rows_affected = sqlx::query!(
         r#"
         UPDATE news_feed_url 
-        SET url_score = $1, num_references = $2
+        SET url_score = $1, num_references = $2, updated_at = $4
         WHERE url_id = $3
             "#,
         url_score,
         num_references,
-        url_id
+        url_id,
+        updated_at
     )
     .execute(pool)
     .await
@@ -92,15 +95,17 @@ pub async fn update_news_feed_url_url_is_climate_related(
     pool: &PgPool,
     url_id: i32,
     is_climate_related: bool,
+    updated_at: i64,
 ) -> Result<PgQueryResult, sqlx::Error> {
     sqlx::query!(
         r#"
         UPDATE news_feed_url 
-        SET is_climate_related = $1
+        SET is_climate_related = $1, updated_at = $3
         WHERE url_id = $2
         "#,
         is_climate_related,
-        url_id
+        url_id,
+        updated_at
     )
     .execute(pool)
     .await
@@ -113,7 +118,7 @@ pub async fn find_news_feed_url_by_url_slug(
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
-            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str
+            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str
             FROM news_feed_url
             WHERE url_slug = $1        
         "#,
@@ -130,7 +135,7 @@ pub async fn find_top_news_feed_urls_without_is_climate_related_set(
     let query = sqlx::query_as!(
         NewsFeedUrl,
         r#"
-            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str
+            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str
             FROM news_feed_url
             WHERE 
                 is_climate_related IS NULL 
@@ -165,21 +170,73 @@ pub async fn find_news_feed_url_slugs_within_date_range(
     query.fetch_all(pool).await
 }
 
+// All climate-related URL slugs in stable (deterministic) order for static builds.
+// `limit`/`offset` are optional; NULL means no limit/offset (return everything).
+pub async fn find_news_feed_url_slugs(
+    pool: &PgPool,
+    limit: Option<i64>,
+    offset: Option<i64>,
+) -> Result<Vec<NewsFeedUrlSlug>, sqlx::Error> {
+    let query = sqlx::query_as!(
+        NewsFeedUrlSlug,
+        r#"
+            SELECT url_slug
+            FROM news_feed_url
+            WHERE
+                is_climate_related = True
+            ORDER BY url_slug ASC
+            LIMIT $1 OFFSET $2
+        "#,
+        limit,
+        offset
+    );
+
+    query.fetch_all(pool).await
+}
+
+// Change cursor + count for the static-site build to decide whether a rebuild is needed.
+pub async fn get_news_feed_build_metadata(
+    pool: &PgPool,
+) -> Result<NewsFeedBuildMetadata, sqlx::Error> {
+    let query = sqlx::query_as!(
+        NewsFeedBuildMetadata,
+        r#"
+            SELECT
+                MAX(updated_at) as updated_at,
+                COUNT(*) as total_count
+            FROM news_feed_url
+            WHERE
+                is_climate_related = True
+        "#
+    );
+
+    match query.fetch_optional(pool).await {
+        Ok(Some(build_metadata)) => Ok(build_metadata),
+        Ok(None) => Ok(NewsFeedBuildMetadata {
+            updated_at: None,
+            total_count: None,
+        }),
+        Err(err) => Err(err),
+    }
+}
+
 pub async fn update_news_feed_url_bsky_posted_at(
     pool: &PgPool,
     url_id: i32,
     bsky_posted_at: i64,
     bsky_posted_at_str: String,
+    updated_at: i64,
 ) -> Result<PgQueryResult, sqlx::Error> {
     sqlx::query!(
         r#"
         UPDATE news_feed_url 
-        SET bsky_posted_at = $1, bsky_posted_at_str = $2
+        SET bsky_posted_at = $1, bsky_posted_at_str = $2, updated_at = $4
         WHERE url_id = $3
         "#,
         bsky_posted_at,
         bsky_posted_at_str,
-        url_id
+        url_id,
+        updated_at
     )
     .execute(pool)
     .await

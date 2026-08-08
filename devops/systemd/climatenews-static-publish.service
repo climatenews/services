@@ -1,0 +1,11 @@
+[Unit]
+Description=Climatenews static site build + publish to Cloudflare Pages
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=patrick
+EnvironmentFile=/etc/climatenews/static-publish.env
+ExecStart=/home/patrick/dev/climatenews/services/devops/scripts/static-build-and-publish.sh
+Nice=10

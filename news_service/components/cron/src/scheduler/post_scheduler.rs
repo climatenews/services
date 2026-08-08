@@ -33,7 +33,8 @@ pub async fn start_post_scheduler() {
                 send_post_cron_message(format!(
                     "init_post_cron_job success - {:?}",
                     now_formated()
-                )).await;
+                ))
+                .await;
             }
             Err(err) => {
                 send_post_cron_message(format!("init_post_cron_job error - {:?}", err)).await;
@@ -47,7 +48,8 @@ pub async fn init_post_cron_job() -> Result<()> {
     let db_pool = init_db_result().await?;
     match start_post_cron_job(&db_pool).await {
         Ok(_) => {
-            send_post_cron_message(format!("start_post_cron_job ended - {:?}", now_formated())).await;
+            send_post_cron_message(format!("start_post_cron_job ended - {:?}", now_formated()))
+                .await;
         }
         Err(err) => {
             send_post_cron_message(format!("start_post_cron_job failed: {:?}", err)).await;
@@ -140,6 +142,7 @@ pub async fn post_cron_job(db_pool: &PgPool) -> Result<()> {
                                         news_feed_url.url_id,
                                         now.unix_timestamp(),
                                         datetime_to_str(now),
+                                        now.unix_timestamp(),
                                     )
                                     .await?;
                                 }
@@ -229,10 +232,8 @@ pub fn post_shared_by_text(news_feed_url_references: &Vec<NewsFeedUrlReferencesQ
     for (i, referenced_handle) in unique_referenced_handles.iter().enumerate() {
         match i {
             0 => {
-                shared_by_text = concat_string(
-                    shared_by_text,
-                    format!("Shared by @{}", referenced_handle),
-                );
+                shared_by_text =
+                    concat_string(shared_by_text, format!("Shared by @{}", referenced_handle));
             }
             1 => {
                 let seperator = if unique_referenced_handles.len() == 2 {
@@ -323,6 +324,7 @@ mod tests {
             bsky_posted_at: None,
             first_referenced_by_username: String::from("user1.bsky.social"),
             created_at: 0,
+            updated_at: 0,
             title: Some(String::from("Example Title")),
             description: Some(String::from("example description")),
             expanded_url_parsed: String::from("https://www.theguardian.com/environment/2022/dec/12/brazil-goldminers-carve-road-to-chaos-amazon-reserve"),
@@ -427,7 +429,8 @@ mod tests {
             created_at_str: String::from(""),
         });
 
-        let unique_referenced_handles = get_unique_referenced_handles(&news_feed_url_references_list);
+        let unique_referenced_handles =
+            get_unique_referenced_handles(&news_feed_url_references_list);
         assert_eq!(
             unique_referenced_handles,
             vec![

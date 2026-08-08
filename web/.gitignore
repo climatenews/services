@@ -12,6 +12,10 @@
 /.next/
 /out/
 
+# generated sitemaps
+/public/sitemap.xml
+/public/sitemap/
+
 # production
 /build
 

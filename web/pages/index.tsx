@@ -26,7 +26,7 @@ const NewsPage: NextPage<NewsPageProps> = ({
   );
 };
 
-export async function getServerSideProps(context: any) {
+export async function getStaticProps() {
   const sdk = getSdk(graphQLClient);
   const response = await sdk.GetNewsFeedUrlsAndNewsFeedStatus();
   return {

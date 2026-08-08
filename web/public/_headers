@@ -1,0 +1,30 @@
+/*
+  X-DNS-Prefetch-Control: on
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-XSS-Protection: 1; mode=block
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cache-Control: public, max-age=60, stale-while-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600, stale-while-revalidate
+
+/sitemap/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate
+
+/*.svg
+  Cache-Control: public, max-age=604800, stale-while-revalidate
+
+/*.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate
+
+/*.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate
+
+/*.jpeg
+  Cache-Control: public, max-age=604800, stale-while-revalidate
+
+/*.webp
+  Cache-Control: public, max-age=604800, stale-while-revalidate

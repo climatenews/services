@@ -26,7 +26,8 @@ pub struct BlueskySession {
 
 pub async fn init_bluesky_agent() -> Result<BlueskyAgent, anyhow::Error> {
     let handle = std::env::var("BLUESKY_HANDLE").expect("BLUESKY_HANDLE is not set");
-    let app_password = std::env::var("BLUESKY_APP_PASSWORD").expect("BLUESKY_APP_PASSWORD is not set");
+    let app_password =
+        std::env::var("BLUESKY_APP_PASSWORD").expect("BLUESKY_APP_PASSWORD is not set");
     let service = std::env::var("BLUESKY_SERVICE").unwrap_or_else(|_| BLUESKY_SERVICE.to_string());
 
     let client = Client::new();

@@ -2,6 +2,10 @@
 - import_playbook: docker_setup.yml
 - hosts: all
   become: true
+  vars:
+    app_user: "{{ ansible_user | default('ubuntu') }}"
+    app_home: "{{ '/home/' + app_user }}"
+    app_dir: "{{ app_home }}/services"
   tasks:
     - name: Update apt and install awscli
       apt:
@@ -12,22 +16,22 @@
     - name: Clone github repository
       git:
         repo: https://github.com/climatenews/services.git
-        dest: /home/ubuntu/services/
+        dest: "{{ app_dir }}/"
         clone: yes
         update: yes
 
     - name: Copy docker-compose.prod.yaml file
       ansible.builtin.copy:
-        src: /home/ubuntu/services/docker-compose.prod.yaml
-        dest: /home/ubuntu/docker-compose.prod.yaml
-        owner: ubuntu
-        group: ubuntu 
+        src: "{{ app_dir }}/docker-compose.prod.yaml"
+        dest: "{{ app_home }}/docker-compose.prod.yaml"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
         mode: '700' 
         remote_src: true      
 
     - name: Copy postgres maintenance script
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/cron/postgres-maintenance.sh
+        src: "{{ app_dir }}/devops/cron/postgres-maintenance.sh"
         dest: /usr/local/bin/postgres-maintenance.sh
         owner: root
         group: root
@@ -36,7 +40,7 @@
 
     - name: Copy backup systemd service unit
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/systemd/climatenews-postgres-backup.service
+        src: "{{ app_dir }}/devops/systemd/climatenews-postgres-backup.service"
         dest: /etc/systemd/system/climatenews-postgres-backup.service
         owner: root
         group: root
@@ -45,7 +49,7 @@
 
     - name: Copy backup systemd timer unit
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/systemd/climatenews-postgres-backup.timer
+        src: "{{ app_dir }}/devops/systemd/climatenews-postgres-backup.timer"
         dest: /etc/systemd/system/climatenews-postgres-backup.timer
         owner: root
         group: root
@@ -54,7 +58,7 @@
 
     - name: Copy restore verification systemd service unit
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/systemd/climatenews-postgres-restore-verify.service
+        src: "{{ app_dir }}/devops/systemd/climatenews-postgres-restore-verify.service"
         dest: /etc/systemd/system/climatenews-postgres-restore-verify.service
         owner: root
         group: root
@@ -63,7 +67,7 @@
 
     - name: Copy restore verification systemd timer unit
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/systemd/climatenews-postgres-restore-verify.timer
+        src: "{{ app_dir }}/devops/systemd/climatenews-postgres-restore-verify.timer"
         dest: /etc/systemd/system/climatenews-postgres-restore-verify.timer
         owner: root
         group: root
@@ -72,7 +76,7 @@
 
     - name: Copy production deploy script
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/scripts/deploy-prod.sh
+        src: "{{ app_dir }}/devops/scripts/deploy-prod.sh"
         dest: /usr/local/bin/deploy-prod.sh
         owner: root
         group: root
@@ -81,7 +85,7 @@
 
     - name: Copy production health check script
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/scripts/check-prod-health.sh
+        src: "{{ app_dir }}/devops/scripts/check-prod-health.sh"
         dest: /usr/local/bin/check-prod-health.sh
         owner: root
         group: root
@@ -90,7 +94,7 @@
 
     - name: Copy backup timer check script
       ansible.builtin.copy:
-        src: /home/ubuntu/services/devops/scripts/check-backup-timers.sh
+        src: "{{ app_dir }}/devops/scripts/check-backup-timers.sh"
         dest: /usr/local/bin/check-backup-timers.sh
         owner: root
         group: root

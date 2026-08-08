@@ -109,7 +109,8 @@ pub async fn openai_chat_completion_request(text: String) -> Result<String> {
                 send_main_cron_message(format!(
                     "openai_chat_completion_request failed: {:?}",
                     result
-                )).await;
+                ))
+                .await;
                 bail!("openai - server error - {}", result)
             }
         }

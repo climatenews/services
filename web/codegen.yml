@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://0.0.0.0:8000/graphql"
+schema: "../news_service/schema.graphql"
 documents: "graphql/queries/*.graphql"
 generates:
   graphql/generated/graphql.ts:
@@ -7,6 +7,3 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-graphql-request"
-    config:
-      fetcher:
-        endpoint: "http://0.0.0.0:8000/graphql"

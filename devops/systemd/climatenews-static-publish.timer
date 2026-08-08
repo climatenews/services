@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly climatenews static site publish (only when content changes)
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

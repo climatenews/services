@@ -33,7 +33,7 @@ BSKY_MAX_USERS_PER_RUN=10
 ### Test the app with Docker Compose
 ```bash
 # Start local Postgres only (recommended for local dev)
-docker-compose --env-file ".env.dev" up
+docker compose --env-file ".env.dev" up
 ```
 
 ### Run the app with the Procfile
@@ -64,8 +64,7 @@ volume was created by an older Postgres major version.
 For disposable local data, reset the local DB volume and start again:
 
 ```bash
-docker compose --env-file .env.dev -f docker-compose.yaml down -v
-docker volume rm services_db_data 2>/dev/null || true
+./run_dev.sh --reset-db
 ./run_dev.sh
 ```
 
@@ -78,6 +77,31 @@ This repo intentionally keeps local and production paths separate:
 - Production: `docker-compose.prod.yaml`
 
 ## Deploying
+### High-level deployment flow
+
+1. Provision infrastructure (optional): use OpenTofu in `devops/opentofu/hetzner`.
+2. Configure the host: run Ansible from `devops/ansible` to install Docker,
+   operational scripts, and systemd timers.
+3. Configure runtime secrets: create `/home/<user>/.env.prod` on the host.
+4. Deploy containers: run Compose with `docker-compose.prod.yaml`.
+5. Validate operations: run health checks and verify backup timers.
+
+### Host setup (local Ansible + host systemd)
+
+If this repository is running on the target host, run Ansible locally to
+install scripts and systemd units in a reproducible way:
+
+```bash
+cd devops/ansible
+ansible-playbook -i "localhost," -c local -K playbooks/main.yml -e "ansible_user=$USER"
+```
+
+Notes:
+
+- Use systemd for host-level automation (timers/services).
+- Use Docker Compose for container lifecycle only.
+- Keep runtime secrets in `/home/<user>/.env.prod` on the host.
+
 ### Deploy the stack with Docker Compose (recommended)
 ```bash
 # Copy env vars for production
@@ -115,14 +139,46 @@ sudo /usr/local/bin/postgres-maintenance.sh backup
 sudo /usr/local/bin/postgres-maintenance.sh verify
 ```
 
-### Legacy Docker Swarm path
+See `devops/README.md` for detailed infrastructure and operational procedures.
 
-The Docker Swarm deployment flow is legacy and no longer the primary deployment path.
-Use the Compose production flow above and the scripts documented in `devops/README.md`.
+## Static site deployment (Cloudflare Pages)
 
-# Triggering a new Docker image build
+The public web site is built as static HTML on the host and published to
+Cloudflare Pages. The API/DB/cron run privately on the host; only the static
+output is uploaded.
+
 ```bash
-
-git tag -a v0.0.52 -m "logging update" && git push origin v0.0.52
-
+# On the host, from the repo checkout
+GRAPHQL_API_URL="http://localhost:8000/graphql" \
+PUBLIC_DOMAIN="climatenews.app" \
+CLOUDFLARE_API_TOKEN="..." \
+CLOUDFLARE_ACCOUNT_ID="..." \
+devops/scripts/static-build-and-publish.sh
 ```
+
+The script:
+
+1. Pulls the repo (`GIT_PULL=true`), installs deps, and builds the static site
+   with `npm run build` (regenerates GraphQL codegen, sitemaps, then
+   `next build && next export` into `web/out`).
+2. Checks a private-content marker (`newsFeedStatus.completedAt`) and skips
+   publish when unchanged (`SKIP_IF_UNCHANGED=true`, default).
+3. Publishes `web/out` to Cloudflare Pages with `wrangler pages deploy` when
+   content changed.
+
+`web/out` includes `_headers` (security/cache headers applied by Cloudflare
+Pages). `getStaticProps`/`getStaticPaths` and sitemaps query the private API
+at build time, so `GRAPHQL_API_URL` must point to a reachable API instance
+(e.g. localhost).
+
+Automated publishing on the host:
+
+```bash
+sudo cp devops/systemd/climatenews-static-publish.{service,timer} /etc/systemd/system/
+sudo install -d -m 0755 /etc/climatenews
+sudo install -m 0640 /dev/null /etc/climatenews/static-publish.env   # then set vars
+sudo systemctl daemon-reload && sudo systemctl enable --now climatenews-static-publish.timer
+```
+
+The timer runs hourly and exits quickly when content is unchanged.
+See `devops/README.md` for details.

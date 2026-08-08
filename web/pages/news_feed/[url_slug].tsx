@@ -33,8 +33,20 @@ const NewsFeedUrlPage: NextPage<NewsFeedUrlPageProps> = ({
   );
 };
 
-export async function getServerSideProps(context: any) {
-  const { url_slug } = context.query;
+export async function getStaticPaths() {
+  const sdk = getSdk(graphQLClient);
+  const response = await sdk.GetNewsFeedUrlSlugs();
+  const paths = response.newsFeedUrlSlugs.map((urlSlug) => ({
+    params: { url_slug: urlSlug }
+  }));
+  return {
+    paths,
+    fallback: false
+  };
+}
+
+export async function getStaticProps(context: any) {
+  const { url_slug } = context.params;
   const sdk = getSdk(graphQLClient);
   const response = await sdk.GetNewsFeedUrlAndReferences({
     urlSlug: url_slug

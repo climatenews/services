@@ -7,9 +7,7 @@ use db::models::news_bsky_reference::NewsBskyReference;
 use db::models::news_bsky_referenced_post_url::NewsBskyReferencedPostUrl;
 use db::models::news_bsky_user::NewsBskyUser;
 use db::sql::news_bsky_post::insert_news_bsky_post;
-use db::sql::news_bsky_post_url::{
-    insert_news_bsky_post_url, update_news_bsky_post_url_metadata,
-};
+use db::sql::news_bsky_post_url::{insert_news_bsky_post_url, update_news_bsky_post_url_metadata};
 use db::sql::news_bsky_reference::insert_news_bsky_reference;
 use db::sql::news_bsky_referenced_post_url::insert_news_bsky_referenced_post_url;
 use db::sql::news_bsky_user::{find_news_bsky_user_by_did, insert_news_bsky_user};
@@ -19,10 +17,7 @@ use sqlx::PgPool;
 use std::time::Duration;
 use url::Url;
 
-pub fn parse_bsky_user(
-    actor: &ActorBasic,
-    existing_user: Option<&NewsBskyUser>,
-) -> NewsBskyUser {
+pub fn parse_bsky_user(actor: &ActorBasic, existing_user: Option<&NewsBskyUser>) -> NewsBskyUser {
     let existing_followers_count = existing_user.map_or(0, |u| u.followers_count);
     let existing_follows_count = existing_user.map_or(0, |u| u.follows_count);
     let existing_posts_count = existing_user.map_or(0, |u| u.posts_count);
@@ -66,8 +61,7 @@ pub fn parse_bsky_post(post_view: &PostView) -> Result<Option<NewsBskyPost>> {
             }
         };
 
-        let (reply_parent_uri, reply_root_uri) =
-            extract_reply_uris_from_record(record);
+        let (reply_parent_uri, reply_root_uri) = extract_reply_uris_from_record(record);
 
         Ok(Some(NewsBskyPost {
             post_uri: post_view.uri.clone(),
@@ -84,9 +78,7 @@ pub fn parse_bsky_post(post_view: &PostView) -> Result<Option<NewsBskyPost>> {
     }
 }
 
-fn extract_reply_uris_from_record(
-    record: &serde_json::Value,
-) -> (Option<String>, Option<String>) {
+fn extract_reply_uris_from_record(record: &serde_json::Value) -> (Option<String>, Option<String>) {
     let parent_uri = record
         .get("reply")
         .and_then(|r| r.get("parent"))
@@ -106,7 +98,9 @@ pub async fn parse_and_insert_bsky_user(
     db_pool: &PgPool,
     actor: &ActorBasic,
 ) -> Result<NewsBskyUser> {
-    let existing_user = find_news_bsky_user_by_did(db_pool, actor.did.clone()).await.ok();
+    let existing_user = find_news_bsky_user_by_did(db_pool, actor.did.clone())
+        .await
+        .ok();
     let user = parse_bsky_user(actor, existing_user.as_ref());
     Ok(insert_news_bsky_user(db_pool, user).await?)
 }
@@ -259,8 +253,7 @@ async fn fetch_url_metadata(url: &str) -> Result<Option<UrlMetadata>> {
     let limit = bytes.len().min(2_000_000);
     let html = String::from_utf8_lossy(&bytes[..limit]).into_owned();
 
-    let title = extract_title(&html)
-        .or_else(|| meta_content_by_key(&html, "property", "og:title"));
+    let title = extract_title(&html).or_else(|| meta_content_by_key(&html, "property", "og:title"));
     let description = meta_content_by_key(&html, "name", "description")
         .or_else(|| meta_content_by_key(&html, "property", "og:description"));
     let preview_image_url = meta_content_by_key(&html, "property", "og:image");

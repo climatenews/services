@@ -33,7 +33,10 @@ This document gives AI agents and contributors a practical overview of the curre
 
 4. Web service (Next.js)
    - Path: web
-   - Reads from GraphQL API and renders the public site.
+   - Builds a fully static export (`next build && next export`) that queries the API at build time.
+   - Pages use `getStaticProps` (index, articles) and `getStaticPaths` (articles, fed by the `newsFeedUrlSlugs` query).
+   - Sitemaps are generated at build time by web/scripts/generate-sitemaps.mjs into web/public.
+   - Publishes to Cloudflare Pages via devops/scripts/static-build-and-publish.sh (see devops/README.md).
 
 5. Postgres
    - Provisioned via docker-compose.yaml for local dev.
@@ -67,7 +70,7 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
 ### Core Bluesky ingestion tables
 
 1. news_bsky_user
-   - Source migration: 11_news_bsky_user.up.sql
+   - Source migration: 3_news_bsky_user.up.sql
    - Primary key: did
    - Stores profile + scoring fields:
      - handle, display_name, avatar_url, description
@@ -75,7 +78,7 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
      - last_post_cid, last_updated_at, last_checked_at
 
 2. news_bsky_post
-   - Source migration: 12_news_bsky_post.up.sql
+   - Source migration: 4_news_bsky_post.up.sql
    - Primary key: post_uri
    - Foreign key: author_did -> news_bsky_user.did
    - Stores text/content identifiers and thread context:
@@ -85,13 +88,13 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
      - idx_bsky_post_created(created_at)
 
 3. news_bsky_reference
-   - Source migration: 13_news_bsky_reference.up.sql
+   - Source migration: 5_news_bsky_reference.up.sql
    - Composite primary key: (post_uri, ref_post_uri, ref_kind)
    - Foreign key: post_uri -> news_bsky_post.post_uri
    - Represents edges like repost/reply relationships.
 
 4. news_bsky_post_url
-   - Source migration: 14_news_bsky_post_url.up.sql
+   - Source migration: 6_news_bsky_post_url.up.sql
    - Primary key: url_id (serial)
    - Unique: expanded_url_parsed
    - Stores extracted URL and metadata:
@@ -99,31 +102,29 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
      - is_bsky_url marks internal Bluesky links vs external article links
 
 5. news_bsky_referenced_post_url
-   - Source migration: 15_news_bsky_referenced_post_url.up.sql
+   - Source migration: 7_news_bsky_referenced_post_url.up.sql
    - Composite primary key: (post_uri, url_id)
    - Foreign key: url_id -> news_bsky_post_url.url_id
    - Join table linking posts to extracted URLs.
 
 6. news_bsky_feed_source
-   - Source migration: 16_news_bsky_feed_source.up.sql
+   - Source migration: 8_news_bsky_feed_source.up.sql
    - Primary key: source_uri
    - Tracks configured feed/list/actor sources and last_checked_at.
 
 ### Shared feed output tables
 
 7. news_feed_url
-   - Base migration: 6_news_feed_url.up.sql
-   - Bluesky fields added by: 17_news_feed_url_bsky.up.sql
-   - Updated by cleanup: 18_bluesky_only_cleanup.up.sql
+   - Source migration: 1_news_feed_url.up.sql (+ 19_news_feed_url_updated_at.up.sql adds `updated_at`)
    - Purpose: ranked, deduplicated candidate URLs for publication
    - Key fields:
      - url_slug (unique), url_id (unique)
      - url_score, num_references, first_referenced_by
      - is_climate_related
-     - bsky_posted_at, bsky_posted_at_str
+     - bsky_posted_at, bsky_posted_at_str, updated_at (change cursor for static rebuilds)
 
 8. news_cron_job
-   - Source migration: 9_news_cron_job.up.sql
+   - Source migration: 2_news_cron_job.up.sql
    - Tracks cron execution status:
      - cron_type, started_at, completed_at, error
 
@@ -139,8 +140,8 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
 
 ### Notes on legacy tables
 
-- Migration 18_bluesky_only_cleanup removes legacy Twitter/X tables.
 - The active design is Bluesky-only for ingestion and publishing.
+- Legacy Twitter/X migrations were removed entirely (never created).
 
 ## Practical File Map
 
@@ -158,3 +159,9 @@ Authoritative schema lives in SQL migrations under news_service/components/db/mi
   - news_service/components/api/src/graphql
 - Web GraphQL queries + UI:
   - web/graphql and web/components
+- Build-time sitemap generation:
+  - web/scripts/generate-sitemaps.mjs (run via `prebuild` before `next build`)
+- Static site publish:
+  - devops/scripts/static-build-and-publish.sh + devops/systemd/climatenews-static-publish.{service,timer}
+- Build metadata (change cursor for the static site):
+  - newsFeedBuildMetadata query → news_feed_url.updated_at

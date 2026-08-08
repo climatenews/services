@@ -162,7 +162,10 @@ pub async fn get_post_thread(agent: &BlueskyAgent, uri: &str) -> Result<PostThre
 }
 
 pub async fn resolve_handle(agent: &BlueskyAgent, handle: &str) -> Result<String> {
-    let url = format!("{}/xrpc/com.atproto.identity.resolveHandle", BLUESKY_APPVIEW);
+    let url = format!(
+        "{}/xrpc/com.atproto.identity.resolveHandle",
+        BLUESKY_APPVIEW
+    );
 
     let resp: ResolveHandleResponse = agent
         .client
@@ -273,11 +276,17 @@ pub struct FacetLink {
 }
 
 pub fn extract_post_text_from_record(record: &serde_json::Value) -> Option<String> {
-    record.get("text").and_then(|t| t.as_str()).map(|s| s.to_string())
+    record
+        .get("text")
+        .and_then(|t| t.as_str())
+        .map(|s| s.to_string())
 }
 
 pub fn extract_created_at_from_record(record: &serde_json::Value) -> Option<String> {
-    record.get("createdAt").and_then(|t| t.as_str()).map(|s| s.to_string())
+    record
+        .get("createdAt")
+        .and_then(|t| t.as_str())
+        .map(|s| s.to_string())
 }
 
 pub fn extract_embed_from_post(post: &PostView) -> Option<serde_json::Value> {
@@ -308,7 +317,10 @@ pub struct ListItemView {
     pub subject: ActorBasic,
 }
 
-pub async fn get_starter_pack(agent: &BlueskyAgent, starter_pack: &str) -> Result<StarterPackResponse> {
+pub async fn get_starter_pack(
+    agent: &BlueskyAgent,
+    starter_pack: &str,
+) -> Result<StarterPackResponse> {
     let url = format!("{}/xrpc/app.bsky.graph.getStarterPack", BLUESKY_APPVIEW);
 
     let resp: StarterPackResponse = agent

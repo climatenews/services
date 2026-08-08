@@ -1,6 +1,6 @@
 use crate::bluesky::api::{
-    extract_created_at_from_record, get_actor_profile, get_author_feed, get_list,
-    get_starter_pack, resolve_handle, GetListResponse,
+    extract_created_at_from_record, get_actor_profile, get_author_feed, get_list, get_starter_pack,
+    resolve_handle, GetListResponse,
 };
 use crate::bluesky::db::{
     parse_and_insert_bsky_post, parse_and_insert_bsky_user, parse_bsky_post_urls,
@@ -8,9 +8,7 @@ use crate::bluesky::db::{
 };
 use crate::bluesky::BlueskyAgent;
 use crate::language::english_language_detector::EnglishLanguageDetector;
-use crate::news_feed::constants::{
-    MAX_BSKY_LIST_RESULTS, MAX_BSKY_POST_RESULTS,
-};
+use crate::news_feed::constants::{MAX_BSKY_LIST_RESULTS, MAX_BSKY_POST_RESULTS};
 use crate::util::{env_i64_or_default, env_usize, env_usize_or_default};
 use anyhow::{anyhow, Result};
 use db::sql::news_bsky_user::{
@@ -41,10 +39,7 @@ struct UserFeedFetchSummary {
     reached_initial_backfill_page_cap: bool,
 }
 
-pub async fn get_all_bsky_posts(
-    db_pool: &PgPool,
-    bsky_agent: &BlueskyAgent,
-) -> Result<()> {
+pub async fn get_all_bsky_posts(db_pool: &PgPool, bsky_agent: &BlueskyAgent) -> Result<()> {
     let started_at = Instant::now();
     info!("get_all_bsky_posts - {:?}", now_formated());
     fetch_bsky_users(db_pool, bsky_agent).await?;
@@ -58,10 +53,7 @@ pub async fn get_all_bsky_posts(
     Ok(())
 }
 
-async fn fetch_bsky_users(
-    db_pool: &PgPool,
-    bsky_agent: &BlueskyAgent,
-) -> Result<()> {
+async fn fetch_bsky_users(db_pool: &PgPool, bsky_agent: &BlueskyAgent) -> Result<()> {
     info!("fetch_bsky_users");
     let started_at = Instant::now();
     let sources = bsky_starter_pack_seeds();
@@ -88,9 +80,7 @@ async fn fetch_bsky_users(
                 total_users_upserted += num_users;
                 info!(
                     "fetch_bsky_users - source: {} - added/updated {} users - cumulative_users={}",
-                    source.label,
-                    num_users,
-                    total_users_upserted
+                    source.label, num_users, total_users_upserted
                 );
             }
             Err(err) => {
@@ -136,7 +126,12 @@ async fn fetch_users_from_starter_pack(
                 .and_then(|value| value.as_str())
                 .map(|uri| uri.to_string())
         })
-        .ok_or_else(|| anyhow!("Starter pack record is missing list URI: {}", starter_pack_uri))?
+        .ok_or_else(|| {
+            anyhow!(
+                "Starter pack record is missing list URI: {}",
+                starter_pack_uri
+            )
+        })?
         .to_string();
 
     let mut cursor: Option<String> = None;
@@ -224,12 +219,7 @@ async fn get_list_with_retries(
                 let backoff_secs = attempt as u64;
                 error!(
                     "get_list attempt {}/{} failed for {} (cursor={:?}): {:?}; retrying in {}s",
-                    attempt,
-                    LIST_FETCH_MAX_ATTEMPTS,
-                    list_uri,
-                    cursor,
-                    err,
-                    backoff_secs
+                    attempt, LIST_FETCH_MAX_ATTEMPTS, list_uri, cursor, err, backoff_secs
                 );
                 tokio::time::sleep(Duration::from_secs(backoff_secs)).await;
             }
@@ -259,7 +249,10 @@ async fn starter_pack_url_to_at_uri(
     let rkey = parts[starter_pack_idx + 2].split('?').next().unwrap_or("");
 
     if rkey.is_empty() {
-        return Err(anyhow!("Invalid starter pack URL (missing rkey): {}", starter_pack_url));
+        return Err(anyhow!(
+            "Invalid starter pack URL (missing rkey): {}",
+            starter_pack_url
+        ));
     }
 
     let owner_did = if owner.starts_with("did:") {
@@ -274,10 +267,7 @@ async fn starter_pack_url_to_at_uri(
     ))
 }
 
-async fn fetch_user_posts(
-    db_pool: &PgPool,
-    bsky_agent: &BlueskyAgent,
-) -> Result<()> {
+async fn fetch_user_posts(db_pool: &PgPool, bsky_agent: &BlueskyAgent) -> Result<()> {
     info!("fetch_user_posts - {:?}", now_formated());
     let started_at = Instant::now();
     let english_detector = EnglishLanguageDetector::init();
@@ -300,8 +290,7 @@ async fn fetch_user_posts(
 
     info!(
         "fetch_user_posts - users_available={} users_processing={}",
-        total_users,
-        users_to_process
+        total_users, users_to_process
     );
 
     let mut succeeded = 0usize;
@@ -336,12 +325,8 @@ async fn fetch_user_posts(
                 error!("fetch_user_feed failed for {}: {:?}", user.handle, err);
             }
         }
-        update_news_bsky_user_last_checked_at(
-            db_pool,
-            user.did.clone(),
-            now_utc_timestamp(),
-        )
-        .await?;
+        update_news_bsky_user_last_checked_at(db_pool, user.did.clone(), now_utc_timestamp())
+            .await?;
 
         let processed = idx + 1;
         if processed % USER_PROGRESS_LOG_EVERY == 0 || processed == users_to_process {
@@ -389,8 +374,8 @@ async fn fetch_user_feed(
         "BSKY_INITIAL_BACKFILL_MAX_POST_AGE_DAYS",
         DEFAULT_INITIAL_BACKFILL_MAX_POST_AGE_DAYS,
     );
-    let initial_backfill_cutoff_ts = chrono::Utc::now().timestamp()
-        - (initial_backfill_max_post_age_days * 24 * 60 * 60);
+    let initial_backfill_cutoff_ts =
+        chrono::Utc::now().timestamp() - (initial_backfill_max_post_age_days * 24 * 60 * 60);
 
     let mut cursor: Option<String> = None;
     let mut newest_cid: Option<String> = None;
@@ -426,7 +411,8 @@ async fn fetch_user_feed(
             if initial_backfill {
                 if let Some(record) = &feed_item.post.record {
                     if let Some(created_at) = extract_created_at_from_record(record) {
-                        if let Ok(created_at_dt) = chrono::DateTime::parse_from_rfc3339(&created_at) {
+                        if let Ok(created_at_dt) = chrono::DateTime::parse_from_rfc3339(&created_at)
+                        {
                             if created_at_dt.timestamp() < initial_backfill_cutoff_ts {
                                 reached_initial_backfill_age_cutoff = true;
                                 break;

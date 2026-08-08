@@ -274,6 +274,84 @@
     },
     "query": "UPDATE news_bsky_user SET last_post_cid = $1, last_updated_at = $2 WHERE did = $3"
   },
+  "351c8665b4e14b9bba5124bc750539022bf87ffb61d2523ecce5e4cdf0f4c03e": {
+    "describe": {
+      "columns": [
+        {
+          "name": "url_slug",
+          "ordinal": 0,
+          "type_info": "Text"
+        },
+        {
+          "name": "url_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "url_score",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "num_references",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "first_referenced_by",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_climate_related",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Int8"
+        },
+        {
+          "name": "created_at_str",
+          "ordinal": 7,
+          "type_info": "Text"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at",
+          "ordinal": 9,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at_str",
+          "ordinal": 10,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE \n                is_climate_related IS NULL \n            ORDER BY url_score DESC\n            LIMIT 20\n            \n        "
+  },
   "37174cba69ce155a0e39b7f41ac219005bd4cf2aa84042363b7ad8e9784be01f": {
     "describe": {
       "columns": [
@@ -370,6 +448,190 @@
       }
     },
     "query": "\n        INSERT INTO news_bsky_user ( did, handle, display_name, avatar_url, description, followers_count, follows_count, posts_count, user_score, last_post_cid, last_updated_at, last_checked_at )\n        VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 )\n        ON CONFLICT (did) DO UPDATE SET\n            handle = EXCLUDED.handle,\n            display_name = EXCLUDED.display_name,\n            avatar_url = EXCLUDED.avatar_url,\n            description = EXCLUDED.description,\n            followers_count = EXCLUDED.followers_count,\n            follows_count = EXCLUDED.follows_count,\n            posts_count = EXCLUDED.posts_count,\n            last_checked_at = EXCLUDED.last_checked_at\n        RETURNING did, handle, display_name, avatar_url, description, followers_count, follows_count, posts_count, user_score, last_post_cid, last_updated_at, last_checked_at\n        "
+  },
+  "377dd2612de70a15bb6ebab749eae368039a9e28c662cb3bace7537de696b47e": {
+    "describe": {
+      "columns": [
+        {
+          "name": "url_slug",
+          "ordinal": 0,
+          "type_info": "Text"
+        },
+        {
+          "name": "url_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "url_score",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "num_references",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "first_referenced_by",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_climate_related",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Int8"
+        },
+        {
+          "name": "created_at_str",
+          "ordinal": 7,
+          "type_info": "Text"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at",
+          "ordinal": 9,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at_str",
+          "ordinal": 10,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE url_id = $1;\n        "
+  },
+  "420b7062ced5f1b20c0436aaad84b0bb4e1c3bddd7ed01c5b53634d45cb7d106": {
+    "describe": {
+      "columns": [
+        {
+          "name": "url_slug",
+          "ordinal": 0,
+          "type_info": "Text"
+        },
+        {
+          "name": "url_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "url_score",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "num_references",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "bsky_posted_at",
+          "ordinal": 4,
+          "type_info": "Int8"
+        },
+        {
+          "name": "first_referenced_by_username",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Int8"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Int8"
+        },
+        {
+          "name": "title",
+          "ordinal": 8,
+          "type_info": "Text"
+        },
+        {
+          "name": "description",
+          "ordinal": 9,
+          "type_info": "Text"
+        },
+        {
+          "name": "expanded_url_parsed",
+          "ordinal": 10,
+          "type_info": "Text"
+        },
+        {
+          "name": "expanded_url_host",
+          "ordinal": 11,
+          "type_info": "Text"
+        },
+        {
+          "name": "display_url",
+          "ordinal": 12,
+          "type_info": "Text"
+        },
+        {
+          "name": "preview_image_thumbnail_url",
+          "ordinal": 13,
+          "type_info": "Text"
+        },
+        {
+          "name": "preview_image_url",
+          "ordinal": 14,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "\n        SELECT\n            nfu.url_slug, \n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.bsky_posted_at,\n            u.handle as first_referenced_by_username,\n            nfu.created_at,\n            nfu.updated_at,\n            pu.title,\n            pu.description,\n            pu.expanded_url_parsed,\n            pu.expanded_url_host,\n            pu.display_url,\n            pu.preview_image_thumbnail_url,\n            pu.preview_image_url\n            \n        FROM\n            news_feed_url as nfu\n            JOIN news_bsky_post_url as pu ON pu.url_id = nfu.url_id\n            JOIN news_bsky_user as u ON u.did = nfu.first_referenced_by\n        WHERE\n            nfu.url_slug = $1\n            AND pu.title IS NOT NULL\n     "
   },
   "43321b6dbe2d2625fe982426a1b317511ce676811c64361e6ed29cea96604c26": {
     "describe": {
@@ -508,144 +770,21 @@
     },
     "query": "\n            SELECT url_slug\n            FROM news_feed_url\n            WHERE\n                created_at >= $1  \n                AND created_at < $2  \n                AND is_climate_related = True\n        "
   },
-  "6503b48d6f4eba3e72afa7e77881b998ffe8c96237817b83db31c2e5118e59ab": {
-    "describe": {
-      "columns": [
-        {
-          "name": "url_id",
-          "ordinal": 0,
-          "type_info": "Int4"
-        },
-        {
-          "name": "url",
-          "ordinal": 1,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url",
-          "ordinal": 2,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_parsed",
-          "ordinal": 3,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_host",
-          "ordinal": 4,
-          "type_info": "Text"
-        },
-        {
-          "name": "display_url",
-          "ordinal": 5,
-          "type_info": "Text"
-        },
-        {
-          "name": "is_bsky_url",
-          "ordinal": 6,
-          "type_info": "Bool"
-        },
-        {
-          "name": "is_english",
-          "ordinal": 7,
-          "type_info": "Bool"
-        },
-        {
-          "name": "title",
-          "ordinal": 8,
-          "type_info": "Text"
-        },
-        {
-          "name": "description",
-          "ordinal": 9,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_thumbnail_url",
-          "ordinal": 10,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_url",
-          "ordinal": 11,
-          "type_info": "Text"
-        },
-        {
-          "name": "created_at",
-          "ordinal": 12,
-          "type_info": "Int8"
-        },
-        {
-          "name": "created_at_str",
-          "ordinal": 13,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Bool",
-          "Bool",
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Int8",
-          "Text"
-        ]
-      }
-    },
-    "query": "\n        INSERT INTO news_bsky_post_url ( url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_bsky_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str )\n        VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 )\n        RETURNING url_id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_bsky_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str\n        "
-  },
-  "678ebdc5a1d2935be6bcf3ac5960e6944e436137b90f411ec5e4bc6755bb83dd": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Int8",
-          "Text",
-          "Int4"
-        ]
-      }
-    },
-    "query": "\n        UPDATE news_feed_url \n        SET bsky_posted_at = $1, bsky_posted_at_str = $2\n        WHERE url_id = $3\n        "
-  },
-  "68b8dc1752482d087fbe206105590d7134ce1a30589f40b8c989c86831b239f8": {
+  "4e372882bb9bf6903f5f45f0040b7543f8a94f54756086773fd7cdb637b6cb46": {
     "describe": {
       "columns": [],
       "nullable": [],
       "parameters": {
         "Left": [
           "Bool",
-          "Int4"
+          "Int4",
+          "Int8"
         ]
       }
     },
-    "query": "\n        UPDATE news_feed_url \n        SET is_climate_related = $1\n        WHERE url_id = $2\n        "
+    "query": "\n        UPDATE news_feed_url \n        SET is_climate_related = $1, updated_at = $3\n        WHERE url_id = $2\n        "
   },
-  "6cfe01952c92203fbd2d15074b168bf8ffef87cde779627e5d5d415b302fa1fc": {
+  "6b3b67aca5c4cdb2b2e6cf45b72597ffc5fde3aade0489b42adc959772e5e560": {
     "describe": {
       "columns": [
         {
@@ -669,14 +808,14 @@
           "type_info": "Int4"
         },
         {
-          "name": "first_referenced_by",
+          "name": "bsky_posted_at",
           "ordinal": 4,
-          "type_info": "Text"
+          "type_info": "Int8"
         },
         {
-          "name": "is_climate_related",
+          "name": "first_referenced_by_username",
           "ordinal": 5,
-          "type_info": "Bool"
+          "type_info": "Text"
         },
         {
           "name": "created_at",
@@ -684,18 +823,43 @@
           "type_info": "Int8"
         },
         {
-          "name": "created_at_str",
+          "name": "updated_at",
           "ordinal": 7,
-          "type_info": "Text"
-        },
-        {
-          "name": "bsky_posted_at",
-          "ordinal": 8,
           "type_info": "Int8"
         },
         {
-          "name": "bsky_posted_at_str",
+          "name": "title",
+          "ordinal": 8,
+          "type_info": "Text"
+        },
+        {
+          "name": "description",
           "ordinal": 9,
+          "type_info": "Text"
+        },
+        {
+          "name": "expanded_url_parsed",
+          "ordinal": 10,
+          "type_info": "Text"
+        },
+        {
+          "name": "expanded_url_host",
+          "ordinal": 11,
+          "type_info": "Text"
+        },
+        {
+          "name": "display_url",
+          "ordinal": 12,
+          "type_info": "Text"
+        },
+        {
+          "name": "preview_image_thumbnail_url",
+          "ordinal": 13,
+          "type_info": "Text"
+        },
+        {
+          "name": "preview_image_url",
+          "ordinal": 14,
           "type_info": "Text"
         }
       ],
@@ -704,20 +868,26 @@
         false,
         false,
         false,
-        false,
         true,
         false,
         false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
         true,
         true
       ],
       "parameters": {
         "Left": [
-          "Int4"
+          "Int8",
+          "Int8"
         ]
       }
     },
-    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE url_id = $1;\n        "
+    "query": "\n        SELECT\n            nfu.url_slug, \n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.bsky_posted_at,\n            u.handle as first_referenced_by_username,\n            nfu.created_at,\n            nfu.updated_at,\n            pu.title,\n            pu.description,\n            pu.expanded_url_parsed,\n            pu.expanded_url_host,\n            pu.display_url,\n            pu.preview_image_thumbnail_url,\n            pu.preview_image_url\n            \n        FROM\n            news_feed_url as nfu\n            JOIN news_bsky_post_url as pu ON pu.url_id = nfu.url_id\n            JOIN news_bsky_user as u ON u.did = nfu.first_referenced_by\n        WHERE\n            nfu.created_at > $1  \n            AND nfu.is_climate_related = True\n            AND pu.title IS NOT NULL\n        ORDER BY\n            url_score DESC\n        LIMIT $2 \n     "
   },
   "6f15c5144b7a77fcaa6a2779f30bd25140b72ff239bf775883a8d15ee4822e19": {
     "describe": {
@@ -736,6 +906,27 @@
     },
     "query": "\n        UPDATE news_bsky_post_url\n        SET title = $2, description = $3, is_english = $4,\n            preview_image_thumbnail_url = $5, preview_image_url = $6\n        WHERE url_id = $1\n        "
   },
+  "6f4b74b8f9761f08d373835211dd151dd8983e8c6facee9e0f2398c174730cbd": {
+    "describe": {
+      "columns": [
+        {
+          "name": "url_slug",
+          "ordinal": 0,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            SELECT url_slug\n            FROM news_feed_url\n            WHERE\n                is_climate_related = True\n            ORDER BY url_slug ASC\n            LIMIT $1 OFFSET $2\n        "
+  },
   "70df8433585f34abda92a0c09f803fdcc403890603fd1238ceebe882a2774f4d": {
     "describe": {
       "columns": [],
@@ -749,79 +940,20 @@
     },
     "query": "UPDATE news_bsky_user SET user_score = $1 WHERE did = $2"
   },
-  "859b037329203157da21dcfda060b7c9c22d8b4408f15cea8fbe330b61c9d97e": {
+  "78d0d661783c7016d5308065d4e920ae642c25d4e474fa96ab7b08222cac0e38": {
     "describe": {
-      "columns": [
-        {
-          "name": "url_slug",
-          "ordinal": 0,
-          "type_info": "Text"
-        },
-        {
-          "name": "url_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "url_score",
-          "ordinal": 2,
-          "type_info": "Int4"
-        },
-        {
-          "name": "num_references",
-          "ordinal": 3,
-          "type_info": "Int4"
-        },
-        {
-          "name": "first_referenced_by",
-          "ordinal": 4,
-          "type_info": "Text"
-        },
-        {
-          "name": "is_climate_related",
-          "ordinal": 5,
-          "type_info": "Bool"
-        },
-        {
-          "name": "created_at",
-          "ordinal": 6,
-          "type_info": "Int8"
-        },
-        {
-          "name": "created_at_str",
-          "ordinal": 7,
-          "type_info": "Text"
-        },
-        {
-          "name": "bsky_posted_at",
-          "ordinal": 8,
-          "type_info": "Int8"
-        },
-        {
-          "name": "bsky_posted_at_str",
-          "ordinal": 9,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
+      "columns": [],
+      "nullable": [],
       "parameters": {
         "Left": [
-          "Text"
+          "Int4",
+          "Int4",
+          "Int4",
+          "Int8"
         ]
       }
     },
-    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE url_slug = $1        \n        "
+    "query": "\n        UPDATE news_feed_url \n        SET url_score = $1, num_references = $2, updated_at = $4\n        WHERE url_id = $3\n            "
   },
   "8a00f2ae3e4d05afcf82bed2a02e4cfab72bc653fcbe82d3032318b9988f782e": {
     "describe": {
@@ -933,78 +1065,6 @@
     },
     "query": "\n            UPDATE news_cron_job \n            SET completed_at = $1, completed_at_str = $2\n            WHERE id = $3\n        "
   },
-  "936cdd1bb71829f29338e19e5b585409e090e1c3f0bfafeace744000ffe49fa4": {
-    "describe": {
-      "columns": [
-        {
-          "name": "url_slug",
-          "ordinal": 0,
-          "type_info": "Text"
-        },
-        {
-          "name": "url_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "url_score",
-          "ordinal": 2,
-          "type_info": "Int4"
-        },
-        {
-          "name": "num_references",
-          "ordinal": 3,
-          "type_info": "Int4"
-        },
-        {
-          "name": "first_referenced_by",
-          "ordinal": 4,
-          "type_info": "Text"
-        },
-        {
-          "name": "is_climate_related",
-          "ordinal": 5,
-          "type_info": "Bool"
-        },
-        {
-          "name": "created_at",
-          "ordinal": 6,
-          "type_info": "Int8"
-        },
-        {
-          "name": "created_at_str",
-          "ordinal": 7,
-          "type_info": "Text"
-        },
-        {
-          "name": "bsky_posted_at",
-          "ordinal": 8,
-          "type_info": "Int8"
-        },
-        {
-          "name": "bsky_posted_at_str",
-          "ordinal": 9,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "parameters": {
-        "Left": []
-      }
-    },
-    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE \n                is_climate_related IS NULL \n            ORDER BY url_score DESC\n            LIMIT 20\n            \n        "
-  },
   "95486b86c0bd1f817ed86d64def5235c1c26d094ce83486dc56d16b6ac1a0550": {
     "describe": {
       "columns": [
@@ -1065,105 +1125,6 @@
       }
     },
     "query": "\n            INSERT INTO news_cron_job ( \n                cron_type, started_at, started_at_str, completed_at, completed_at_str, error\n             )\n            VALUES ( $1, $2, $3, $4, $5, $6)\n            RETURNING \n                id, cron_type, started_at, started_at_str, completed_at, completed_at_str, error\n            "
-  },
-  "9ed4f7d5c84fd8ddb6e8038b5e6cf2eddb3152044e84afb98e502030bf5f9258": {
-    "describe": {
-      "columns": [
-        {
-          "name": "url_slug",
-          "ordinal": 0,
-          "type_info": "Text"
-        },
-        {
-          "name": "url_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "url_score",
-          "ordinal": 2,
-          "type_info": "Int4"
-        },
-        {
-          "name": "num_references",
-          "ordinal": 3,
-          "type_info": "Int4"
-        },
-        {
-          "name": "bsky_posted_at",
-          "ordinal": 4,
-          "type_info": "Int8"
-        },
-        {
-          "name": "first_referenced_by_username",
-          "ordinal": 5,
-          "type_info": "Text"
-        },
-        {
-          "name": "created_at",
-          "ordinal": 6,
-          "type_info": "Int8"
-        },
-        {
-          "name": "title",
-          "ordinal": 7,
-          "type_info": "Text"
-        },
-        {
-          "name": "description",
-          "ordinal": 8,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_parsed",
-          "ordinal": 9,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_host",
-          "ordinal": 10,
-          "type_info": "Text"
-        },
-        {
-          "name": "display_url",
-          "ordinal": 11,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_thumbnail_url",
-          "ordinal": 12,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_url",
-          "ordinal": 13,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true
-      ],
-      "parameters": {
-        "Left": [
-          "Int8",
-          "Int8"
-        ]
-      }
-    },
-    "query": "\n        SELECT\n            nfu.url_slug, \n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.bsky_posted_at,\n            u.handle as first_referenced_by_username,\n            nfu.created_at,\n            pu.title,\n            pu.description,\n            pu.expanded_url_parsed,\n            pu.expanded_url_host,\n            pu.display_url,\n            pu.preview_image_thumbnail_url,\n            pu.preview_image_url\n            \n        FROM\n            news_feed_url as nfu\n            JOIN news_bsky_post_url as pu ON pu.url_id = nfu.url_id\n            JOIN news_bsky_user as u ON u.did = nfu.first_referenced_by\n        WHERE\n            nfu.created_at > $1  \n            AND nfu.is_climate_related = True\n            AND pu.title IS NOT NULL\n        ORDER BY\n            url_score DESC\n        LIMIT $2 \n     "
   },
   "a4bbec1915434ab3445e7ff742ef1f61a2edde211063e9ae549923ccbf877ead": {
     "describe": {
@@ -1291,103 +1252,29 @@
     },
     "query": "SELECT post_uri, cid, text, author_did, reply_parent_uri, reply_root_uri, created_at, created_at_str FROM news_bsky_post WHERE post_uri = $1"
   },
-  "ae122d7d59d3d9ad780a68953160be8480a09b582e6e268403fcfd0a277b2706": {
+  "b4e3d5bb16da43576d1075ba672004db707f3c812d2dc612cf0a2b882afbaafa": {
     "describe": {
       "columns": [
         {
-          "name": "url_slug",
+          "name": "updated_at",
           "ordinal": 0,
-          "type_info": "Text"
+          "type_info": "Int8"
         },
         {
-          "name": "url_id",
+          "name": "total_count",
           "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "url_score",
-          "ordinal": 2,
-          "type_info": "Int4"
-        },
-        {
-          "name": "num_references",
-          "ordinal": 3,
-          "type_info": "Int4"
-        },
-        {
-          "name": "bsky_posted_at",
-          "ordinal": 4,
           "type_info": "Int8"
-        },
-        {
-          "name": "first_referenced_by_username",
-          "ordinal": 5,
-          "type_info": "Text"
-        },
-        {
-          "name": "created_at",
-          "ordinal": 6,
-          "type_info": "Int8"
-        },
-        {
-          "name": "title",
-          "ordinal": 7,
-          "type_info": "Text"
-        },
-        {
-          "name": "description",
-          "ordinal": 8,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_parsed",
-          "ordinal": 9,
-          "type_info": "Text"
-        },
-        {
-          "name": "expanded_url_host",
-          "ordinal": 10,
-          "type_info": "Text"
-        },
-        {
-          "name": "display_url",
-          "ordinal": 11,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_thumbnail_url",
-          "ordinal": 12,
-          "type_info": "Text"
-        },
-        {
-          "name": "preview_image_url",
-          "ordinal": 13,
-          "type_info": "Text"
         }
       ],
       "nullable": [
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true
+        null,
+        null
       ],
       "parameters": {
-        "Left": [
-          "Text"
-        ]
+        "Left": []
       }
     },
-    "query": "\n        SELECT\n            nfu.url_slug, \n            nfu.url_id, \n            nfu.url_score,\n            nfu.num_references,\n            nfu.bsky_posted_at,\n            u.handle as first_referenced_by_username,\n            nfu.created_at,\n            pu.title,\n            pu.description,\n            pu.expanded_url_parsed,\n            pu.expanded_url_host,\n            pu.display_url,\n            pu.preview_image_thumbnail_url,\n            pu.preview_image_url\n            \n        FROM\n            news_feed_url as nfu\n            JOIN news_bsky_post_url as pu ON pu.url_id = nfu.url_id\n            JOIN news_bsky_user as u ON u.did = nfu.first_referenced_by\n        WHERE\n            nfu.url_slug = $1\n            AND pu.title IS NOT NULL\n     "
+    "query": "\n            SELECT\n                MAX(updated_at) as updated_at,\n                COUNT(*) as total_count\n            FROM news_feed_url\n            WHERE\n                is_climate_related = True\n        "
   },
   "d7355209471dfc9c8215c8e7a6b5c442ef97fccca52d00b7290d155bf3400e14": {
     "describe": {
@@ -1487,7 +1374,34 @@
     },
     "query": "SELECT url_id, url, expanded_url, expanded_url_parsed, expanded_url_host, display_url, is_bsky_url, is_english, title, description, preview_image_thumbnail_url, preview_image_url, created_at, created_at_str FROM news_bsky_post_url WHERE expanded_url_parsed = $1"
   },
-  "dda06da26272025ac2f564fafd3643b22f9217831e6b57dd4a8aac9345e4a48d": {
+  "df879db0034ca75bbb4a268d6ca43b12e7c170dc1510b5df91b5e1aa57a13871": {
+    "describe": {
+      "columns": [
+        {
+          "name": "post_uri",
+          "ordinal": 0,
+          "type_info": "Text"
+        },
+        {
+          "name": "url_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO news_bsky_referenced_post_url ( post_uri, url_id )\n        VALUES ( $1, $2 )\n        ON CONFLICT (post_uri, url_id) DO NOTHING\n        RETURNING post_uri, url_id\n        "
+  },
+  "e3fc1956fb8b2f9080584b7672f7132e7f9ec4a5123d17c41e5b0a7db65bf99b": {
     "describe": {
       "columns": [
         {
@@ -1531,13 +1445,18 @@
           "type_info": "Text"
         },
         {
-          "name": "bsky_posted_at",
+          "name": "updated_at",
           "ordinal": 8,
           "type_info": "Int8"
         },
         {
-          "name": "bsky_posted_at_str",
+          "name": "bsky_posted_at",
           "ordinal": 9,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at_str",
+          "ordinal": 10,
           "type_info": "Text"
         }
       ],
@@ -1548,6 +1467,7 @@
         false,
         false,
         true,
+        false,
         false,
         false,
         true,
@@ -1564,17 +1484,18 @@
           "Int8",
           "Text",
           "Int8",
+          "Int8",
           "Text"
         ]
       }
     },
-    "query": "\n            INSERT INTO news_feed_url ( \n                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str\n             )\n            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)\n            RETURNING \n                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, bsky_posted_at, bsky_posted_at_str\n            "
+    "query": "\n            INSERT INTO news_feed_url ( \n                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str\n             )\n            VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)\n            RETURNING \n                url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str\n            "
   },
-  "df879db0034ca75bbb4a268d6ca43b12e7c170dc1510b5df91b5e1aa57a13871": {
+  "e8972a733be1605f9e7316b03d41b9c28d9db6cda671844917829f3ab311efdf": {
     "describe": {
       "columns": [
         {
-          "name": "post_uri",
+          "name": "url_slug",
           "ordinal": 0,
           "type_info": "Text"
         },
@@ -1582,34 +1503,73 @@
           "name": "url_id",
           "ordinal": 1,
           "type_info": "Int4"
+        },
+        {
+          "name": "url_score",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "num_references",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "first_referenced_by",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_climate_related",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Int8"
+        },
+        {
+          "name": "created_at_str",
+          "ordinal": 7,
+          "type_info": "Text"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at",
+          "ordinal": 9,
+          "type_info": "Int8"
+        },
+        {
+          "name": "bsky_posted_at_str",
+          "ordinal": 10,
+          "type_info": "Text"
         }
       ],
       "nullable": [
         false,
-        false
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
       ],
       "parameters": {
         "Left": [
-          "Text",
-          "Int4"
+          "Text"
         ]
       }
     },
-    "query": "\n        INSERT INTO news_bsky_referenced_post_url ( post_uri, url_id )\n        VALUES ( $1, $2 )\n        ON CONFLICT (post_uri, url_id) DO NOTHING\n        RETURNING post_uri, url_id\n        "
-  },
-  "ea1d507a2807b4ebe53d30752c1c9dfb298be4302fba67221349d2f46f34d102": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Int4",
-          "Int4",
-          "Int4"
-        ]
-      }
-    },
-    "query": "\n        UPDATE news_feed_url \n        SET url_score = $1, num_references = $2\n        WHERE url_id = $3\n            "
+    "query": "\n            SELECT url_slug, url_id, url_score, num_references, first_referenced_by, is_climate_related, created_at, created_at_str, updated_at, bsky_posted_at, bsky_posted_at_str\n            FROM news_feed_url\n            WHERE url_slug = $1        \n        "
   },
   "f7a45c92bfc70936aec3325e0cfd0dbc791d6d96c25b5aafe31a5add8971dc7a": {
     "describe": {
@@ -1721,5 +1681,20 @@
       }
     },
     "query": "UPDATE news_bsky_user SET last_checked_at = $1 WHERE did = $2"
+  },
+  "f9ee4dc263953c75f7079b75d1926f188597e29b30069e1f24f7bfffa61972d4": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Text",
+          "Int4",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n        UPDATE news_feed_url \n        SET bsky_posted_at = $1, bsky_posted_at_str = $2, updated_at = $4\n        WHERE url_id = $3\n        "
   }
 }

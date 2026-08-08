@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "sitemaps": "node scripts/generate-sitemaps.mjs",
+    "prebuild": "npm run sitemaps && npm run codegen",
+    "build": "next build && next export",
     "lint": "next lint",
     "typecheck": "yarn tsc",
     "codegen": "graphql-codegen --config codegen.yml",

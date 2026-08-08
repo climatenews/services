@@ -92,6 +92,7 @@ async fn populate_news_feed_urls_v1(
                 created_at_str: datetime_to_str(datetime_from_unix_timestamp(
                     first_tweet.created_at,
                 )),
+                updated_at: now_utc_timestamp(),
                 bsky_posted_at: None,
                 bsky_posted_at_str: None,
             };
@@ -102,6 +103,7 @@ async fn populate_news_feed_urls_v1(
                 *url_id,
                 url_score,
                 num_references,
+                now_utc_timestamp(),
             )
             .await?;
         }
@@ -148,6 +150,7 @@ async fn update_is_climate_related_fields(db_pool: &PgPool) -> Result<()> {
                         db_pool,
                         news_feed_url.url_id,
                         is_climate_related,
+                        now_utc_timestamp(),
                     )
                     .await?;
                 }
@@ -173,9 +176,7 @@ mod tests {
         sql::news_feed_url::truncate_news_feed_url,
         util::{
             convert::now_utc_timestamp,
-            test::test_util::{
-                create_fake_news_bsky_post_url, create_fake_news_feed_url,
-            },
+            test::test_util::{create_fake_news_bsky_post_url, create_fake_news_feed_url},
         },
     };
 

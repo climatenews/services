@@ -1,6 +1,7 @@
-
-
-
+type NewsFeedBuildMetadata {
+	updatedAt: Int!
+	totalCount: Int!
+}
 
 type NewsFeedStatus {
 	completedAt: Int
@@ -13,6 +14,7 @@ type NewsFeedUrl {
 	numReferences: Int!
 	firstReferencedByUsername: String!
 	createdAt: Int!
+	updatedAt: Int!
 	title: String
 	description: String
 	expandedUrlParsed: String!
@@ -37,9 +39,18 @@ type Query {
 	newsFeedUrl(urlSlug: String!): NewsFeedUrl!
 	newsFeedUrlReferences(urlSlug: String!): [NewsFeedUrlReference!]!
 	sitemapNewsFeedUrlSlugs(month: Int!, year: Int!): [String!]!
+	newsFeedUrlSlugs(limit: Int, offset: Int): [String!]!
+	newsFeedBuildMetadata: NewsFeedBuildMetadata!
 }
 
-
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 schema {
 	query: Query
 }
