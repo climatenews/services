@@ -1,0 +1,22 @@
+project_name          = "climatenews"
+server_type           = "cpx21"
+server_image          = "ubuntu-24.04"
+location              = "hel1"
+ssh_public_key_path   = "/home/your-user/.ssh/id_ed25519.pub"
+ssh_allowed_cidr      = "203.0.113.10/32"
+base_domain_name      = "climatenews.app"
+manage_dns            = true
+
+# Set these as environment variables in CI or shell when possible:
+# export TF_VAR_hcloud_token="..."
+# export TF_VAR_hetzner_dns_api_token="..."
+
+mx_records = [
+  "10 mx1.privateemail.com",
+  "10 mx2.privateemail.com"
+]
+
+txt_records = [
+  "v=spf1 include:spf.privateemail.com ~all",
+  "google-site-verification=replace-me"
+]

@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ClimateNews PostgreSQL backup daily
+
+[Timer]
+OnCalendar=*-*-* 00:05:00
+Persistent=true
+RandomizedDelaySec=300
+Unit=climatenews-postgres-backup.service
+
+[Install]
+WantedBy=timers.target

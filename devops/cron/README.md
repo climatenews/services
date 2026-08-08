@@ -1,8 +1,13 @@
+### PostgreSQL maintenance script
 
-### Postgresql backup script
+Use `postgres-maintenance.sh` for both backup and restore verification.
+
 ```bash
-# install script: 
-chmod +x postgres-backup.sh
-# run script: 
-sudo ./postgres-backup.sh
+chmod +x postgres-maintenance.sh
+
+# Run backup
+sudo ./postgres-maintenance.sh backup
+
+# Run restore verification
+sudo ./postgres-maintenance.sh verify
 ```

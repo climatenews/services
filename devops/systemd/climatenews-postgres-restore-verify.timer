@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ClimateNews PostgreSQL restore verification weekly
+
+[Timer]
+OnCalendar=Sun *-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=300
+Unit=climatenews-postgres-restore-verify.service
+
+[Install]
+WantedBy=timers.target

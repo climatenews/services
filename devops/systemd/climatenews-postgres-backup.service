@@ -1,0 +1,11 @@
+[Unit]
+Description=ClimateNews PostgreSQL Backup Job
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/home/ubuntu/.env.prod
+ExecStart=/usr/local/bin/postgres-maintenance.sh backup
+User=root
+Group=root

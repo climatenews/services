@@ -32,11 +32,8 @@ BSKY_MAX_USERS_PER_RUN=10
 
 ### Test the app with Docker Compose
 ```bash
-# Start the app
-docker-compose --env-file ".env.dev" up --build 
+# Start local Postgres only (recommended for local dev)
 docker-compose --env-file ".env.dev" up
-# tail the logs
-docker-compose logs --tail="all" -f
 ```
 
 ### Run the app with the Procfile
@@ -45,59 +42,83 @@ cron, and web processes:
 
 ```bash
 brew install overmind
+
+# Ubuntu: https://gist.github.com/iagopuccini/12b594f6726a8ae85e1b1e32491bb12d
 ```
 
 Start Postgres, load the development environment, then start the processes
 defined in `Procfile`:
 
 ```bash
-docker-compose --env-file ".env.dev" up 
-export DATABASE_URL="postgres://climate_news:climate_news@localhost:5432/climate_news"
-overmind start 
+./run_dev.sh
 ```
 
 Stop all Procfile processes with `overmind stop`.
 
-## Deploying
-### Deploy the stack with Docker Swarm
+### Troubleshooting local Postgres version mismatch
+
+If you see errors like "database files are incompatible with server" and
+"The data directory was initialized by PostgreSQL version 12", your local Docker
+volume was created by an older Postgres major version.
+
+For disposable local data, reset the local DB volume and start again:
+
 ```bash
-# Initialize a docker swarm
-sudo docker swarm init 
-
-# Deploy the stack
-sudo env $(cat .env.dev | xargs) docker stack deploy --compose-file docker-compose.yaml climate_news_stack 
-
-# Display stack info
-sudo docker stack ps climate_news_stack
-
-# Display service info
-sudo docker service ps climate_news_stack_news_cron
-
-# Inspect a service
-sudo docker service inspect --pretty climate_news_stack_news_cron
-
-# Restart a service
-sudo docker service update --force climate_news_stack_news_cron
-
-# Run a command in a container
-sudo docker container ls
-sudo docker exec -it f855a1118d35 /bin/bash
-
-# Logs for a service
-sudo docker service logs -f --since 1h climate_news_stack_db
-sudo docker service logs -f --since 1h climate_news_stack_news_api
-sudo docker service logs -f --since 1h climate_news_stack_news_cron
-sudo docker service logs -f --since 1h climate_news_stack_web
-sudo docker service logs -f --since 1h climate_news_stack_caddy
-
-# Search logs for a service
-sudo docker service logs --since 24h climate_news_stack_news_cron 2>&1 | grep "main_cron_job" 
-
-# Remove the stack
-sudo docker stack rm climate_news_stack
-sudo docker volume prune
-
+docker compose --env-file .env.dev -f docker-compose.yaml down -v
+docker volume rm services_db_data 2>/dev/null || true
+./run_dev.sh
 ```
+
+If you need to preserve local data, temporarily run a Postgres 12 container,
+export a dump, then restore into Postgres 16.
+
+This repo intentionally keeps local and production paths separate:
+
+- Local dev: `Procfile` + `docker-compose.yaml` (DB only)
+- Production: `docker-compose.prod.yaml`
+
+## Deploying
+### Deploy the stack with Docker Compose (recommended)
+```bash
+# Copy env vars for production
+cp .env.sample .env.prod
+
+# Edit .env.prod and set required secrets
+
+# Pull latest images
+docker compose --env-file .env.prod -f docker-compose.prod.yaml pull
+
+# Start services
+docker compose --env-file .env.prod -f docker-compose.prod.yaml up -d
+
+# Verify health
+docker compose --env-file .env.prod -f docker-compose.prod.yaml ps
+docker compose --env-file .env.prod -f docker-compose.prod.yaml logs -f --since=1h
+```
+
+### Run scripts on the production host
+
+After running the Ansible playbook, these scripts are available under `/usr/local/bin`:
+
+```bash
+# Deploy or update services
+sudo /usr/local/bin/deploy-prod.sh
+
+# Run health checks
+sudo /usr/local/bin/check-prod-health.sh
+
+# Check backup timers and recent logs
+sudo /usr/local/bin/check-backup-timers.sh
+
+# Manual backup and restore verification
+sudo /usr/local/bin/postgres-maintenance.sh backup
+sudo /usr/local/bin/postgres-maintenance.sh verify
+```
+
+### Legacy Docker Swarm path
+
+The Docker Swarm deployment flow is legacy and no longer the primary deployment path.
+Use the Compose production flow above and the scripts documented in `devops/README.md`.
 
 # Triggering a new Docker image build
 ```bash

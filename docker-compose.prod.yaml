@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    command: caddy reverse-proxy --from ${PUBLIC_DOMAIN}:443 --to web:3000
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - client-side
+    env_file:
+      - .env.prod
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    image: climatenews/web:latest
+    environment:
+      - GRAPHQL_API_URL=${GRAPHQL_API_URL}
+      - NODE_ENV=production
+    networks:
+      - client-side
+    depends_on:
+      news_api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  news_api:
+    image: climatenews/news_api:latest
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - RUST_LOG=info,actix=info
+      - DATABASE_URL=${DATABASE_URL}
+    expose:
+      - "8000"
+    networks:
+      - client-side
+      - server-side
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 20s
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  news_cron:
+    image: climatenews/news_cron:latest
+    environment:
+      - CRON_HOST=0.0.0.0
+      - CRON_PORT=8001
+      - RUST_LOG=info,actix=info
+      - DATABASE_URL=${DATABASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - POST_CRON_WEBHOOK_URL=${POST_CRON_WEBHOOK_URL}
+      - MAIN_CRON_WEBHOOK_URL=${MAIN_CRON_WEBHOOK_URL}
+      - BLUESKY_HANDLE=${BLUESKY_HANDLE}
+      - BLUESKY_APP_PASSWORD=${BLUESKY_APP_PASSWORD}
+      - BLUESKY_SERVICE=${BLUESKY_SERVICE}
+    expose:
+      - "8001"
+    networks:
+      - server-side
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 20s
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    networks:
+      - server-side
+    expose:
+      - "5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+      start_period: 20s
+    env_file:
+      - .env.prod
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  client-side: {}
+  server-side: {}
+
+volumes:
+  db_data: {}
+  caddy_data: {}
+  caddy_config: {}
