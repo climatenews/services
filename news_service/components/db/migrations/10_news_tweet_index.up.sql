@@ -1,1 +1,0 @@
-CREATE INDEX news_tweet_author_id_index on news_tweet (author_id);
